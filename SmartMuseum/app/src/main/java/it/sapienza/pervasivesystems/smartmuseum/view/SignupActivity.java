@@ -17,6 +17,7 @@ import it.sapienza.pervasivesystems.smartmuseum.R;
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
 
+
     @Bind(R.id.input_name)
     EditText _nameText;
     @Bind(R.id.input_email)
