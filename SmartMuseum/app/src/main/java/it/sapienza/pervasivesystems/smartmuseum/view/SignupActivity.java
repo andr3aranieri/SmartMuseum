@@ -1,8 +1,8 @@
 package it.sapienza.pervasivesystems.smartmuseum.view;
 
 import android.app.ProgressDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +13,8 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.sapienza.pervasivesystems.smartmuseum.R;
+import it.sapienza.pervasivesystems.smartmuseum.model.db.UserDB;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
@@ -72,6 +74,15 @@ public class SignupActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         // TODO: Implement your own signup logic here.
+        /*************ANDREA TEST***********************/
+        UserModel userModel = new UserModel();
+        userModel.setName(name);
+        userModel.setEmail(email);
+        userModel.setPassword(password);
+        userModel.setProfileImage("img111111111");
+        userModel.setLabels("Person");
+        new UserDB().createUser(userModel);
+        /***********************************************/
 
         new android.os.Handler().postDelayed(
                 new Runnable() {

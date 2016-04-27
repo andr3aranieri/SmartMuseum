@@ -2,8 +2,8 @@ package it.sapienza.pervasivesystems.smartmuseum.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +14,8 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.sapienza.pervasivesystems.smartmuseum.R;
+import it.sapienza.pervasivesystems.smartmuseum.model.db.UserDB;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -73,6 +75,10 @@ public class LoginActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         // TODO: Implement your own authentication logic here.
+        /*******ANDREA TEST******/
+        UserModel um = new UserDB().getUserByEmail("and.ranieros@gmail.com");
+        Log.i("ANDREA", "usermodel in activity: " + um.getName() + ", " + um.getEmail());
+        /************************/
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
