@@ -3,90 +3,67 @@ package it.sapienza.pervasivesystems.smartmuseum.model.db;
 
 import android.util.Log;
 
-import java.io.IOException;
+import com.google.gson.internal.LinkedTreeMap;
 
-import it.sapienza.pervasivesystems.smartmuseum.api.UserAPI;
-import it.sapienza.pervasivesystems.smartmuseum.api.cyphers.QueryCypher;
+import java.util.ArrayList;
+
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import it.sapienza.pervasivesystems.smartmuseum.neo4j.CypherRow;
+import it.sapienza.pervasivesystems.smartmuseum.neo4j.wsinterface.WSOperations;
+
 
 /**
  * Created by andrearanieri on 25/04/16.
  */
 public class UserDB extends DBManager {
-    private UserAPI userAPI;
 
-    public UserModel getUserByEmail(String email){
-        Log.i("ANDREA", "getUserByEmail()");
-        Log.i("ANDREA", "api: " + this.retrofit.baseUrl().toString());
-        final UserModel userModel = new UserModel();
-        this.userAPI = this.retrofit.create(UserAPI.class);
+    private WSOperations wsOperations = new WSOperations();
 
-        Call<ResponseBody> call = this.userAPI.searchUserByEmail(new QueryCypher("match (n) where n.email = '" + email + "' return n"));
+    public UserModel getUserByEmail(String email) {
+        UserModel userRet = null;
+        CypherRow row = null;
 
-        //the searchUserByEmail2 uses the correct db/data/transaction/commit for invoking a list of cyphers... try to make it work to use it instead the legacy db/data/cypher!
-        //the problem should be the way a pass statements json: i should implement a pojo class that maps a list of statements;
-//        Call<ResponseBody> call = this.userAPI.searchUserByEmail2("{\n" +
-//                "  \"statements\" : [ {\n" +
-//                "    \"statement\" : \"match (n) where n.email = 'and.ranieros@gmail.com' return n\"\n" +
-//                "  } ]\n" +
-//                "}");
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> c, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    // request successful (status code 200, 201)
-                    try {
-                        Log.i("ANDREA", "*******************************User returned: " + response.body().string());
-                        //set userModel values from response.body().string() json file, and pass the data asynchounosly to the UI;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    //request not successful (like 400,401,403 etc)
-                    //Handle errors
-                }
+        try {
+            String cypher = "MATCH (u:User { email: '" + email + "'}) return u";
+            row = this.wsOperations.getCypherSingleResult(cypher);
+            if(row != null) {
+                userRet = this.readUser(row);
+                Log.i("GET USER RESULT: ", userRet.getEmail() + ", " + userRet.getName() + ", " + userRet.getPassword() + ", " + userRet.getProfileImage());
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> c, Throwable t) {
-                Log.i("ANDREA", "Failure: " + t.getMessage());
+            else {
+                userRet = null;
+                Log.i("GET USER RESULT: ", "NO DATA");
             }
-        });
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            userRet = null;
+        }
 
-        return userModel;
+        return userRet;
     }
 
     public boolean createUser(UserModel user) {
-        boolean res = true;
-        this.userAPI = this.retrofit.create(UserAPI.class);
-        Call<ResponseBody> call = this.userAPI.createUser(user);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> c, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    // request successful (status code 200, 201)
-                    try {
-                        Log.i("ANDREA", "*******************************create user: " + response.body().string());
-                        //set userModel values from response.body().string() json file, and pass the data asynchounosly to the UI;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    //request not successful (like 400,401,403 etc)
-                    //Handle errors
-                }
-            }
+        boolean ret = false;
+        try {
+            String cypher = "CREATE (n:User { name : '" + user.getName() + "', email : '" + user.getEmail() + "', password : '" + user.getPassword() + "', profileImage : '" + user.getProfileImage() + "' })";
+            ret = this.wsOperations.getCypherResponse(cypher);
+            Log.i("CREATE USER RESULT: : ", new Boolean(ret).toString());
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            ret = false;
+        }
+        return ret;
+    }
 
-            @Override
-            public void onFailure(Call<ResponseBody> c, Throwable t) {
-                Log.i("ANDREA", "create user failure: " + t.getMessage());
-            }
-        });
-        return res;
+    private UserModel readUser(CypherRow row) {
+        LinkedTreeMap<String, String> objectMap = ((ArrayList<LinkedTreeMap<String,String>>)row.getRow()).get(0);
+        UserModel user = new UserModel();
+        user.setName(objectMap.get("name"));
+        user.setEmail(objectMap.get("email"));
+        user.setPassword(objectMap.get("password"));
+        user.setProfileImage(objectMap.get("profileImage"));
+        return user;
     }
 }

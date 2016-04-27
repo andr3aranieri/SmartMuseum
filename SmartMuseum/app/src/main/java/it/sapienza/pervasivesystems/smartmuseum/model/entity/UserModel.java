@@ -16,8 +16,6 @@ public class UserModel {
     private String password;
     @Expose
     private String profileImage;
-    @Expose
-    private String labels;
 
     public String getProfileImage() {
         return profileImage;
@@ -49,13 +47,5 @@ public class UserModel {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLabels() {
-        return labels;
-    }
-
-    public void setLabels(String labels) {
-        this.labels = labels;
     }
 }

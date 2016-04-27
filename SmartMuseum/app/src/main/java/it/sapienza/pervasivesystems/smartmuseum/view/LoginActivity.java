@@ -2,6 +2,7 @@ package it.sapienza.pervasivesystems.smartmuseum.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -76,8 +77,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // TODO: Implement your own authentication logic here.
         /*******ANDREA TEST******/
-        UserModel um = new UserDB().getUserByEmail("and.ranieros@gmail.com");
-        Log.i("ANDREA", "usermodel in activity: " + um.getName() + ", " + um.getEmail());
+        new LoginAsync(email, password).execute();
         /************************/
 
         new android.os.Handler().postDelayed(
@@ -142,5 +142,45 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+}
+
+/***********************************************************************/
+/* ANDREA: Async test task for neo4j driver*/
+class LoginAsync extends AsyncTask<Void, Integer, String>
+{
+    private String email, password;
+
+    public LoginAsync() {}
+
+    public LoginAsync(String e, String p) {
+        this.email = e;
+        this.password = p;
+    }
+
+    protected void onPreExecute (){
+        Log.d("LoginAsync","On pre Exceute......");
+    }
+
+    protected String doInBackground(Void...arg0) {
+        Log.d("LoginAsync","On doInBackground...");
+
+        UserModel userModel = new UserDB().getUserByEmail(this.email);
+        if(userModel != null && userModel.getPassword().trim().equalsIgnoreCase(this.password.trim())) {
+            Log.i("LOGIN", "SUCCESS");
+        }
+        else {
+            Log.i("LOGIN", "WRONG USERNAME OR PASSWORD");
+        }
+
+        return "You are at PostExecute";
+    }
+
+    protected void onProgressUpdate(Integer...a){
+        Log.d("LoginAsync", "You are in progress update ... " + a[0]);
+    }
+
+    protected void onPostExecute(String result) {
+        Log.d("LoginAsync", ""+result);
     }
 }

@@ -1,6 +1,7 @@
 package it.sapienza.pervasivesystems.smartmuseum.view;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -80,8 +81,7 @@ public class SignupActivity extends AppCompatActivity {
         userModel.setEmail(email);
         userModel.setPassword(password);
         userModel.setProfileImage("img111111111");
-        userModel.setLabels("Person");
-        new UserDB().createUser(userModel);
+        new SignupAsync(userModel).execute();
         /***********************************************/
 
         new android.os.Handler().postDelayed(
@@ -138,5 +138,38 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+}
+
+/***********************************************************************/
+/* ANDREA: Async test task for neo4j driver*/
+class SignupAsync extends AsyncTask<Void, Integer, String>
+{
+    private UserModel userModel;
+
+    public SignupAsync() {}
+
+    public SignupAsync(UserModel um) {
+        this.userModel = um;
+    }
+
+    protected void onPreExecute (){
+        Log.d("SignupAsync","On pre Exceute......");
+    }
+
+    protected String doInBackground(Void...arg0) {
+        Log.d("SignupAsync","On doInBackground...");
+
+        boolean ret = new UserDB().createUser(userModel);
+
+        return "createUser result: " + ret;
+    }
+
+    protected void onProgressUpdate(Integer...a){
+        Log.d("SignupAsync", "You are in progress update ... " + a[0]);
+    }
+
+    protected void onPostExecute(String result) {
+        Log.d("ANDREA", ""+result);
     }
 }
