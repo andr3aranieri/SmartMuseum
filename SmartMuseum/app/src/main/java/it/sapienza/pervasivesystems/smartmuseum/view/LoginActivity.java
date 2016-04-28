@@ -74,7 +74,6 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
         /*******Start login async task******/
         new LoginAsync(this, email, password).execute();
         /************************/

@@ -69,15 +69,12 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own signup logic here.
-        /*************ANDREA TEST***********************/
         UserModel userModel = new UserModel();
         userModel.setName(name);
         userModel.setEmail(email);
         userModel.setPassword(password);
         userModel.setProfileImage("img111111111");
         new SignupAsync(this, userModel).execute();
-        /***********************************************/
 
     }
 
