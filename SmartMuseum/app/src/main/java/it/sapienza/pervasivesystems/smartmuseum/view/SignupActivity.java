@@ -132,13 +132,14 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
 
         switch(message.getMessageType()) {
             case SUCCESS:
+
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Creating Account...");
+                progressDialog.show();
+
                 new android.os.Handler().postDelayed(
                         new Runnable() {
                             public void run() {
-                                progressDialog.setIndeterminate(true);
-                                progressDialog.setMessage("Creating Account...");
-                                progressDialog.show();
-
                                 onSignupSuccess();
                                 progressDialog.dismiss();
                             }
