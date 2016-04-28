@@ -19,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.business.SHA1Business;
+import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.UserDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 
@@ -149,12 +150,16 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
     }
 
     @Override
-    public void processFinish(UserModel output) {
-        if(output != null) {
-            Log.i("LoginActivity", "processFinish> LOGIN OK");
-        }
-        else {
-            Log.i("LoginActivity", "processFinish> LOGIN ERROR");
+    public void processFinish(ILCMessage message) {
+        Log.i("LoginActivity", message.getMessageText());
+
+        switch(message.getMessageType()) {
+            case SUCCESS:
+                //update UI;
+                break;
+            case ERROR:
+                //update UI;
+                break;
         }
     }
 }
@@ -163,15 +168,16 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
 /* Async Task to retrieve data from neo4j rest ws */
 
 interface LoginAsyncResponse {
-    void processFinish(UserModel output);
+    void processFinish(ILCMessage message);
 }
 
-class LoginAsync extends AsyncTask<Void, Integer, String>
-{
+class LoginAsync extends AsyncTask<Void, Integer, String> {
     public LoginAsyncResponse delegate = null;
 
     private String email, password;
     private UserModel userModel = null;
+    private ILCMessage message = new ILCMessage();
+    private UserDB userDB = new UserDB();
 
     public LoginAsync(LoginAsyncResponse d, String e, String p) {
         this.email = e;
@@ -179,18 +185,31 @@ class LoginAsync extends AsyncTask<Void, Integer, String>
         this.delegate = d;
     }
 
-    protected void onPreExecute (){
-        Log.d("LoginAsync","On pre Exceute......");
+    protected void onPreExecute() {
+        Log.d("LoginAsync", "On pre Exceute......");
     }
 
-    protected String doInBackground(Void...arg0) {
-        Log.d("LoginAsync","On doInBackground...");
+    protected String doInBackground(Void... arg0) {
+        Log.d("LoginAsync", "On doInBackground...");
 
-        this.userModel = new UserDB().getUserByEmail(this.email);
+        this.userModel = this.userDB.getUserByEmail(this.email);
         try {
-            if(!(this.userModel != null && userModel.getPassword().trim().equalsIgnoreCase(SHA1Business.SHA1(this.password.trim())))) {
-                //LOGIN ERROR;
+            if (this.userModel == null) {
                 this.userModel = null;
+                this.message.setMessageType(ILCMessage.MessageType.ERROR);
+                this.message.setMessageText("The email that you entered is incorrect. Please try again");
+                this.message.setMessageObject(this.userModel);
+
+            } else if (!userModel.getPassword().trim().equalsIgnoreCase(SHA1Business.SHA1(this.password.trim()))) {
+                this.userModel = null;
+                this.message.setMessageType(ILCMessage.MessageType.ERROR);
+                this.message.setMessageText("The password that you entered is incorrect. Please try again");
+                this.message.setMessageObject(this.userModel);
+            } else {
+                //success
+                this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
+                this.message.setMessageText("Login successfully done. Welcome back to SmartMuseum!");
+                this.message.setMessageObject(this.userModel);
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -201,12 +220,12 @@ class LoginAsync extends AsyncTask<Void, Integer, String>
         return "You are at PostExecute";
     }
 
-    protected void onProgressUpdate(Integer...a){
+    protected void onProgressUpdate(Integer... a) {
         Log.d("LoginAsync", "You are in progress update ... " + a[0]);
     }
 
     protected void onPostExecute(String result) {
-        this.delegate.processFinish(this.userModel);
+        this.delegate.processFinish(this.message);
         Log.d("LoginAsync", "FINISHED Async Task, invoked activity postback method");
     }
 }

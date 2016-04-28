@@ -14,6 +14,7 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.sapienza.pervasivesystems.smartmuseum.R;
+import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.UserDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 
@@ -141,12 +142,19 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
     }
 
     @Override
-    public void processFinish(boolean result) {
-        if(result) {
-            Log.i("SignupActivity", "processFinish> SIGNUP OK");
-        }
-        else {
-            Log.i("SignupActivity", "processFinish> SIGUP ERROR");
+    public void processFinish(ILCMessage message) {
+        Log.i("SignupActivity", message.getMessageText());
+
+        switch(message.getMessageType()) {
+            case SUCCESS:
+                //update activity;
+                break;
+            case ERROR:
+                //update activity;
+                break;
+            case WARNING:
+                //update activity;
+                break;
         }
     }
 }
@@ -154,7 +162,7 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
 /***********************************************************************/
 /* Async Task to retrieve data from neo4j rest ws */
 interface SignupAsyncResponse {
-    void processFinish(boolean result);
+    void processFinish(ILCMessage message);
 }
 
 class SignupAsync extends AsyncTask<Void, Integer, String>
@@ -163,6 +171,8 @@ class SignupAsync extends AsyncTask<Void, Integer, String>
 
     private UserModel userModel;
     private boolean operationResult = false;
+    private final UserDB userDB = new UserDB();
+    private ILCMessage message = new ILCMessage();
 
     public SignupAsync(SignupAsyncResponse d, UserModel um) {
         this.userModel = um;
@@ -176,8 +186,26 @@ class SignupAsync extends AsyncTask<Void, Integer, String>
     protected String doInBackground(Void...arg0) {
         Log.d("SignupAsync","On doInBackground...");
 
-        this.operationResult = new UserDB().createUser(userModel);
-
+        UserModel userAlreadyRegistered = this.userDB.getUserByEmail(this.userModel.getEmail());
+        if(userAlreadyRegistered == null) {
+            this.operationResult = this.userDB.createUser(userModel);
+            if(this.operationResult) {
+                this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
+                this.message.setMessageText("You correctly registered to SmartMuseum!");
+                this.message.setMessageObject(new Boolean(this.operationResult));
+            }
+            else {
+                this.message.setMessageType(ILCMessage.MessageType.ERROR);
+                this.message.setMessageText("There was a problem with your registration. Please try again.");
+                this.message.setMessageObject(new Boolean(this.operationResult));
+            }
+        }
+        else {
+            this.operationResult = false;
+            this.message.setMessageType(ILCMessage.MessageType.WARNING);
+            this.message.setMessageText("Your email is already in our system. Please choose another one.");
+            this.message.setMessageObject(new Boolean(this.operationResult));
+        }
         return "createUser result: " + this.operationResult;
     }
 
@@ -186,6 +214,6 @@ class SignupAsync extends AsyncTask<Void, Integer, String>
     }
 
     protected void onPostExecute(String result) {
-        this.delegate.processFinish(this.operationResult);
+        this.delegate.processFinish(this.message);
     }
 }

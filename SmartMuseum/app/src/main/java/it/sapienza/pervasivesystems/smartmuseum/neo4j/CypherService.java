@@ -29,7 +29,7 @@ import retrofit.converter.GsonConverter;
  */
 public class CypherService {
 
-    protected static final String SERVER_ROOT_URI = "http://192.168.20.154:7474";
+    protected static final String SERVER_ROOT_URI = "http://192.168.1.3:7474";
     protected static final String USERNAME = "neo4j";
     protected static final String PASSWORD = "andrea";
 
