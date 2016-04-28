@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "Login");
 
         if (!validate()) {
-            onLoginFailed();
+            onLoginFailed("Login failed");
             return;
         }
 
@@ -80,15 +80,23 @@ public class LoginActivity extends AppCompatActivity {
         new LoginAsync(email, password).execute();
         /************************/
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+        //After Andrea create interface that returns db response msg, check the db response and show it on toastr.
+        String responseMsgDB = "success";  //it shows db response msg
+        if(responseMsgDB.equals("success")) {
+            new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        public void run() {
+                            // On complete call either onLoginSuccess or onLoginFailed
+                            onLoginSuccess();
+                            // onLoginFailed();
+                            progressDialog.dismiss();
+                        }
+                    }, 3000);
+        } else {
+            onLoginFailed(responseMsgDB);
+            return;
+        }
+
     }
 
 
@@ -115,8 +123,8 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+    public void onLoginFailed(String msg) {
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
 
         _loginButton.setEnabled(true);
     }

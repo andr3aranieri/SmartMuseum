@@ -58,7 +58,7 @@ public class SignupActivity extends AppCompatActivity {
         Log.d(TAG, "Signup");
 
         if (!validate()) {
-            onSignupFailed();
+            onSignupFailed("Login failed");
             return;
         }
 
@@ -84,16 +84,23 @@ public class SignupActivity extends AppCompatActivity {
         new SignupAsync(userModel).execute();
         /***********************************************/
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+        //After Andrea create interface that returns db response msg, check the db response and show it on toastr.
+        String responseMsgDB = "success";  //it shows db response msg
+        if(responseMsgDB.equals("success")) {
+            new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        public void run() {
+                            // On complete call either onSignupSuccess or onSignupFailed
+                            // depending on success
+                            onSignupSuccess();
+                            // onSignupFailed();
+                            progressDialog.dismiss();
+                        }
+                    }, 3000);
+        } else {
+            onSignupFailed(responseMsgDB);
+            return;
+        }
     }
 
 
@@ -103,8 +110,8 @@ public class SignupActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+    public void onSignupFailed(String msg) {
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
     }
