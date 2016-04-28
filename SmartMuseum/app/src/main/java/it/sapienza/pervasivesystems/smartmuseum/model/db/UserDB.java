@@ -7,6 +7,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 
+import it.sapienza.pervasivesystems.smartmuseum.business.SHA1Business;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 import it.sapienza.pervasivesystems.smartmuseum.neo4j.CypherRow;
 import it.sapienza.pervasivesystems.smartmuseum.neo4j.wsinterface.WSOperations;
@@ -46,7 +47,7 @@ public class UserDB extends DBManager {
     public boolean createUser(UserModel user) {
         boolean ret = false;
         try {
-            String cypher = "CREATE (n:User { name : '" + user.getName() + "', email : '" + user.getEmail() + "', password : '" + user.getPassword() + "', profileImage : '" + user.getProfileImage() + "' })";
+            String cypher = "CREATE (n:User { name : '" + user.getName() + "', email : '" + user.getEmail() + "', password : '" + SHA1Business.SHA1(user.getPassword()) + "', profileImage : '" + user.getProfileImage() + "' })";
             ret = this.wsOperations.getCypherResponse(cypher);
             Log.i("CREATE USER RESULT: : ", new Boolean(ret).toString());
         }
