@@ -17,7 +17,7 @@ import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.UserDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 
-public class SignupActivity extends AppCompatActivity implements SignupAsyncResponse {
+public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
 
 
@@ -81,7 +81,7 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
         userModel.setEmail(email);
         userModel.setPassword(password);
         userModel.setProfileImage("img111111111");
-        new SignupAsync(this, userModel).execute();
+        new SignupAsync(userModel).execute();
         /***********************************************/
 
         new android.os.Handler().postDelayed(
@@ -139,34 +139,18 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
 
         return valid;
     }
-
-    @Override
-    public void processFinish(boolean result) {
-        if(result) {
-            Log.i("SignupActivity", "processFinish> SIGNUP OK");
-        }
-        else {
-            Log.i("SignupActivity", "processFinish> SIGUP ERROR");
-        }
-    }
 }
 
 /***********************************************************************/
-/* Async Task to retrieve data from neo4j rest ws */
-interface SignupAsyncResponse {
-    void processFinish(boolean result);
-}
-
+/* ANDREA: Async test task for neo4j driver*/
 class SignupAsync extends AsyncTask<Void, Integer, String>
 {
-    private SignupAsyncResponse delegate;
-
     private UserModel userModel;
-    private boolean operationResult = false;
 
-    public SignupAsync(SignupAsyncResponse d, UserModel um) {
+    public SignupAsync() {}
+
+    public SignupAsync(UserModel um) {
         this.userModel = um;
-        this.delegate = d;
     }
 
     protected void onPreExecute (){
@@ -176,9 +160,9 @@ class SignupAsync extends AsyncTask<Void, Integer, String>
     protected String doInBackground(Void...arg0) {
         Log.d("SignupAsync","On doInBackground...");
 
-        this.operationResult = new UserDB().createUser(userModel);
+        boolean ret = new UserDB().createUser(userModel);
 
-        return "createUser result: " + this.operationResult;
+        return "createUser result: " + ret;
     }
 
     protected void onProgressUpdate(Integer...a){
@@ -186,6 +170,6 @@ class SignupAsync extends AsyncTask<Void, Integer, String>
     }
 
     protected void onPostExecute(String result) {
-        this.delegate.processFinish(this.operationResult);
+        Log.d("ANDREA", ""+result);
     }
 }

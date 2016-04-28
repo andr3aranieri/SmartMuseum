@@ -12,17 +12,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.sapienza.pervasivesystems.smartmuseum.R;
-import it.sapienza.pervasivesystems.smartmuseum.business.SHA1Business;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.UserDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 
-public class LoginActivity extends AppCompatActivity implements LoginAsyncResponse {
+public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
@@ -80,8 +76,8 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
         String password = _passwordText.getText().toString();
 
         // TODO: Implement your own authentication logic here.
-        /*******Start login async task******/
-        new LoginAsync(this, email, password).execute();
+        /*******ANDREA TEST******/
+        new LoginAsync(email, password).execute();
         /************************/
 
         new android.os.Handler().postDelayed(
@@ -147,36 +143,19 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
 
         return valid;
     }
-
-    @Override
-    public void processFinish(UserModel output) {
-        if(output != null) {
-            Log.i("LoginActivity", "processFinish> LOGIN OK");
-        }
-        else {
-            Log.i("LoginActivity", "processFinish> LOGIN ERROR");
-        }
-    }
 }
 
 /***********************************************************************/
-/* Async Task to retrieve data from neo4j rest ws */
-
-interface LoginAsyncResponse {
-    void processFinish(UserModel output);
-}
-
+/* ANDREA: Async test task for neo4j driver*/
 class LoginAsync extends AsyncTask<Void, Integer, String>
 {
-    public LoginAsyncResponse delegate = null;
-
     private String email, password;
-    private UserModel userModel = null;
 
-    public LoginAsync(LoginAsyncResponse d, String e, String p) {
+    public LoginAsync() {}
+
+    public LoginAsync(String e, String p) {
         this.email = e;
         this.password = p;
-        this.delegate = d;
     }
 
     protected void onPreExecute (){
@@ -186,16 +165,12 @@ class LoginAsync extends AsyncTask<Void, Integer, String>
     protected String doInBackground(Void...arg0) {
         Log.d("LoginAsync","On doInBackground...");
 
-        this.userModel = new UserDB().getUserByEmail(this.email);
-        try {
-            if(!(this.userModel != null && userModel.getPassword().trim().equalsIgnoreCase(SHA1Business.SHA1(this.password.trim())))) {
-                //LOGIN ERROR;
-                this.userModel = null;
-            }
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        UserModel userModel = new UserDB().getUserByEmail(this.email);
+        if(userModel != null && userModel.getPassword().trim().equalsIgnoreCase(this.password.trim())) {
+            Log.i("LOGIN", "SUCCESS");
+        }
+        else {
+            Log.i("LOGIN", "WRONG USERNAME OR PASSWORD");
         }
 
         return "You are at PostExecute";
@@ -206,7 +181,6 @@ class LoginAsync extends AsyncTask<Void, Integer, String>
     }
 
     protected void onPostExecute(String result) {
-        this.delegate.processFinish(this.userModel);
-        Log.d("LoginAsync", "FINISHED Async Task, invoked activity postback method");
+        Log.d("LoginAsync", ""+result);
     }
 }
