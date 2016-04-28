@@ -65,17 +65,11 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
         Log.d(TAG, "Login");
 
         if (!validate()) {
-            onLoginFailed();
+            onLoginFailed("Login failed");
             return;
         }
 
         _loginButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
 
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
@@ -84,16 +78,6 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
         /*******Start login async task******/
         new LoginAsync(this, email, password).execute();
         /************************/
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
     }
 
 
@@ -120,9 +104,8 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
         finish();
     }
 
-    public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
+    public void onLoginFailed(String msg) {
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
     }
 
@@ -153,12 +136,26 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
     public void processFinish(ILCMessage message) {
         Log.i("LoginActivity", message.getMessageText());
 
-        switch(message.getMessageType()) {
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+
+        switch (message.getMessageType()) {
             case SUCCESS:
-                //update UI;
+
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Authenticating...");
+                progressDialog.show();
+
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                onLoginSuccess();
+                                progressDialog.dismiss();
+                            }
+                        }, 3000);
                 break;
             case ERROR:
-                //update UI;
+                onLoginFailed(message.getMessageText());
                 break;
         }
     }

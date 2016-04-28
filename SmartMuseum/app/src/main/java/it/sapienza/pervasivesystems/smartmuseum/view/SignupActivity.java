@@ -59,17 +59,11 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
         Log.d(TAG, "Signup");
 
         if (!validate()) {
-            onSignupFailed();
+            onSignupFailed("Login failed");
             return;
         }
 
         _signupButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
-        progressDialog.show();
 
         String name = _nameText.getText().toString();
         String email = _emailText.getText().toString();
@@ -85,16 +79,6 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
         new SignupAsync(this, userModel).execute();
         /***********************************************/
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
     }
 
 
@@ -104,9 +88,8 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
         finish();
     }
 
-    public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
+    public void onSignupFailed(String msg) {
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
         _signupButton.setEnabled(true);
     }
 
@@ -144,16 +127,34 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
     @Override
     public void processFinish(ILCMessage message) {
         Log.i("SignupActivity", message.getMessageText());
+        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
+                R.style.AppTheme_Dark_Dialog);
 
         switch(message.getMessageType()) {
             case SUCCESS:
-                //update activity;
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                progressDialog.setIndeterminate(true);
+                                progressDialog.setMessage("Creating Account...");
+                                progressDialog.show();
+
+                                onSignupSuccess();
+                                progressDialog.dismiss();
+                            }
+                        }, 3000);
                 break;
             case ERROR:
-                //update activity;
+                onSignupFailed(message.getMessageText());
                 break;
             case WARNING:
-                //update activity;
+                Toast.makeText(getBaseContext(), message.getMessageText(), Toast.LENGTH_LONG).show();
+                onSignupSuccess();
+
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Creating Account...");
+                progressDialog.show();
+                progressDialog.dismiss();
                 break;
         }
     }
