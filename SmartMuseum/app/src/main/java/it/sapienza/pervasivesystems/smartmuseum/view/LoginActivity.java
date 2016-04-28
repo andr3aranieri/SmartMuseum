@@ -81,21 +81,20 @@ public class LoginActivity extends AppCompatActivity {
         /************************/
 
         //After Andrea create interface that returns db response msg, check the db response and show it on toastr.
-        String responseMsgDB = "success";  //it shows db response msg
-        if(responseMsgDB.equals("success")) {
-            new android.os.Handler().postDelayed(
-                    new Runnable() {
-                        public void run() {
-                            // On complete call either onLoginSuccess or onLoginFailed
+        final String responseMsgDB = "success";  //it shows db response msg
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        // On complete call either onLoginSuccess or onLoginFailed
+                        if (responseMsgDB.equals("success"))
                             onLoginSuccess();
-                            // onLoginFailed();
-                            progressDialog.dismiss();
-                        }
-                    }, 3000);
-        } else {
-            onLoginFailed(responseMsgDB);
-            return;
-        }
+                        else
+                            onLoginFailed(responseMsgDB);
+                        progressDialog.dismiss();
+                    }
+                }, 3000);
+
 
     }
 
@@ -155,40 +154,39 @@ public class LoginActivity extends AppCompatActivity {
 
 /***********************************************************************/
 /* ANDREA: Async test task for neo4j driver*/
-class LoginAsync extends AsyncTask<Void, Integer, String>
-{
+class LoginAsync extends AsyncTask<Void, Integer, String> {
     private String email, password;
 
-    public LoginAsync() {}
+    public LoginAsync() {
+    }
 
     public LoginAsync(String e, String p) {
         this.email = e;
         this.password = p;
     }
 
-    protected void onPreExecute (){
-        Log.d("LoginAsync","On pre Exceute......");
+    protected void onPreExecute() {
+        Log.d("LoginAsync", "On pre Exceute......");
     }
 
-    protected String doInBackground(Void...arg0) {
-        Log.d("LoginAsync","On doInBackground...");
+    protected String doInBackground(Void... arg0) {
+        Log.d("LoginAsync", "On doInBackground...");
 
         UserModel userModel = new UserDB().getUserByEmail(this.email);
-        if(userModel != null && userModel.getPassword().trim().equalsIgnoreCase(this.password.trim())) {
+        if (userModel != null && userModel.getPassword().trim().equalsIgnoreCase(this.password.trim())) {
             Log.i("LOGIN", "SUCCESS");
-        }
-        else {
+        } else {
             Log.i("LOGIN", "WRONG USERNAME OR PASSWORD");
         }
 
         return "You are at PostExecute";
     }
 
-    protected void onProgressUpdate(Integer...a){
+    protected void onProgressUpdate(Integer... a) {
         Log.d("LoginAsync", "You are in progress update ... " + a[0]);
     }
 
     protected void onPostExecute(String result) {
-        Log.d("LoginAsync", ""+result);
+        Log.d("LoginAsync", "" + result);
     }
 }

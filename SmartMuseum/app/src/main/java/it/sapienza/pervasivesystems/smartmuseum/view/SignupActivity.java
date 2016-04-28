@@ -85,22 +85,20 @@ public class SignupActivity extends AppCompatActivity {
         /***********************************************/
 
         //After Andrea create interface that returns db response msg, check the db response and show it on toastr.
-        String responseMsgDB = "success";  //it shows db response msg
-        if(responseMsgDB.equals("success")) {
-            new android.os.Handler().postDelayed(
-                    new Runnable() {
-                        public void run() {
-                            // On complete call either onSignupSuccess or onSignupFailed
-                            // depending on success
+        final String responseMsgDB = "success";  //it shows db response msg
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        // On complete call either onSignupSuccess or onSignupFailed
+                        // depending on success
+                        if (responseMsgDB.equals("success"))
                             onSignupSuccess();
-                            // onSignupFailed();
-                            progressDialog.dismiss();
-                        }
-                    }, 3000);
-        } else {
-            onSignupFailed(responseMsgDB);
-            return;
-        }
+                        else
+                            onSignupFailed(responseMsgDB);
+                        progressDialog.dismiss();
+                    }
+                }, 3000);
     }
 
 
@@ -150,33 +148,33 @@ public class SignupActivity extends AppCompatActivity {
 
 /***********************************************************************/
 /* ANDREA: Async test task for neo4j driver*/
-class SignupAsync extends AsyncTask<Void, Integer, String>
-{
+class SignupAsync extends AsyncTask<Void, Integer, String> {
     private UserModel userModel;
 
-    public SignupAsync() {}
+    public SignupAsync() {
+    }
 
     public SignupAsync(UserModel um) {
         this.userModel = um;
     }
 
-    protected void onPreExecute (){
-        Log.d("SignupAsync","On pre Exceute......");
+    protected void onPreExecute() {
+        Log.d("SignupAsync", "On pre Exceute......");
     }
 
-    protected String doInBackground(Void...arg0) {
-        Log.d("SignupAsync","On doInBackground...");
+    protected String doInBackground(Void... arg0) {
+        Log.d("SignupAsync", "On doInBackground...");
 
         boolean ret = new UserDB().createUser(userModel);
 
         return "createUser result: " + ret;
     }
 
-    protected void onProgressUpdate(Integer...a){
+    protected void onProgressUpdate(Integer... a) {
         Log.d("SignupAsync", "You are in progress update ... " + a[0]);
     }
 
     protected void onPostExecute(String result) {
-        Log.d("ANDREA", ""+result);
+        Log.d("ANDREA", "" + result);
     }
 }
