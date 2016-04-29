@@ -1,4 +1,4 @@
-package it.sapienza.pervasivesystems.smartmuseum.business;
+package it.sapienza.pervasivesystems.smartmuseum.business.cryptography;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

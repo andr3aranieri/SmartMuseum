@@ -7,7 +7,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 
-import it.sapienza.pervasivesystems.smartmuseum.business.SHA1Business;
+import it.sapienza.pervasivesystems.smartmuseum.business.cryptography.SHA1Business;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 import it.sapienza.pervasivesystems.smartmuseum.neo4j.CypherRow;
 import it.sapienza.pervasivesystems.smartmuseum.neo4j.wsinterface.WSOperations;

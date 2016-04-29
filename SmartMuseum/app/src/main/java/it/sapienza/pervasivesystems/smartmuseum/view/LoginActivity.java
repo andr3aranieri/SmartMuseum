@@ -18,7 +18,8 @@ import java.security.NoSuchAlgorithmException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.sapienza.pervasivesystems.smartmuseum.R;
-import it.sapienza.pervasivesystems.smartmuseum.business.SHA1Business;
+import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
+import it.sapienza.pervasivesystems.smartmuseum.business.cryptography.SHA1Business;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.UserDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
@@ -77,6 +78,11 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
         /*******Start login async task******/
         new LoginAsync(this, email, password).execute();
         /************************/
+
+        if(SmartMuseumApp.isUserInsideMuseum)
+            Log.i("LoginActivity", "The User is inside");
+        else
+            Log.i("LoginActivity", "The User is outside");
     }
 
 
