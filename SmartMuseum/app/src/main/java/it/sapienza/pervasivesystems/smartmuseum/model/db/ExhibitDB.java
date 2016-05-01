@@ -1,14 +1,23 @@
 package it.sapienza.pervasivesystems.smartmuseum.model.db;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import it.sapienza.pervasivesystems.smartmuseum.business.aws.AWSConfiguration;
+import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
+import it.sapienza.pervasivesystems.smartmuseum.neo4j.CypherRow;
+import it.sapienza.pervasivesystems.smartmuseum.neo4j.wsinterface.WSOperations;
 
 /**
  * Created by andrearanieri on 01/05/16.
  */
 public class ExhibitDB {
+
+    private WSOperations wsOperations = new WSOperations();
 
     public List<ExhibitModel> getSortedExhibitList() {
         List<ExhibitModel> exhibits = new ArrayList<ExhibitModel>();
@@ -101,5 +110,43 @@ public class ExhibitDB {
                 e = null;
         }
         return e;
+    }
+
+    public HashMap<String, ExhibitModel> getModelsFromDB() {
+        HashMap<String, ExhibitModel> hashMapExhibits = new HashMap<String, ExhibitModel>();
+        List<CypherRow<List<Object>>> rows = null;
+        try {
+            String cypher = "MATCH (e:Exhibit) return e";
+            rows = this.wsOperations.getCypherMultipleResults(cypher);
+            ExhibitModel exhibitModel = null;
+            ExhibitBusiness exhibitBusiness = new ExhibitBusiness();
+            for (CypherRow<List<Object>> row: rows) {
+                exhibitModel = this.readExhibit(row);
+                hashMapExhibits.put(exhibitBusiness.getExhibitHashmapKey(exhibitModel), exhibitModel);
+            }
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            hashMapExhibits = null;
+        }
+
+        return hashMapExhibits;
+    }
+
+    private ExhibitModel readExhibit(CypherRow row) {
+        LinkedTreeMap<String, String> objectMap = ((ArrayList<LinkedTreeMap<String,String>>)row.getRow()).get(0);
+        ExhibitModel exhibit = new ExhibitModel();
+        exhibit.setTitle(objectMap.get("title"));
+        exhibit.setShortDescription(objectMap.get("shortDescription"));
+        exhibit.setLongDescriptionURL("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("longDescription"))));
+        exhibit.setImage("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("image"))));
+        exhibit.setLocation(objectMap.get("location"));
+        exhibit.setOpeningHour(objectMap.get("openingHour"));
+        exhibit.setPeriod(objectMap.get("period"));
+        exhibit.setBeaconProximityUUID(objectMap.get("beaconProximityUUID"));
+        exhibit.setBeaconMajor(objectMap.get("beaconMajor"));
+        exhibit.setBeaconMinor(objectMap.get("beaconMinor"));
+        exhibit.setBeacon(objectMap.get("beacon"));
+        return exhibit;
     }
 }

@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements RangingDetection 
         Log.i("MainActivity", message.getMessageText());
         List<Beacon> listOfBeaconsDetected = (List<Beacon>) message.getMessageObject();
         for(Beacon b: listOfBeaconsDetected) {
-            Log.i("MainActivity", "Beacon detected: " + b.getMinor() + ":" + b.getMajor() + ", " + b.getMacAddress() + ", " + b.getRssi());
+            Log.i("MainActivity", "Beacon detected: " + b.getMajor() + ":" + b.getMinor() + ", " + b.getMacAddress() + ", " + b.getRssi());
         }
 
         //stop ranging;

@@ -14,6 +14,11 @@ public class ExhibitModel {
     private String location;
     private String openingHour;
     private String period;
+    private String beaconProximityUUID;
+    private String beaconMajor;
+    private String beaconMinor;
+    private String beacon;
+    private int idMuseum;
 
     public int getId() {
         return id;
@@ -85,5 +90,45 @@ public class ExhibitModel {
 
     public void setLongDescriptionURL(String longDescriptionURL) {
         this.longDescriptionURL = longDescriptionURL;
+    }
+
+    public int getIdMuseum() {
+        return idMuseum;
+    }
+
+    public void setIdMuseum(int idMuseum) {
+        this.idMuseum = idMuseum;
+    }
+
+    public String getBeaconProximityUUID() {
+        return beaconProximityUUID;
+    }
+
+    public void setBeaconProximityUUID(String beaconProximityUUID) {
+        this.beaconProximityUUID = beaconProximityUUID;
+    }
+
+    public String getBeaconMajor() {
+        return beaconMajor;
+    }
+
+    public void setBeaconMajor(String beaconMajor) {
+        this.beaconMajor = beaconMajor;
+    }
+
+    public String getBeaconMinor() {
+        return beaconMinor;
+    }
+
+    public void setBeaconMinor(String beaconMinor) {
+        this.beaconMinor = beaconMinor;
+    }
+
+    public String getBeacon() {
+        return beacon;
+    }
+
+    public void setBeacon(String beacon) {
+        this.beacon = beacon;
     }
 }

@@ -29,6 +29,13 @@ public class WSOperations {
         return nodes.getData() != null && nodes.getData().size() > 0 ? nodes.getData().get(0) : null;
     }
 
+    public List<CypherRow<List<Object>>> getCypherMultipleResults(String cypher) throws IOException {
+        CypherStatement statement = CypherStatement.Builder().withCypher(cypher).build();
+        CypherRequest request = CypherRequest.Builder().withStatement(statement).build();
+        CypherResultSet<List<Object>> result = this.neo4j.getCypherResultSet(request);
+        CypherNodeSet<List<Object>> nodes = result.getResults().get(0);
+        return nodes.getData();
+    }
     public boolean getCypherResponse(String cypher) throws  IOException {
         boolean success = false;
         CypherStatement statement = CypherStatement.Builder().withCypher(cypher).build();
