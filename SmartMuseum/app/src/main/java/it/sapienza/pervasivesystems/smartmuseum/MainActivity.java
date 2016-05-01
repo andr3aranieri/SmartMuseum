@@ -14,6 +14,7 @@ import java.util.List;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Ranging;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.RangingDetection;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
+import it.sapienza.pervasivesystems.smartmuseum.view.ListOfExhibitsActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.LoginActivity;
 
 public class MainActivity extends AppCompatActivity implements RangingDetection {
@@ -38,15 +39,15 @@ public class MainActivity extends AppCompatActivity implements RangingDetection 
         progressDialog.setMessage("Detecting your position. Please wait...");
         progressDialog.show();
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        goToFirstActivity();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+//        new android.os.Handler().postDelayed(
+//                new Runnable() {
+//                    public void run() {
+//                        goToFirstActivity();
+//                        progressDialog.dismiss();
+//                    }
+//                }, 3000);
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, ListOfExhibitsActivity.class);
         startActivity(intent);
     }
 
