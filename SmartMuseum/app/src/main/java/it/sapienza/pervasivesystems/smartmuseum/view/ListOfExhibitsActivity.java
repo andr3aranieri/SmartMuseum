@@ -1,18 +1,28 @@
 package it.sapienza.pervasivesystems.smartmuseum.view;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.estimote.sdk.Beacon;
+import com.estimote.sdk.SystemRequirementsChecker;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
+import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Ranging;
+import it.sapienza.pervasivesystems.smartmuseum.business.beacons.RangingDetection;
+import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.model.adapter.ExhibitModelArrayAdapter;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 
 
-public class ListOfExhibitsActivity extends AppCompatActivity {
+public class ListOfExhibitsActivity extends AppCompatActivity implements RangingDetection {
 
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
@@ -20,6 +30,8 @@ public class ListOfExhibitsActivity extends AppCompatActivity {
     private ListView listView;
     ExhibitModelArrayAdapter exhibitAdapter;
     ArrayList<ExhibitModel> dataItems = new ArrayList<ExhibitModel>();
+    private Ranging beaconsRanging;
+    private ExhibitBusiness exhibitBusiness = new ExhibitBusiness();
 
     /**
      * Called when the activity is first created.
@@ -50,8 +62,45 @@ public class ListOfExhibitsActivity extends AppCompatActivity {
 
         });
 
-
+        //start ranging;
+        this.beaconsRanging = new Ranging(this);
+        Ranging.rangingDetection = this;
+        this.beaconsRanging.initRanging();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SystemRequirementsChecker.checkWithDefaultDialogs(this);
+
+        Log.i("MainActivity", "Start Ranging");
+        this.beaconsRanging.startRanging();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.i("MainActivity", "Stop Ranging");
+        this.beaconsRanging.stopRanging();
+
+        super.onPause();
+    }
+
+    @Override
+    public void beaconsDetected(ILCMessage message) {
+        Log.i("ListOfExhibitsActivity", message.getMessageText());
+        List<Beacon> listOfBeaconsDetected = (List<Beacon>) message.getMessageObject();
+
+        ArrayList<ExhibitModel> newSortedList = this.exhibitBusiness.getSortedExhibits(listOfBeaconsDetected);
+
+        if(this.exhibitBusiness.hasOrderingChanged(this.dataItems, newSortedList)) {
+            this.dataItems = newSortedList;
+
+            Log.i("ListOfExhibitsActivity", "List Sorting...");
+            //REFRESH THE EXHIBIT LIST HERE
+            Log.i("ListOfExhibitsActivity", "List Sorted");
+        }
+
+    }
 }
 

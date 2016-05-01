@@ -18,8 +18,8 @@ public class ExhibitBusiness {
     private ExhibitDB exhibitDB = new ExhibitDB();
     private BeaconBusiness beaconBusiness = new BeaconBusiness();
 
-    public List<ExhibitModel> getSortedExhibits(List<Beacon> sortedBeacons) {
-        List<ExhibitModel> sortedExhibits = null;
+    public ArrayList<ExhibitModel> getSortedExhibits(List<Beacon> sortedBeacons) {
+        ArrayList<ExhibitModel> sortedExhibits = null;
         if(SmartMuseumApp.unsortedExhibits != null) {
             sortedExhibits = new ArrayList<ExhibitModel>();
             ExhibitModel em = null;
@@ -36,6 +36,12 @@ public class ExhibitBusiness {
             sortedExhibits = null;
         }
         return sortedExhibits;
+    }
+
+    public boolean hasOrderingChanged(ArrayList<ExhibitModel> oldList, ArrayList<ExhibitModel> newList) {
+        boolean hasChanged = true;
+
+        return hasChanged;
     }
 
     //key used to retrieve exhibits from the application level hashmap that contains all of them;
