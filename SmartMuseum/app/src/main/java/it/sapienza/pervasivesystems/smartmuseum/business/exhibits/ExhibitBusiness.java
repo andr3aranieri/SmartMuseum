@@ -40,6 +40,6 @@ public class ExhibitBusiness {
 
     //key used to retrieve exhibits from the application level hashmap that contains all of them;
     public String getExhibitHashmapKey(ExhibitModel em) {
-        return em.getBeaconMajor() + ":" + em.getBeaconMinor();
+        return em.getBeaconMajor().concat(":").concat(em.getBeaconMinor());
     }
 }
