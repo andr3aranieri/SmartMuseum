@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.estimote.sdk.Beacon;
+import com.estimote.sdk.MacAddress;
 import com.estimote.sdk.SystemRequirementsChecker;
 
 import java.util.ArrayList;
@@ -93,14 +94,69 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
 
         ArrayList<ExhibitModel> newSortedList = this.exhibitBusiness.getSortedExhibits(listOfBeaconsDetected);
 
-        if(this.exhibitBusiness.hasOrderingChanged(this.dataItems, newSortedList)) {
+        if (this.exhibitBusiness.hasOrderingChanged(this.dataItems, newSortedList)) {
             this.dataItems = newSortedList;
 
             Log.i("ListOfExhibitsActivity", "List Sorting...");
             //REFRESH THE EXHIBIT LIST HERE
             Log.i("ListOfExhibitsActivity", "List Sorted");
         }
+    }
 
+    private void buttonToTestBeaconsSorting() {
+        new RangingTest2(this).getSortedBeacons();
+    }
+}
+
+class RangingTest2 {
+    static int i = 1;
+
+    private ListOfExhibitsActivity act;
+
+    public RangingTest2(ListOfExhibitsActivity a) {
+        this.act = a;
+    }
+
+    public void getSortedBeacons() {
+        ILCMessage message = new ILCMessage();
+        List<Beacon> beacons = new ArrayList<Beacon>();
+        switch(i)
+
+        {
+            case 1:
+                i = 2;
+                Beacon b1 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 33510, 55725, 0, 0);
+                Beacon b2 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 20512, 25367, 0, 0);
+                Beacon b3 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 2048, 8066, 0, 0);
+                beacons.add(b1);
+                beacons.add(b2);
+                beacons.add(b3);
+                break;
+            case 2:
+                i = 3;
+                Beacon b4 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 20512, 25367, 0, 0);
+                Beacon b5 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 33510, 55725, 0, 0);
+                Beacon b6 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 2048, 8066, 0, 0);
+                beacons.add(b4);
+                beacons.add(b5);
+                beacons.add(b6);
+                break;
+            case 3:
+                i = 1;
+                Beacon b8 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 20512, 25367, 0, 0);
+                Beacon b9 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 33510, 55725, 0, 0);
+                Beacon b7 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 2048, 8066, 0, 0);
+                beacons.add(b7);
+                beacons.add(b8);
+                beacons.add(b9);
+                break;
+        }
+
+        message.setMessageType(ILCMessage.MessageType.DEBUG);
+        message.setMessageText("TEST");
+        message.setMessageObject(beacons);
+
+        this.act.beaconsDetected(message);
     }
 }
 

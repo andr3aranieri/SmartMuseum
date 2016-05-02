@@ -38,6 +38,10 @@ public class ExhibitBusiness {
         return sortedExhibits;
     }
 
+    public ExhibitModel getExhibitDetail(String key) {
+        return SmartMuseumApp.unsortedExhibits.get(key);
+    }
+
     public boolean hasOrderingChanged(ArrayList<ExhibitModel> oldList, ArrayList<ExhibitModel> newList) {
         boolean hasChanged = true;
 
