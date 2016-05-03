@@ -2,10 +2,10 @@
 
 Android app to enhance your museum experience.
 
-Techologies:
+Technologies:
 
 - Estimote Android SDK for beacons monitoring and ranging;
-- Neo4j fo data storing;
+- Neo4j hosted on Amazon EC2 ubuntu machine for data storing;
 - Square Retrofit Android library for interacting with Neo4j RESTful API;
-- Cloud Storage for images store (Amazon 3s, Google Cloud Storage or MongoDB GridFS);
+- Amazon S3 cloud storage for images store;
 - Square Picasso Android libraby to download images;
