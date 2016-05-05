@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.MacAddress;
@@ -27,7 +25,6 @@ import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusines
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.business.visits.VisitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.adapter.ExhibitModelArrayAdapter;
-import it.sapienza.pervasivesystems.smartmuseum.model.db.ExhibitDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 
@@ -242,6 +239,10 @@ class ListOfExhibitsAsync extends AsyncTask<Void, Integer, String> {
             this.message.setMessageObject(null);
         }
         return this.message.getMessageText();
+    }
+
+    protected void onPostExecute(String result) {
+        this.delegate.processFinish(this.message);
     }
 }
 
