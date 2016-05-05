@@ -36,6 +36,7 @@ public class WSOperations {
         CypherNodeSet<List<Object>> nodes = result.getResults().get(0);
         return nodes.getData();
     }
+
     public boolean getCypherResponse(String cypher) throws  IOException {
         boolean success = false;
         CypherStatement statement = CypherStatement.Builder().withCypher(cypher).build();

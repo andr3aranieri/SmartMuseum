@@ -212,6 +212,8 @@ class LoginAsync extends AsyncTask<Void, Integer, String> {
                 this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
                 this.message.setMessageText("Login successfully done. Welcome back to SmartMuseum!");
                 this.message.setMessageObject(this.userModel);
+
+                SmartMuseumApp.loggedUser = this.userModel;
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
