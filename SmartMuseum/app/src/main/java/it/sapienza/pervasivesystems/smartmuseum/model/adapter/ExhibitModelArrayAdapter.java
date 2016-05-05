@@ -2,6 +2,8 @@ package it.sapienza.pervasivesystems.smartmuseum.model.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
+import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfExhibitActivity;
+import it.sapienza.pervasivesystems.smartmuseum.view.ListOfExhibitsActivity;
 
 /**
  * Created by Guamaral on 5/1/2016.
@@ -78,7 +82,8 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
         exhibitWrapper.detailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, exhibitModel.getTitle(), Toast.LENGTH_LONG).show();
+//                Intent intent = new Intent(context, DetailOfExhibitActivity.class);
+//                startActivity(intent);
             }
 
         });

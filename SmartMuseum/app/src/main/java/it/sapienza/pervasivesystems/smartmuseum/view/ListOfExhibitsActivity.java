@@ -40,8 +40,6 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
     private VisitBusiness visitBusiness = new VisitBusiness();
     private boolean iAmWriting = false;
 
-    Button sortExhBtn;
-
     /**
      * Called when the activity is first created.
      */
@@ -49,11 +47,6 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_exhibits);
-
-        //// TODO: Remove the following 2 lines
-        sortExhBtn = (Button) findViewById(R.id.sortExhBtn);
-        sortExhBtn.setOnClickListener(this);
-
 
 //        //reading data from sorted exhibitList and set it to the adapter class
 //        this.dataItems = (ArrayList<ExhibitModel>) new ExhibitDB().getSortedExhibitList();
@@ -64,16 +57,6 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
 //        listView.setItemsCanFocus(false);
 //        listView.setAdapter(exhibitAdapter);
 
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View v,
-//                                    final int position, long id) {
-//
-//                System.out.println("***pos : " + position);
-//            }
-//
-//        });
 
         //start ranging;
         this.beaconsRanging = new Ranging(this);
@@ -150,12 +133,6 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         }
 
         this.iAmWriting = false;
-    }
-
-    //// TODO: Remove the onclick method
-    @Override
-    public void onClick(View v) {
-        new RangingTest2(this).getSortedBeacons();
     }
 }
 
