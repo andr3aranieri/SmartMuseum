@@ -9,8 +9,16 @@
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:scaleType="fitXY"
+        android:contentDescription="@string/app_name"
         android:src="@drawable/exhibitions_logo"
         />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort the exhibits"
+        android:id="@+id/sortExhBtn"
+        android:layout_gravity="center_horizontal" />
 
     <ListView
         android:id="@+id/listview"

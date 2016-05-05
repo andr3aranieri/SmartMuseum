@@ -25,11 +25,16 @@
             android:name=".view.SignupActivity"
             android:theme="@style/AppTheme.Dark" />
         <activity android:name=".view.ListOfExhibitsActivity" />
-        <activity android:name=".view.ItemOfExhibitsActivity"></activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <activity android:name=".view.ItemOfExhibitsActivity" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".view.DetailOfExhibitActivity"></activity>
     </application>
 
 </manifest>
