@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import java.util.Date;
+
+import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 
 /**
@@ -33,6 +36,7 @@ public class Ranging {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
                 if (!list.isEmpty()) {
+                    SmartMuseumApp.lastSeenBeaconTimeStamp = new Date();
                     ILCMessage message = new ILCMessage();
                     message.setMessageType(ILCMessage.MessageType.INFO);
                     message.setMessageText("Beacons detected");

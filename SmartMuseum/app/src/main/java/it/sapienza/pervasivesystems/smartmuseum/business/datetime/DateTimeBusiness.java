@@ -42,4 +42,10 @@ public class DateTimeBusiness {
     public long getMillis() {
         return this.calendar.getTime().getTime();
     }
+
+    static public Date getDateFromMillis(long millis) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(millis);
+        return cal.getTime();
+    }
 }

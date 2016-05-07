@@ -10,6 +10,7 @@ public class WorkofartModel {
     private String longDescription;
     private String longDescriptionURL;
     private String image;
+    private String audioURL;
 
     public int getId() {
         return id;
@@ -57,5 +58,13 @@ public class WorkofartModel {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getAudioURL() {
+        return audioURL;
+    }
+
+    public void setAudioURL(String audioURL) {
+        this.audioURL = audioURL;
     }
 }

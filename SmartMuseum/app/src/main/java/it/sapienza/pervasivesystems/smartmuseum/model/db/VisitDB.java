@@ -2,12 +2,20 @@ package it.sapienza.pervasivesystems.smartmuseum.model.db;
 
 import android.util.Log;
 
-import java.util.Date;
+import com.google.gson.internal.LinkedTreeMap;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import it.sapienza.pervasivesystems.smartmuseum.business.aws.AWSConfiguration;
 import it.sapienza.pervasivesystems.smartmuseum.business.datetime.DateTimeBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
+import it.sapienza.pervasivesystems.smartmuseum.neo4j.CypherRow;
 import it.sapienza.pervasivesystems.smartmuseum.neo4j.wsinterface.WSOperations;
 
 /**
@@ -15,6 +23,7 @@ import it.sapienza.pervasivesystems.smartmuseum.neo4j.wsinterface.WSOperations;
  */
 public class VisitDB {
     private WSOperations wsOperations = new WSOperations();
+    private ExhibitDB exhibitDB = new ExhibitDB();
 
     public boolean insertExhibitVisit(ExhibitModel em, UserModel um) {
         boolean result = false;
@@ -36,6 +45,26 @@ public class VisitDB {
             result = false;
         }
         return result;
+    }
+
+    public HashMap<String, VisitExhibitModel> getUserExhibitHistory(UserModel um) {
+        HashMap<String, VisitExhibitModel> userExhibitHistory = new HashMap<String, VisitExhibitModel>();
+        List<CypherRow<List<Object>>> rows = null;
+        try {
+            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: DID] -> (v:Visit {type:'exhibit'}) - [ve: WHAT_EXHIBIT] -> (e) RETURN e, v.timestamp";
+            rows = this.wsOperations.getCypherMultipleResults(cypher);
+            VisitExhibitModel visitExhibitModel = null;
+            for (CypherRow<List<Object>> row: rows) {
+                visitExhibitModel = this.readVisitExhibit(row);
+                userExhibitHistory.put(this.exhibitDB.getExhibitHashmapKey(visitExhibitModel.getExhibitModel()), visitExhibitModel);
+            }
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            userExhibitHistory = null;
+        }
+
+        return userExhibitHistory;
     }
 
     private String createCypherInsertExhibitVisit(ExhibitModel em, UserModel um){
@@ -87,5 +116,26 @@ public class VisitDB {
                 "MERGE (u)-[:DID]->(v)\n" +
                 "MERGE (v)-[:WHAT_WORKOFART]->(w)";
         return cypher;
+    }
+
+    private VisitExhibitModel readVisitExhibit(CypherRow row) {
+        LinkedTreeMap<String, String> objectMap = ((ArrayList<LinkedTreeMap<String,String>>)row.getRow()).get(0);
+        VisitExhibitModel visitExhibitModel = new VisitExhibitModel();
+        ExhibitModel exhibit = new ExhibitModel();
+        exhibit.setTitle(objectMap.get("e.title"));
+        exhibit.setShortDescription(objectMap.get("e.shortDescription"));
+        exhibit.setLongDescriptionURL("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("e.longDescription"))));
+        exhibit.setImage("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("e.image"))));
+        exhibit.setLocation(objectMap.get("e.location"));
+        exhibit.setOpeningHour(objectMap.get("e.openingHour"));
+        exhibit.setPeriod(objectMap.get("e.period"));
+        exhibit.setBeaconProximityUUID(objectMap.get("e.beaconProximityUUID"));
+        exhibit.setBeaconMajor(objectMap.get("e.beaconMajor"));
+        exhibit.setBeaconMinor(objectMap.get("e.beaconMinor"));
+        exhibit.setBeacon(objectMap.get("e.beacon"));
+
+        visitExhibitModel.setExhibitModel(exhibit);
+        visitExhibitModel.setTimeStamp(DateTimeBusiness.getDateFromMillis(Long.parseLong(objectMap.get("v.timestamp"))));
+        return visitExhibitModel;
     }
 }

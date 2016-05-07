@@ -18,6 +18,7 @@ public class ExhibitModel {
     private String beaconMajor;
     private String beaconMinor;
     private String beacon;
+    private String audioURL;
     private int idMuseum;
 
     public int getId() {
@@ -130,5 +131,13 @@ public class ExhibitModel {
 
     public void setBeacon(String beacon) {
         this.beacon = beacon;
+    }
+
+    public String getAudioURL() {
+        return audioURL;
+    }
+
+    public void setAudioURL(String audioURL) {
+        this.audioURL = audioURL;
     }
 }

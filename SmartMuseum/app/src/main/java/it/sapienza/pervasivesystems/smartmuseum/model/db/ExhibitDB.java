@@ -9,7 +9,6 @@ import java.util.List;
 import it.sapienza.pervasivesystems.smartmuseum.business.aws.AWSConfiguration;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
-import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 import it.sapienza.pervasivesystems.smartmuseum.neo4j.CypherRow;
 import it.sapienza.pervasivesystems.smartmuseum.neo4j.wsinterface.WSOperations;
 
@@ -77,7 +76,7 @@ public class ExhibitDB {
                 e1.setPeriod("01/05/2016 - 24/05/2016");
                 e1.setLocation("Floor 1, Room 3");
                 e = e1;
-            break;
+                break;
 
             case 2:
                 ExhibitModel e2 = new ExhibitModel();
@@ -91,7 +90,7 @@ public class ExhibitDB {
                 e2.setPeriod("01/05/2016 - 02/06/2016");
                 e2.setLocation("Floor 2, Room 1");
                 e = e2;
-            break;
+                break;
 
             case 3:
                 ExhibitModel e3 = new ExhibitModel();
@@ -105,7 +104,7 @@ public class ExhibitDB {
                 e3.setPeriod("01/05/2016 - 24/05/2016");
                 e3.setLocation("Floor 1, Room 5");
                 e = e3;
-            break;
+                break;
 
             default:
                 e = null;
@@ -134,25 +133,9 @@ public class ExhibitDB {
         return hashMapExhibits;
     }
 
-    public List<ExhibitModel> getUserExhibitHistory(UserModel um) {
-        List<ExhibitModel> userExhibitHistory = new ArrayList<ExhibitModel>();
-        List<CypherRow<List<Object>>> rows = null;
-        try {
-            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: DID] -> (v) - [ve: WHAT_EXHIBIT] -> (e) RETURN e";
-            rows = this.wsOperations.getCypherMultipleResults(cypher);
-            ExhibitModel exhibitModel = null;
-            ExhibitBusiness exhibitBusiness = new ExhibitBusiness();
-            for (CypherRow<List<Object>> row: rows) {
-                exhibitModel = this.readExhibit(row);
-                userExhibitHistory.add(exhibitModel);
-            }
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-            userExhibitHistory = null;
-        }
-
-        return userExhibitHistory;
+    //key used to retrieve exhibits from the application level hashmap that contains all of them;
+    public String getExhibitHashmapKey(ExhibitModel em) {
+        return em.getBeaconMajor().concat(":").concat(em.getBeaconMinor());
     }
 
     private ExhibitModel readExhibit(CypherRow row) {
@@ -169,6 +152,7 @@ public class ExhibitDB {
         exhibit.setBeaconMajor(objectMap.get("beaconMajor"));
         exhibit.setBeaconMinor(objectMap.get("beaconMinor"));
         exhibit.setBeacon(objectMap.get("beacon"));
+        exhibit.setAudioURL("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("audio"))));
         return exhibit;
     }
 }

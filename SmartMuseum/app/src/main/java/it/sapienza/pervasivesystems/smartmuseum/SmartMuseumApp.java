@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.Date;
 
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Monitoring;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
@@ -31,6 +32,7 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
     static public HashMap<String, ExhibitModel> visitedExhibits = null;
     static public int visitDistanceTreshold = 5;
     static public UserModel loggedUser = null;
+    static public Date lastSeenBeaconTimeStamp;
 
     private ExhibitDB exhibitDB = new ExhibitDB();
 
@@ -77,7 +79,7 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
         if(unsortedExhibits != null) {
             Log.i("Exhibit", "SOME DATA...");
             for (ExhibitModel em : unsortedExhibits.values()) {
-                Log.i("Exhibit", em.getTitle() + ", " + em.getImage() + ", " + em.getLongDescriptionURL());
+                Log.i("Exhibit", em.getTitle() + ", " + em.getImage() + ", " + em.getLongDescriptionURL() + ", " + em.getAudioURL());
             }
         }
         else {
