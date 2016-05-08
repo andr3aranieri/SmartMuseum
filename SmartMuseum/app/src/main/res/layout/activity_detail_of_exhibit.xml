@@ -56,7 +56,7 @@
             android:id="@+id/musicCurrentLoc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5px"
+            android:layout_marginLeft="15px"
             android:layout_marginTop="5px" />
 
         <SeekBar
@@ -64,9 +64,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="5px"
             android:layout_marginTop="5px"
             android:layout_weight="1"
+            android:layout_marginLeft="0px"
             android:maxHeight="2dip"
             android:minHeight="2dip" />
 
@@ -74,7 +74,7 @@
             android:id="@+id/musicDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5px"
+            android:layout_marginLeft="0px"
             android:layout_marginTop="5px" />
     </LinearLayout>
 
