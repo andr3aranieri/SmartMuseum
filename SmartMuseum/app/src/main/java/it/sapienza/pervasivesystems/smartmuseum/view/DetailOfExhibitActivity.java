@@ -103,13 +103,13 @@ public class DetailOfExhibitActivity extends AppCompatActivity implements View.O
             // Running this thread after 100 milliseconds
             seekHandler.postDelayed(this, 1000);
 
-            String totalTime = String.format("%d : , %d",
+            String totalTime = String.format("%d : %d",
                     TimeUnit.MILLISECONDS.toMinutes(totalDuration),
                     TimeUnit.MILLISECONDS.toSeconds(totalDuration) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(totalDuration))
             );
 
-            String curTime = String.format("%d : , %d",
+            String curTime = String.format("%d : %d",
                     TimeUnit.MILLISECONDS.toMinutes(currentDuration),
                     TimeUnit.MILLISECONDS.toSeconds(currentDuration) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentDuration))
