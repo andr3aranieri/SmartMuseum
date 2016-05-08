@@ -21,6 +21,7 @@ import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfExhibitActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfExhibitsActivity;
+import it.sapienza.pervasivesystems.smartmuseum.view.ListOfObjectsActivity;
 
 /**
  * Created by Guamaral on 5/1/2016.
@@ -75,15 +76,18 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, exhibitModel.getTitle(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(context, ListOfObjectsActivity.class);
+                intent.putExtra("exhibitId", exhibitModel.getId());
+                context.startActivity(intent);
             }
 
         });
         exhibitWrapper.detailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(context, DetailOfExhibitActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(context, DetailOfExhibitActivity.class);
+                intent.putExtra("exhibitId", exhibitModel.getId());
+                context.startActivity(intent);
             }
 
         });
@@ -107,3 +111,5 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
     }
 
 }
+
+
