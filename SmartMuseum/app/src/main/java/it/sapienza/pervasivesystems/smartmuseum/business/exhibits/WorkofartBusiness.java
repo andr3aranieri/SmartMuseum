@@ -1,5 +1,9 @@
 package it.sapienza.pervasivesystems.smartmuseum.business.exhibits;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import it.sapienza.pervasivesystems.smartmuseum.model.db.WorkofartDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
 
@@ -8,7 +12,29 @@ import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
  */
 public class WorkofartBusiness {
 
-    public String getWorkofartHashmapKey(ExhibitModel em, WorkofartModel wam) {
-        return em.getBeaconMajor().concat(":").concat(em.getBeaconMinor()).concat(new Integer(wam.getId()).toString());
+    private WorkofartDB workofartDB = new WorkofartDB();
+
+    public String getWorkofartHashmapKey(String exhibitKey, WorkofartModel wam) {
+        return this.workofartDB.getWorkofartHashmapKey(exhibitKey, wam);
+    }
+
+    public HashMap<String, WorkofartModel> getWorkofarts(ExhibitModel exhibitModel) {
+        return this.workofartDB.getWorkofarts(exhibitModel);
+    }
+
+    public ArrayList<WorkofartModel> getWorksofartList(HashMap<String, WorkofartModel> map) {
+        return new ArrayList<WorkofartModel>(map.values());
+    }
+
+    public WorkofartModel getWorkofartDetail(HashMap<String, WorkofartModel> map, String key) {
+        WorkofartModel workofartModel;
+        if (map.containsKey(key)) {
+            workofartModel = map.get(key);
+        }
+        else {
+            workofartModel = null;
+        }
+
+        return workofartModel;
     }
 }

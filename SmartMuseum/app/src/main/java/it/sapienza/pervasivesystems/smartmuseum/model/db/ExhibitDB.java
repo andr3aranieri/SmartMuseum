@@ -112,7 +112,7 @@ public class ExhibitDB {
         return e;
     }
 
-    public HashMap<String, ExhibitModel> getExhibitsFromDB() {
+    public HashMap<String, ExhibitModel> getExhibitsFromDB2() {
         HashMap<String, ExhibitModel> hashMapExhibits = new HashMap<String, ExhibitModel>();
         List<CypherRow<List<Object>>> rows = null;
         try {

@@ -4,8 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.estimote.sdk.Beacon;
@@ -14,6 +12,7 @@ import com.estimote.sdk.SystemRequirementsChecker;
 import com.estimote.sdk.Utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
@@ -21,12 +20,14 @@ import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.BeaconBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Ranging;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.RangingDetection;
+import it.sapienza.pervasivesystems.smartmuseum.business.datetime.DateTimeBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.business.visits.VisitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.adapter.ExhibitModelArrayAdapter;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
 
 
 public class ListOfExhibitsActivity extends AppCompatActivity implements RangingDetection, ListOfExhibitsAsyncResponse {
@@ -57,11 +58,15 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
 //        listView.setItemsCanFocus(false);
 //        listView.setAdapter(exhibitAdapter);
 
-
-        //start ranging;
-        this.beaconsRanging = new Ranging(this);
-        Ranging.rangingDetection = this;
-        this.beaconsRanging.initRanging();
+        if(SmartMuseumApp.noBeacons) {
+            this.loadExhibitsNoBeacons();
+        }
+        else {
+            //start ranging;
+            this.beaconsRanging = new Ranging(this);
+            Ranging.rangingDetection = this;
+            this.beaconsRanging.initRanging();
+        }
 
     }
 
@@ -72,45 +77,70 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
 
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
 
-        Log.i("MainActivity", "Start Ranging");
-        this.beaconsRanging.startRanging();
+        if(!SmartMuseumApp.noBeacons) {
+            Log.i("MainActivity", "Start Ranging");
+            this.beaconsRanging.startRanging();
+        }
     }
 
     @Override
     protected void onPause() {
-        Log.i("MainActivity", "Stop Ranging");
-        this.beaconsRanging.stopRanging();
+
+        if(!SmartMuseumApp.noBeacons) {
+            Log.i("MainActivity", "Stop Ranging");
+            this.beaconsRanging.stopRanging();
+        }
 
         super.onPause();
     }
 
     @Override
     public void beaconsDetected(ILCMessage message) {
-        Log.i("ListOfExhibitsActivity", message.getMessageText());
         List<Beacon> listOfBeaconsDetected = (List<Beacon>) message.getMessageObject();
 
-        ArrayList<ExhibitModel> newSortedList = this.exhibitBusiness.getSortedExhibits(listOfBeaconsDetected);
+        boolean firstTime = false;
+        if (SmartMuseumApp.lastOrderingTimeStamp == null) {
+            SmartMuseumApp.lastOrderingTimeStamp = new Date();
+            firstTime = true;
+        }
+        else {
+            firstTime = false;
+        }
 
-        if (this.exhibitBusiness.hasOrderingChanged(this.dataItems, newSortedList)) {
+        int howManySecondsFromLastOrdering = DateTimeBusiness.howManySecondsFromDate(SmartMuseumApp.lastOrderingTimeStamp);
+        Log.i("ListOfExhibitsActivity", howManySecondsFromLastOrdering + " seconds since last ordering> firstTIme: " + firstTime);
 
-            //reading data from sorted exhibitList and set it to the adapter class
-            this.dataItems = newSortedList;
-            exhibitAdapter = new ExhibitModelArrayAdapter(ListOfExhibitsActivity.this, R.layout.activity_item_of_exhibits, dataItems);
+        //we reorder list only after a period of time from the last ordering;
+        if (firstTime || (howManySecondsFromLastOrdering > SmartMuseumApp.exhibitsReorderingPeriod)) {
+            Log.i("ListOfExhibitsActivity", howManySecondsFromLastOrdering + " seconds since last ordering> new ordering");
 
-            // Getting a reference to listview of activity_item_of_exhibits layout file
-            listView = (ListView) findViewById(R.id.listview);
-            listView.setItemsCanFocus(false);
-            listView.setAdapter(exhibitAdapter);
+            SmartMuseumApp.lastOrderingTimeStamp = new Date();
 
-//            Log.i("ListOfExhibitsActivity", "List Sorting...");
-            //REFRESH THE EXHIBIT LIST HERE
-//            Log.i("ListOfExhibitsActivity", "List Sorted");
+            ArrayList<ExhibitModel> newSortedList = this.exhibitBusiness.getSortedExhibits(listOfBeaconsDetected);
+
+            if (newSortedList != null && (this.dataItems == null || this.dataItems.size() == 0 || this.exhibitBusiness.hasOrderingChanged(this.dataItems, newSortedList))) {
+                Log.i("ListOfExhibitsActivity", howManySecondsFromLastOrdering + " seconds since last ordering> order changed... reorder list");
+                //reading data from sorted exhibitList and set it to the adapter class
+                this.dataItems = newSortedList;
+                //static variable to understand if the user is detecting some beacon or not;
+                SmartMuseumApp.detectedSortedExhibits = this.dataItems;
+                exhibitAdapter = new ExhibitModelArrayAdapter(ListOfExhibitsActivity.this, R.layout.activity_item_of_exhibits, dataItems);
+
+                // Getting a reference to listview of activity_item_of_exhibits layout file
+                listView = (ListView) findViewById(R.id.listview);
+                listView.setItemsCanFocus(false);
+                listView.setAdapter(exhibitAdapter);
+            } else {
+                Log.i("ListOfExhibitsActivity", howManySecondsFromLastOrdering + " seconds since last ordering> order did not change. Doing nothing.");
+            }
+        } else {
+            Log.i("ListOfExhibitsActivity", howManySecondsFromLastOrdering + " seconds since last ordering> not ordering... maybe inserting a visit");
         }
 
         //if the user is nearer than a treshold to the nearest beacon, we store only once the visit on the DB;
         Beacon beacon = listOfBeaconsDetected.get(0); //nearest beacon;
         double estimatedDistance = Utils.computeAccuracy(beacon);
-//        Log.i("ListOfExhibitsActivity", "The nearest beacon is at " + estimatedDistance + " meters!");
+        Log.i("ListOfExhibitsActivity", "The nearest beacon is at " + estimatedDistance + " meters!");
         if (estimatedDistance > -1 && estimatedDistance < SmartMuseumApp.visitDistanceTreshold) {
             String key = this.beaconBusiness.getBeaconHashmapKey(beacon);
             ExhibitModel em = SmartMuseumApp.unsortedExhibits.get(key);
@@ -119,10 +149,11 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
                 new ListOfExhibitsAsync(this, em, SmartMuseumApp.loggedUser).execute();
                 Log.i("ListOfExhibitsActivity", "Done calling visit registration async");
                 this.iAmWriting = true;
+            } else {
+                Log.i("ListOfExhibitsActivity", "DIDN'T WRITE: " + this.iAmWriting + ", " + SmartMuseumApp.unsortedExhibits);
             }
         }
     }
-
 
     @Override
     public void processFinish(ILCMessage message) {
@@ -133,6 +164,16 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         }
 
         this.iAmWriting = false;
+    }
+
+    private void loadExhibitsNoBeacons() {
+        this.dataItems = new ExhibitBusiness().getUnorderedExhibitList(SmartMuseumApp.unsortedExhibits);
+        exhibitAdapter = new ExhibitModelArrayAdapter(ListOfExhibitsActivity.this, R.layout.activity_item_of_exhibits, dataItems);
+
+        // Getting a reference to listview of activity_item_of_exhibits layout file
+        listView = (ListView) findViewById(R.id.listview);
+        listView.setItemsCanFocus(false);
+        listView.setAdapter(exhibitAdapter);
     }
 }
 
@@ -206,7 +247,10 @@ class ListOfExhibitsAsync extends AsyncTask<Void, Integer, String> {
     }
 
     protected String doInBackground(Void... arg0) {
-        if (this.visitBusiness.insertExhibitVisit(this.exhibitModel, this.userModel)) {
+        VisitExhibitModel vme = new VisitExhibitModel();
+        vme.setTimeStamp(new Date());
+        vme.setExhibitModel(this.exhibitModel);
+        if (this.visitBusiness.insertExhibitVisit(vme.getTimeStamp(), vme.getExhibitModel(), this.userModel)) {
             this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
             this.message.setMessageText("Visit registered!");
             this.message.setMessageObject(this.exhibitModel);

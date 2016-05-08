@@ -2,20 +2,22 @@ package it.sapienza.pervasivesystems.smartmuseum.view;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
 import com.squareup.picasso.Picasso;
-import java.util.concurrent.TimeUnit;
+
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
-import it.sapienza.pervasivesystems.smartmuseum.model.db.ExhibitDB;
+import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 
 public class DetailOfExhibitActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
@@ -42,9 +44,12 @@ public class DetailOfExhibitActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_detail_of_exhibit);
 
         Intent mIntent = getIntent();
-        int exhibitId = mIntent.getIntExtra("exhibitId", 1);
+//        int exhibitId = mIntent.getIntExtra("exhibitId", 1);
 
-        ExhibitModel exhDtl = (ExhibitModel) new ExhibitDB().getExhibitDetail(exhibitId);
+//        ExhibitModel exhDtl = (ExhibitModel) new ExhibitDB().getExhibitDetail(exhibitId);
+
+        String exhibitKey = mIntent.getStringExtra("exhibitId");
+        ExhibitModel exhDtl = (ExhibitModel) new ExhibitBusiness().getExhibitDetailFAKE(exhibitKey);
 
         image = (ImageView) findViewById(R.id.exh_dtl_image);
         title = (TextView) findViewById(R.id.exh_dtl_title);
