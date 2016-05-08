@@ -58,6 +58,12 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
 //        listView.setItemsCanFocus(false);
 //        listView.setAdapter(exhibitAdapter);
 
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if(SmartMuseumApp.noBeacons) {
             this.loadExhibitsNoBeacons();
         }
