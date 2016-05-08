@@ -4,7 +4,7 @@ package it.sapienza.pervasivesystems.smartmuseum.model.entity;
  * Created by andrearanieri on 04/05/16.
  */
 public class WorkofartModel {
-    private int id;
+    private int idWork;
     private String title;
     private String shortDescription;
     private String longDescription;
@@ -12,12 +12,12 @@ public class WorkofartModel {
     private String image;
     private String audioURL;
 
-    public int getId() {
-        return id;
+    public int getIdWork() {
+        return idWork;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdWork(int idWork) {
+        this.idWork = idWork;
     }
 
     public String getTitle() {

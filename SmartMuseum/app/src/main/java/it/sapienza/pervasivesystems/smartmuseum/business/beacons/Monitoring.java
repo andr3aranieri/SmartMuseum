@@ -1,12 +1,14 @@
 package it.sapienza.pervasivesystems.smartmuseum.business.beacons;
 
 import android.content.ContextWrapper;
+import android.util.Log;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,16 +28,22 @@ public class Monitoring {
         beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> list) {
-                app.showNotification(
-                        "Welcome to Smart Museum!",
-                        "Enjoy your visit with our app. The more you know, the more you enjoy.");
+                Log.i("Monitoring", "OnEnteredRegion. DetectedExhibits: " + app.detectedSortedExhibits + ", lastSeenBeaconTimeStamp: " + app.lastSeenBeaconTimeStamp);
+                if(app.lastSeenBeaconTimeStamp == null && (app.detectedSortedExhibits == null || app.detectedSortedExhibits.size() == 0)) {
+                    app.showNotification(
+                            "Welcome to Smart Museum!",
+                            "Enjoy your visit with our app. The more you know, the more you enjoy.");
+                }
             }
 
             @Override
             public void onExitedRegion(Region region) {
-                app.showNotification(
-                        "Good Bye",
-                        "We hope to see you soon!");
+                Log.i("Monitoring", "OnExitRegion. DetectedExhibits: " + app.detectedSortedExhibits + ", lastSeenBeaconTimeStamp: " + app.lastSeenBeaconTimeStamp);
+                if((app.detectedSortedExhibits == null || app.detectedSortedExhibits.size() == 0) && (app.lastSeenBeaconTimeStamp != null && app.lastSeenBeaconTimeStamp.getTime() - new Date().getTime() > 60000)) {
+                    app.showNotification(
+                            "Good Bye",
+                            "We hope to see you soon!");
+                }
             }
         });
 

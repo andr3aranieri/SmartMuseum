@@ -1,5 +1,7 @@
 package it.sapienza.pervasivesystems.smartmuseum.business.visits;
 
+import java.util.Date;
+
 import it.sapienza.pervasivesystems.smartmuseum.model.db.VisitDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
@@ -10,7 +12,7 @@ import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 public class VisitBusiness {
     private VisitDB visitDB = new VisitDB();
 
-    public boolean insertExhibitVisit(ExhibitModel em, UserModel um) {
-        return this.visitDB.insertExhibitVisit(em, um);
+    public boolean insertExhibitVisit(Date timeStamp, ExhibitModel em, UserModel um) {
+        return this.visitDB.insertExhibitVisit(timeStamp, em, um);
     }
 }

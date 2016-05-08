@@ -8,7 +8,6 @@ import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.business.aws.AWSConfiguration;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
-import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.WorkofartBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
 import it.sapienza.pervasivesystems.smartmuseum.neo4j.CypherRow;
@@ -19,19 +18,19 @@ import it.sapienza.pervasivesystems.smartmuseum.neo4j.wsinterface.WSOperations;
  */
 public class WorkofartDB {
     private WSOperations wsOperations = new WSOperations();
-    private WorkofartBusiness workofartBusiness = new WorkofartBusiness();
+    private ExhibitDB exhibitDB = new ExhibitDB();
 
-    public HashMap<String, WorkofartModel> getWorkofarts(ExhibitModel exhibit) {
+    public HashMap<String, WorkofartModel> getWorkofarts(ExhibitModel em) {
         HashMap<String, WorkofartModel> hashMapWorkofarts = new HashMap<String, WorkofartModel>();
         List<CypherRow<List<Object>>> rows = null;
         try {
-            String cypher = "MATCH (e:Exhibit) return e";
+            String cypher = "MATCH (e:Exhibit {beaconMajor: '" + em.getBeaconMajor() + "', beaconMinor:'" + em.getBeaconMinor() + "'}) <- [r:BELONGS_TO] - (woa:Workofart) return woa";
             rows = this.wsOperations.getCypherMultipleResults(cypher);
             WorkofartModel workofartModel = null;
             ExhibitBusiness exhibitBusiness = new ExhibitBusiness();
             for (CypherRow<List<Object>> row: rows) {
                 workofartModel = this.readWorkofart(row);
-                hashMapWorkofarts.put(this.workofartBusiness.getWorkofartHashmapKey(exhibit, workofartModel), workofartModel);
+                hashMapWorkofarts.put(this.getWorkofartHashmapKey(this.exhibitDB.getExhibitHashmapKey(em), workofartModel), workofartModel);
             }
         }
         catch(Exception ex) {
@@ -42,9 +41,14 @@ public class WorkofartDB {
         return hashMapWorkofarts;
     }
 
+    public String getWorkofartHashmapKey(String exhibitKey, WorkofartModel wam) {
+        return exhibitKey.concat(new Integer(wam.getIdWork()).toString());
+    }
+
     private WorkofartModel readWorkofart(CypherRow row) {
         LinkedTreeMap<String, String> objectMap = ((ArrayList<LinkedTreeMap<String,String>>)row.getRow()).get(0);
         WorkofartModel workofartModel = new WorkofartModel();
+        workofartModel.setIdWork(Integer.parseInt((objectMap.get("idWork"))));
         workofartModel.setTitle(objectMap.get("title"));
         workofartModel.setShortDescription(objectMap.get("shortDescription"));
         workofartModel.setLongDescription("");

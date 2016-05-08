@@ -48,4 +48,9 @@ public class DateTimeBusiness {
         cal.setTimeInMillis(millis);
         return cal.getTime();
     }
+
+    static public int howManySecondsFromDate(Date fromDate) {
+        long millis = new Date().getTime() - fromDate.getTime();
+        return (int) (millis / 1000);
+    }
 }

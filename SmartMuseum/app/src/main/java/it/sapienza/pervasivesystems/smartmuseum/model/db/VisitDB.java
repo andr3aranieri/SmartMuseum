@@ -25,21 +25,21 @@ public class VisitDB {
     private WSOperations wsOperations = new WSOperations();
     private ExhibitDB exhibitDB = new ExhibitDB();
 
-    public boolean insertExhibitVisit(ExhibitModel em, UserModel um) {
+    public boolean insertExhibitVisit(Date timeStamp, ExhibitModel em, UserModel um) {
         boolean result = false;
         try {
-            result = this.wsOperations.getCypherResponse(this.createCypherInsertExhibitVisit(em, um));
+            result = this.wsOperations.getCypherResponse(this.createCypherInsertExhibitVisit(timeStamp, em, um));
         } catch (Exception ex) {
             ex.printStackTrace();
             result = false;
-        }
+            }
         return result;
     }
 
-    public boolean insertWorkofartVisit(WorkofartModel wm, UserModel um) {
+    public boolean insertWorkofartVisit(Date timeStamp, WorkofartModel wm, UserModel um) {
         boolean result = false;
         try {
-            result = this.wsOperations.getCypherResponse(this.createCypherInsertWorkofartVisit(wm, um));
+            result = this.wsOperations.getCypherResponse(this.createCypherInsertWorkofartVisit(timeStamp, wm, um));
         } catch (Exception ex) {
             ex.printStackTrace();
             result = false;
@@ -51,7 +51,7 @@ public class VisitDB {
         HashMap<String, VisitExhibitModel> userExhibitHistory = new HashMap<String, VisitExhibitModel>();
         List<CypherRow<List<Object>>> rows = null;
         try {
-            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: DID] -> (v:Visit {type:'exhibit'}) - [ve: WHAT_EXHIBIT] -> (e) RETURN e, v.timestamp";
+            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'exhibit'}) - [ve: WHAT_EXHIBIT] -> (e) RETURN e, v.timestamp";
             rows = this.wsOperations.getCypherMultipleResults(cypher);
             VisitExhibitModel visitExhibitModel = null;
             for (CypherRow<List<Object>> row: rows) {
@@ -67,8 +67,28 @@ public class VisitDB {
         return userExhibitHistory;
     }
 
-    private String createCypherInsertExhibitVisit(ExhibitModel em, UserModel um){
-        DateTimeBusiness dateTimeBusiness = new DateTimeBusiness(new Date());
+    public HashMap<String, VisitExhibitModel> getTodayUserExhibitHistory(UserModel um) {
+        HashMap<String, VisitExhibitModel> userExhibitHistory = new HashMap<String, VisitExhibitModel>();
+        List<CypherRow<List<Object>>> rows = null;
+        try {
+            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'exhibit'}) - [ve: WHAT_EXHIBIT] -> (e) RETURN e, v.timestamp";
+            rows = this.wsOperations.getCypherMultipleResults(cypher);
+            VisitExhibitModel visitExhibitModel = null;
+            for (CypherRow<List<Object>> row: rows) {
+                visitExhibitModel = this.readVisitExhibit(row);
+                userExhibitHistory.put(this.exhibitDB.getExhibitHashmapKey(visitExhibitModel.getExhibitModel()), visitExhibitModel);
+            }
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            userExhibitHistory = null;
+        }
+
+        return userExhibitHistory;
+    }
+
+    private String createCypherInsertExhibitVisit(Date ts, ExhibitModel em, UserModel um){
+        DateTimeBusiness dateTimeBusiness = new DateTimeBusiness(ts);
         int year = dateTimeBusiness.getYear(),
                 month = dateTimeBusiness.getMonth(),
                 day = dateTimeBusiness.getDayOfMonth(),
@@ -86,7 +106,7 @@ public class VisitDB {
                 "WITH v\n" +
                 "MATCH (u:User {email:'" + um.getEmail() + "'})\n" +
                 "MATCH (e:Exhibit {beaconMajor:'" + em.getBeaconMajor() + "', beaconMinor:'" + em.getBeaconMinor() + "'})\n" +
-                "MERGE (u)-[:DID]->(v)\n" +
+                "MERGE (u)-[:VISITED]->(v)\n" +
                 "MERGE (v)-[:WHAT_EXHIBIT]->(e)";
 
         Log.i("CYPHER", cypher);
@@ -94,8 +114,8 @@ public class VisitDB {
         return cypher;
     }
 
-    private String createCypherInsertWorkofartVisit(WorkofartModel wm, UserModel um){
-        DateTimeBusiness dateTimeBusiness = new DateTimeBusiness(new Date());
+    private String createCypherInsertWorkofartVisit(Date ts, WorkofartModel wm, UserModel um){
+        DateTimeBusiness dateTimeBusiness = new DateTimeBusiness(ts);
         int year = dateTimeBusiness.getYear(),
                 month = dateTimeBusiness.getMonth(),
                 day = dateTimeBusiness.getDayOfMonth(),
@@ -112,8 +132,8 @@ public class VisitDB {
                 "MERGE (s)<-[:HAPPENED_AT]-(v: Visit {type:'exhibit',timestamp:'" + timeStamp + "'})\n" +
                 "WITH v\n" +
                 "MATCH (u:User {email:'" + um.getEmail() + "'})\n" +
-                "MATCH (w:Workofart {id:" + wm.getId() + "})\n" +
-                "MERGE (u)-[:DID]->(v)\n" +
+                "MATCH (w:Workofart {id:" + wm.getIdWork() + "})\n" +
+                "MERGE (u)-[:VISITED]->(v)\n" +
                 "MERGE (v)-[:WHAT_WORKOFART]->(w)";
         return cypher;
     }
@@ -122,17 +142,18 @@ public class VisitDB {
         LinkedTreeMap<String, String> objectMap = ((ArrayList<LinkedTreeMap<String,String>>)row.getRow()).get(0);
         VisitExhibitModel visitExhibitModel = new VisitExhibitModel();
         ExhibitModel exhibit = new ExhibitModel();
-        exhibit.setTitle(objectMap.get("e.title"));
-        exhibit.setShortDescription(objectMap.get("e.shortDescription"));
-        exhibit.setLongDescriptionURL("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("e.longDescription"))));
-        exhibit.setImage("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("e.image"))));
-        exhibit.setLocation(objectMap.get("e.location"));
-        exhibit.setOpeningHour(objectMap.get("e.openingHour"));
-        exhibit.setPeriod(objectMap.get("e.period"));
-        exhibit.setBeaconProximityUUID(objectMap.get("e.beaconProximityUUID"));
-        exhibit.setBeaconMajor(objectMap.get("e.beaconMajor"));
-        exhibit.setBeaconMinor(objectMap.get("e.beaconMinor"));
-        exhibit.setBeacon(objectMap.get("e.beacon"));
+        exhibit.setTitle(objectMap.get("title"));
+        exhibit.setShortDescription(objectMap.get("shortDescription"));
+//        exhibit.setLongDescriptionURL("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("e.longDescription"))));
+        exhibit.setLongDescription(objectMap.get("longDescription"));
+        exhibit.setImage("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("image"))));
+        exhibit.setLocation(objectMap.get("location"));
+        exhibit.setOpeningHour(objectMap.get("openingHour"));
+        exhibit.setPeriod(objectMap.get("period"));
+        exhibit.setBeaconProximityUUID(objectMap.get("beaconProximityUUID"));
+        exhibit.setBeaconMajor(objectMap.get("beaconMajor"));
+        exhibit.setBeaconMinor(objectMap.get("beaconMinor"));
+        exhibit.setBeacon(objectMap.get("beacon"));
 
         visitExhibitModel.setExhibitModel(exhibit);
         visitExhibitModel.setTimeStamp(DateTimeBusiness.getDateFromMillis(Long.parseLong(objectMap.get("v.timestamp"))));

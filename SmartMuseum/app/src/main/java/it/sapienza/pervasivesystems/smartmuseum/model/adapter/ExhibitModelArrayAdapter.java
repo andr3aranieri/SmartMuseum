@@ -3,7 +3,6 @@ package it.sapienza.pervasivesystems.smartmuseum.model.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +10,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
+import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfExhibitActivity;
-import it.sapienza.pervasivesystems.smartmuseum.view.ListOfExhibitsActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfObjectsActivity;
 
 /**
@@ -77,7 +75,8 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ListOfObjectsActivity.class);
-                intent.putExtra("exhibitId", exhibitModel.getId());
+//                intent.putExtra("exhibitId", exhibitModel.getId());
+                intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
                 context.startActivity(intent);
             }
 
@@ -86,7 +85,8 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailOfExhibitActivity.class);
-                intent.putExtra("exhibitId", exhibitModel.getId());
+//                intent.putExtra("exhibitId", exhibitModel.getId());
+                intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
                 context.startActivity(intent);
             }
 
