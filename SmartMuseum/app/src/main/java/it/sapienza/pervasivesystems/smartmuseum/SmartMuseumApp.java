@@ -65,8 +65,8 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
         //initial loading the unordered exhibits from DB (we'll order this list in the list of exhibits view during beacons ranging);
         new LoadExhibitsAsync(this).execute();
 
-        //initial loading of the today user exhibit history not to store a visit more than once;
-        new LoadExhibitsHistoryAsync(this).execute();
+//        //initial loading of the today user exhibit history not to store a visit more than once;
+//        new LoadExhibitsHistoryAsync(this).execute();
 
         visitedExhibits = new HashMap<String, ExhibitModel>();
     }
