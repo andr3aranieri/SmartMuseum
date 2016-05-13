@@ -20,6 +20,7 @@ public class ExhibitModel {
     private String beacon;
     private String audioURL;
     private int idMuseum;
+    private String color;
 
     public int getId() {
         return id;
@@ -139,5 +140,13 @@ public class ExhibitModel {
 
     public void setAudioURL(String audioURL) {
         this.audioURL = audioURL;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

@@ -12,6 +12,7 @@ public class WorkofartModel {
     private String image;
     private String audioURL;
     private ExhibitModel exhibitModel;
+    private String color;
 
     public int getIdWork() {
         return idWork;
@@ -75,5 +76,13 @@ public class WorkofartModel {
 
     public void setExhibitModel(ExhibitModel exhibitModel) {
         this.exhibitModel = exhibitModel;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

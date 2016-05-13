@@ -49,7 +49,8 @@ public class DetailOfExhibitActivity extends AppCompatActivity implements View.O
 //        ExhibitModel exhDtl = (ExhibitModel) new ExhibitDB().getExhibitDetail(exhibitId);
 
         String exhibitKey = mIntent.getStringExtra("exhibitId");
-        ExhibitModel exhDtl = (ExhibitModel) new ExhibitBusiness().getExhibitDetailFAKE(exhibitKey);
+//        ExhibitModel exhDtl = (ExhibitModel) new ExhibitBusiness().getExhibitDetailFAKE(exhibitKey);
+        ExhibitModel exhDtl = (ExhibitModel) new ExhibitBusiness().getExhibitDetail(exhibitKey);
 
         image = (ImageView) findViewById(R.id.exh_dtl_image);
         title = (TextView) findViewById(R.id.exh_dtl_title);

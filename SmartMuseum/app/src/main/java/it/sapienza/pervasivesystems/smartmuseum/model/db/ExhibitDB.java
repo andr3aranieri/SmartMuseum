@@ -164,6 +164,7 @@ public class ExhibitDB {
         ExhibitModel exhibit = new ExhibitModel();
         exhibit.setTitle(objectMap.get("title"));
         exhibit.setShortDescription(objectMap.get("shortDescription"));
+        exhibit.setLongDescription(objectMap.get("longDescription"));
         exhibit.setLongDescriptionURL("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("longDescription"))));
         exhibit.setImage("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("image"))));
         exhibit.setLocation(objectMap.get("location"));
