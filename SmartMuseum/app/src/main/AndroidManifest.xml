@@ -35,7 +35,9 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".view.DetailOfExhibitActivity" />
-        <activity android:name=".view.ListOfObjectsActivity"></activity>
+        <activity android:name=".view.ListOfObjectsActivity" />
+        <activity android:name=".view.ItemOfObjectsActivity" />
+        <activity android:name=".view.DetailOfObjectActivity"></activity>
     </application>
 
 </manifest>
