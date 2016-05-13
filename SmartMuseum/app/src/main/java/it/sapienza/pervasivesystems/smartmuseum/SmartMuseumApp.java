@@ -16,33 +16,33 @@ import java.util.HashMap;
 
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Monitoring;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.WorkofartBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.ExhibitDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
-import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
 
 /**
  * Created by andrearanieri on 21/04/16.
  */
-public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResponse, LoadExhibitHistoryAsyncResponse {
+public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResponse, LoadExhibitHistoryAsyncResponse, LoadWorksofartHistoryAsyncResponse {
 
     private Monitoring beaconMonitoring = new Monitoring();
     static public boolean isUserInsideMuseum = false;
     static public HashMap<String, ExhibitModel> unsortedExhibits = null;
-    static public HashMap<String, WorkofartModel> workofartModelHashMap;
+    static public HashMap<String, WorkofartModel> workofartModelHashMap = null;
     static public Collection<ExhibitModel> detectedSortedExhibits = null;
-    static public HashMap<String, VisitExhibitModel> exhibitsVisitedToday;
 
     //hashmap used to store only once each exhibit visit for a user;
     static public HashMap<String, ExhibitModel> visitedExhibits = null;
+    static public HashMap<String, WorkofartModel> visitedWorksofart = null;
     static public int visitDistanceTreshold = 1;
     static public UserModel loggedUser = null;
     static public Date lastSeenBeaconTimeStamp;
     static public Date lastOrderingTimeStamp;
     static public int exhibitsReorderingPeriod = 5;
-    static public boolean noBeacons = true;
+    static public boolean noBeacons = false;
 
     private ExhibitDB exhibitDB = new ExhibitDB();
 
@@ -65,8 +65,11 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
         //initial loading the unordered exhibits from DB (we'll order this list in the list of exhibits view during beacons ranging);
         new LoadExhibitsAsync(this).execute();
 
-//        //initial loading of the today user exhibit history not to store a visit more than once;
-//        new LoadExhibitsHistoryAsync(this).execute();
+        //initial loading of the today user exhibit history not to store a visit more than once;
+        new LoadExhibitsHistoryAsync(this).execute();
+
+        //initial loading of today works of art history not to store a visit more than once;
+        new LoadWorksofartHistoryAsync(this).execute();
 
         visitedExhibits = new HashMap<String, ExhibitModel>();
     }
@@ -110,16 +113,32 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
     public void loadTodayExhibitsHistoryFinish(ILCMessage message) {
         Log.i("SmartMuseum2", "*********************");
         Log.i("SmartMuseum2", "Load of today exhibits history done");
-        exhibitsVisitedToday = (HashMap<String, VisitExhibitModel>) message.getMessageObject();
-        if (exhibitsVisitedToday != null) {
+        visitedExhibits = (HashMap<String, ExhibitModel>) message.getMessageObject();
+        if (visitedExhibits != null) {
             Log.i("ExhibitHistory", "SOME DATA...");
-            for (VisitExhibitModel vem : exhibitsVisitedToday.values()) {
-                Log.i("ExhibitHistory", "[" + vem.getTimeStamp() + "] >" + vem.getExhibitModel().getTitle() + ", " + vem.getExhibitModel().getImage() + ", " + vem.getExhibitModel().getLongDescriptionURL() + ", " + vem.getExhibitModel().getAudioURL());
+            for (ExhibitModel em : visitedExhibits.values()) {
+                Log.i("ExhibitHistory", ">" + em.getTitle() + ", " + em.getImage() + ", " + em.getLongDescription() + ", " + em.getAudioURL());
             }
         } else {
             Log.i("ExhibitHistory", "NO DATA");
         }
         Log.i("SmartMuseum2", "*********************");
+    }
+
+    @Override
+    public void loadTodayWorksofartHistoryFinish(ILCMessage message) {
+        Log.i("SmartMuseum3", "*********************");
+        Log.i("SmartMuseum3", "Load of today exhibits history done");
+        visitedWorksofart = (HashMap<String, WorkofartModel>) message.getMessageObject();
+        if (visitedWorksofart != null) {
+            Log.i("WorksofartHistory", "SOME DATA...");
+            for (WorkofartModel wm : visitedWorksofart.values()) {
+                Log.i("WorksofartHistory", ">" + wm.getExhibitModel().getBeaconMajor() + ", " + wm.getExhibitModel().getBeaconMinor() + ", " + wm.getIdWork() + ", " + wm.getShortDescription() + ", woa key: " + new WorkofartBusiness().getWorkofartHashmapKey(new ExhibitBusiness().getExhibitHashmapKey(wm.getExhibitModel()), wm));
+            }
+        } else {
+            Log.i("WorksofartHistory", "NO DATA");
+        }
+        Log.i("SmartMuseum3", "*********************");
     }
 }
 
@@ -179,6 +198,35 @@ class LoadExhibitsHistoryAsync extends AsyncTask<Void, Integer, String> {
     @Override
     protected void onPostExecute(String result) {
         this.delegate.loadTodayExhibitsHistoryFinish(this.message);
+    }
+
+}
+
+/* Load User Exhibit History: exhibits he already visited today */
+interface LoadWorksofartHistoryAsyncResponse {
+    void loadTodayWorksofartHistoryFinish(ILCMessage message);
+}
+
+class LoadWorksofartHistoryAsync extends AsyncTask<Void, Integer, String> {
+
+    private SmartMuseumApp delegate;
+    private ILCMessage message = new ILCMessage();
+
+    public LoadWorksofartHistoryAsync(SmartMuseumApp d) {
+        this.delegate = d;
+    }
+
+    @Override
+    protected String doInBackground(Void... voids) {
+        this.message.setMessageType(ILCMessage.MessageType.INFO);
+        this.message.setMessageText("List of today works of art user history");
+        this.message.setMessageObject(new WorkofartBusiness().getTodayUserWorksofartHistoryMap(SmartMuseumApp.loggedUser));
+        return this.message.getMessageText();
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        this.delegate.loadTodayWorksofartHistoryFinish(this.message);
     }
 
 }

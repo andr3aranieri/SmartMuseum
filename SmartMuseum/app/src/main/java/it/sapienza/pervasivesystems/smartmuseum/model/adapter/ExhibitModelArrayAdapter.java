@@ -75,7 +75,7 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ListOfObjectsActivity.class);
-//                intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
+                intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
                 context.startActivity(intent);
             }
 

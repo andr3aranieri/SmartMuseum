@@ -11,6 +11,7 @@ public class WorkofartModel {
     private String longDescriptionURL;
     private String image;
     private String audioURL;
+    private ExhibitModel exhibitModel;
 
     public int getIdWork() {
         return idWork;
@@ -66,5 +67,13 @@ public class WorkofartModel {
 
     public void setAudioURL(String audioURL) {
         this.audioURL = audioURL;
+    }
+
+    public ExhibitModel getExhibitModel() {
+        return exhibitModel;
+    }
+
+    public void setExhibitModel(ExhibitModel exhibitModel) {
+        this.exhibitModel = exhibitModel;
     }
 }

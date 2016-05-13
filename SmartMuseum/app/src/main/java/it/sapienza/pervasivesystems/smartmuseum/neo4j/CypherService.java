@@ -1,7 +1,6 @@
 package it.sapienza.pervasivesystems.smartmuseum.neo4j;
 
 import android.util.Base64;
-import android.util.Log;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -180,15 +179,12 @@ public class CypherService {
     }
 
     public <T> CypherResultSet<T> runCypher(CypherRequest request) {
-        Log.d("request", "request : " + request);
         final CypherResultSet<T> response;
         try {
             response = neo4j.getCypherResultSet(request);
         } catch (Exception e) {
-            Log.e("ANDREA", "Error running Cypher\n" + request + "\n");
             throw e;
         }
-        Log.d("ANDREA", "response: " + response);
         return response;
     }
 

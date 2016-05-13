@@ -10,6 +10,7 @@ import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.BeaconBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.ExhibitDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.VisitDB;
+import it.sapienza.pervasivesystems.smartmuseum.model.db.WorkofartDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
@@ -20,6 +21,7 @@ import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
 public class ExhibitBusiness {
 
     private ExhibitDB exhibitDB = new ExhibitDB();
+    private WorkofartDB workofartDB = new WorkofartDB();
     private BeaconBusiness beaconBusiness = new BeaconBusiness();
     private VisitDB visitDB = new VisitDB();
 
@@ -106,16 +108,28 @@ public class ExhibitBusiness {
         return e;
     }
 
-    public HashMap<String, VisitExhibitModel> getUserExhibitsHistoryMap(UserModel userModel) {
+    public ArrayList<VisitExhibitModel> getUserExhibitsHistory(UserModel userModel) {
         return this.visitDB.getUserExhibitHistory(userModel);
     }
 
-    public HashMap<String, VisitExhibitModel> getTodayUserExhibitsHistoryMap(UserModel userModel) {
-        return this.visitDB.getTodayUserExhibitHistory(userModel);
+    public HashMap<String, ExhibitModel> getTodayUserExhibitsHistoryMap(UserModel userModel) {
+        return this.exhibitDB.getTodayUserExhibitHistory(userModel);
     }
 
     public ArrayList<VisitExhibitModel> getUserExhibitHistoryList(HashMap<String, VisitExhibitModel> userHistoryMap) {
         return new ArrayList<VisitExhibitModel>(userHistoryMap.values());
+    }
+
+    public boolean hasAlreadyVisited(String key, HashMap<String, VisitExhibitModel> exhibitsHistoryMap) {
+        boolean ret = false;
+        VisitExhibitModel vem = null;
+        if(exhibitsHistoryMap.containsKey(key)) {
+            ret = true;
+        }
+        else {
+            ret = false;
+        }
+        return ret;
     }
 
     public VisitExhibitModel getVisitExhibitDetail(HashMap<String, VisitExhibitModel> userHistoryMap, String key) {

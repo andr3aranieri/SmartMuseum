@@ -9,6 +9,7 @@ import java.util.List;
 import it.sapienza.pervasivesystems.smartmuseum.business.aws.AWSConfiguration;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 import it.sapienza.pervasivesystems.smartmuseum.neo4j.CypherRow;
 import it.sapienza.pervasivesystems.smartmuseum.neo4j.wsinterface.WSOperations;
 
@@ -131,6 +132,26 @@ public class ExhibitDB {
         }
 
         return hashMapExhibits;
+    }
+
+    public HashMap<String, ExhibitModel> getTodayUserExhibitHistory(UserModel um) {
+        HashMap<String, ExhibitModel> userExhibitHistory = new HashMap<String, ExhibitModel>();
+        List<CypherRow<List<Object>>> rows = null;
+        try {
+            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'exhibit'}) - [ve: WHAT_EXHIBIT] -> (e) RETURN e";
+            rows = this.wsOperations.getCypherMultipleResults(cypher);
+            ExhibitModel exhibitModel = null;
+            for (CypherRow<List<Object>> row: rows) {
+                exhibitModel = this.readExhibit(row);
+                userExhibitHistory.put(this.getExhibitHashmapKey(exhibitModel), exhibitModel);
+            }
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            userExhibitHistory = null;
+        }
+
+        return userExhibitHistory;
     }
 
     //key used to retrieve exhibits from the application level hashmap that contains all of them;

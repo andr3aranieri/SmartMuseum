@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
+import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.WorkofartBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
 
@@ -43,7 +44,10 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
         Intent mIntent = getIntent();
 
 //        String idWork = mIntent.getStringExtra("idWork");
-        WorkofartModel objectDtl = (WorkofartModel) new WorkofartBusiness().getWorkOfArtDetailFAKE("2048:8066:1");
+        String key = mIntent.getStringExtra("key");
+//        WorkofartModel objectDtl = (WorkofartModel) new WorkofartBusiness().getWorkOfArtDetailFAKE("2048:8066:1");
+
+        WorkofartModel objectDtl = (WorkofartModel) new WorkofartBusiness().getWorkofartDetail(SmartMuseumApp.workofartModelHashMap, key);
 
         image = (ImageView) findViewById(R.id.obj_dtl_image);
         title = (TextView) findViewById(R.id.obj_dtl_title);

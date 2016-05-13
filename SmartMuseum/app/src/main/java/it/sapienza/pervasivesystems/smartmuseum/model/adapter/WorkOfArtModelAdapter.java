@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
-import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfExhibitActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfObjectActivity;
 
 /**
@@ -72,6 +70,8 @@ public class WorkOfArtModelAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailOfObjectActivity.class);
                 intent.putExtra("idWork", workofartModels.get(position).getIdWork());
+                WorkofartModel workofartModel = workofartModels.get(position);
+                intent.putExtra("key", workofartModel.getExhibitModel().getBeaconMajor() + ":" + workofartModel.getExhibitModel().getBeaconMinor() + ":" + workofartModel.getIdWork());
                 mContext.startActivity(intent);
             }
         });

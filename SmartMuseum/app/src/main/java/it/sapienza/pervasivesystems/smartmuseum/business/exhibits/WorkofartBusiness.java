@@ -6,6 +6,7 @@ import java.util.HashMap;
 import it.sapienza.pervasivesystems.smartmuseum.business.aws.AWSConfiguration;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.WorkofartDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
 
 /**
@@ -15,8 +16,8 @@ public class WorkofartBusiness {
 
     private WorkofartDB workofartDB = new WorkofartDB();
 
-    public String getWorkofartHashmapKey(String exhibitKey, WorkofartModel wam) {
-        return this.workofartDB.getWorkofartHashmapKey(exhibitKey, wam);
+    public HashMap<String, WorkofartModel> getTodayUserWorksofartHistoryMap(UserModel userModel) {
+        return this.workofartDB.getTodayUserWorkofartHistory(userModel);
     }
 
     public HashMap<String, WorkofartModel> getWorkofarts(ExhibitModel exhibitModel) {
@@ -125,6 +126,10 @@ public class WorkofartBusiness {
                 break;
         }
         return ret;
+    }
+
+    public String getWorkofartHashmapKey(String exhibitKey, WorkofartModel wam) {
+        return this.workofartDB.getWorkofartHashmapKey(exhibitKey, wam);
     }
 
     public WorkofartModel getWorkofartDetail(HashMap<String, WorkofartModel> map, String key) {
