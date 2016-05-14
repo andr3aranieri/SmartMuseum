@@ -1,5 +1,7 @@
 package it.sapienza.pervasivesystems.smartmuseum.model.entity;
 
+import java.util.Date;
+
 /**
  * Created by andrearanieri on 01/05/16.
  */
@@ -21,6 +23,7 @@ public class ExhibitModel {
     private String audioURL;
     private int idMuseum;
     private String color;
+    private Date timestamp;
 
     public int getId() {
         return id;
@@ -148,5 +151,13 @@ public class ExhibitModel {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 }
