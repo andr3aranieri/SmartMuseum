@@ -3,12 +3,14 @@ package it.sapienza.pervasivesystems.smartmuseum.model.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -20,6 +22,7 @@ import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusines
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfExhibitActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfObjectsActivity;
+import it.sapienza.pervasivesystems.smartmuseum.view.Utilities;
 
 /**
  * Created by Guamaral on 5/1/2016.
@@ -54,6 +57,8 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
             exhibitWrapper.title = (TextView) item.findViewById(R.id.exh_title);
             exhibitWrapper.shortDesc = (TextView) item.findViewById(R.id.exh_short_desc);
             exhibitWrapper.exhDate = (TextView) item.findViewById(R.id.exh_date);
+            exhibitWrapper.exhTimestamp = (TextView) item.findViewById(R.id.exh_timestamp);
+            exhibitWrapper.exhTimestampLayout = (RelativeLayout) item.findViewById(R.id.exh_timestamp_layout);
             exhibitWrapper.detailBtn = (Button) item.findViewById(R.id.detailBtn);
             exhibitWrapper.objectBtn = (Button) item.findViewById(R.id.objectBtn);
 
@@ -69,6 +74,14 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
         exhibitWrapper.title.setText(exhibitModel.getTitle());
         exhibitWrapper.shortDesc.setText(exhibitModel.getShortDescription());
         exhibitWrapper.exhDate.setText(exhibitModel.getPeriod());
+
+        if(exhibitModel.getTimestamp() != null) {
+            exhibitWrapper.exhTimestampLayout.setVisibility(View.VISIBLE);
+            exhibitWrapper.exhTimestamp.setText(new Utilities().formatDateToString(exhibitModel.getTimestamp(), "dd/MM/yyyy HH:mm"));
+        } else {
+            exhibitWrapper.exhTimestampLayout.setVisibility(View.GONE);
+        }
+
 
         exhibitWrapper.objectBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -106,6 +119,8 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
 
         Button detailBtn;
         Button objectBtn;
+        TextView exhTimestamp;
+        RelativeLayout exhTimestampLayout;
     }
 
 }
