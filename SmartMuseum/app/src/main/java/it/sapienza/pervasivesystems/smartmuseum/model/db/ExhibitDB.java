@@ -3,6 +3,7 @@ package it.sapienza.pervasivesystems.smartmuseum.model.db;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,6 +34,8 @@ public class ExhibitDB {
         e1.setOpeningHour("10:00-18:00");
         e1.setPeriod("01/05/2016 - 24/05/2016");
         e1.setLocation("Floor 1, Room 3");
+        e1.setColor("#E3F6CE");
+        e1.setTimestamp(new Date(System.currentTimeMillis()));
         exhibits.add(e1);
 
         ExhibitModel e2 = new ExhibitModel();
@@ -57,6 +60,7 @@ public class ExhibitDB {
         e3.setOpeningHour("10:00-18:00");
         e3.setPeriod("01/05/2016 - 24/05/2016");
         e3.setLocation("Floor 1, Room 5");
+        e3.setColor("#E3F6CE");
         exhibits.add(e3);
 
         return exhibits;
