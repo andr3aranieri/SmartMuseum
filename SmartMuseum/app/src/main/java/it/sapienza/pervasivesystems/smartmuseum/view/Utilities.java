@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
 /**
  * Created by Guamaral on 5/13/2016.
  */
@@ -92,5 +93,29 @@ public class Utilities {
         }
 
         return dateStr;
+    }
+
+    /**
+     * trim String
+     * @param sen
+     * @param length
+     * @return
+     */
+    public static String trimString(String sen, int length) {
+        if(sen == null || sen.trim().isEmpty() || sen.length() <= length){
+            return sen;
+        }
+
+        String[] words = sen.split(" ");
+        String newStr = "";
+
+        for (int i = 0; i < words.length; i ++) {
+            if(newStr.length() > length) {
+                break;
+            }
+            newStr += words[i] + " ";
+        }
+
+        return newStr;
     }
 }
