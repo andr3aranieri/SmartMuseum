@@ -1,5 +1,9 @@
 package it.sapienza.pervasivesystems.smartmuseum.view;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Guamaral on 5/13/2016.
  */
@@ -68,5 +72,25 @@ public class Utilities {
 
         // return current duration in milliseconds
         return currentDuration * 1000;
+    }
+
+    /**
+     *  format date to String by given pattern
+     * @param date
+     * @param pattern
+     * @return
+     */
+    public String formatDateToString(Date date, String pattern) {
+
+        String dateStr = "";
+
+        try {
+            DateFormat df = new SimpleDateFormat(pattern);
+            dateStr = df.format(date);
+        }catch (Exception e) {
+            System.out.println("Error to format date");
+        }
+
+        return dateStr;
     }
 }
