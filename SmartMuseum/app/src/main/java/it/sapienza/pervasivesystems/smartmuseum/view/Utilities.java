@@ -97,23 +97,32 @@ public class Utilities {
 
     /**
      * trim String
-     * @param sen
+     * @param str
      * @param length
      * @return
      */
-    public static String trimString(String sen, int length) {
-        if(sen == null || sen.trim().isEmpty() || sen.length() <= length){
-            return sen;
+    public static String trimString(String str, int length) {
+        if(str == null || str.trim().isEmpty()){
+            return str;
         }
 
-        String[] words = sen.split(" ");
         String newStr = "";
 
-        for (int i = 0; i < words.length; i ++) {
-            if(newStr.length() > length) {
-                break;
+        if(str.length() < length) {
+            newStr = str;
+            for(int i = 0; i < length - str.length(); i++) {
+                newStr+="\u00A0";
             }
-            newStr += words[i] + " ";
+        }
+        else {
+            String[] words = str.split(" ");
+
+            for (int i = 0; i < words.length; i ++) {
+                if(newStr.length() > length) {
+                    break;
+                }
+                newStr += words[i] + " ";
+            }
         }
 
         return newStr;
