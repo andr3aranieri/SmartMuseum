@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_exhibits"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
     <GridView
         android:id="@+id/gridView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:verticalSpacing="0dp"
-        android:horizontalSpacing="0dp"
-        android:stretchMode="columnWidth"
-        android:numColumns="2" />
-</FrameLayout>
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:gravity="center"
+        android:numColumns="2"
+        android:stretchMode="columnWidth">
+
+    </GridView>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:text=" Work of Arts"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
