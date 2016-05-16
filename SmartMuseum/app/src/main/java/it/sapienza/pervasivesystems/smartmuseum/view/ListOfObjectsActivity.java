@@ -29,15 +29,15 @@ public class ListOfObjectsActivity extends AppCompatActivity implements ListOfOb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_objects);
 
-        Intent mIntent = getIntent();
-        String exhibitKey = mIntent.getStringExtra("exhibitId");
-        new ListOfObjectsActivityAsync(this, new ExhibitBusiness().getExhibitDetail(exhibitKey)).execute();
+//        Intent mIntent = getIntent();
+//        String exhibitKey = mIntent.getStringExtra("exhibitId");
+//        new ListOfObjectsActivityAsync(this, new ExhibitBusiness().getExhibitDetail(exhibitKey)).execute();
 
 
-//        ArrayList<WorkofartModel> workofartModels = new WorkofartBusiness().getWorkOfArtListFAKE();
-//
-//        GridView gridview = (GridView) findViewById(R.id.gridView);
-//        gridview.setAdapter(new WorkOfArtModelAdapter(this, workofartModels));
+        ArrayList<WorkofartModel> workofartModels = new WorkofartBusiness().getWorkOfArtListFAKE();
+
+        GridView gridview = (GridView) findViewById(R.id.gridView);
+        gridview.setAdapter(new WorkOfArtModelAdapter(this, workofartModels));
 
     }
 
