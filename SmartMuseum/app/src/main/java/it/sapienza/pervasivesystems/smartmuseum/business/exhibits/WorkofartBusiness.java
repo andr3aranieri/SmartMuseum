@@ -1,6 +1,7 @@
 package it.sapienza.pervasivesystems.smartmuseum.business.exhibits;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import it.sapienza.pervasivesystems.smartmuseum.business.aws.AWSConfiguration;
@@ -37,6 +38,7 @@ public class WorkofartBusiness {
         w1.setLongDescription("Neoclassical ruin painting had reached its zenith of popularity when Hubert Robert, its foremost French practitioner, was commissioned in 1787 to paint a suite of four canvases for a wealthy financier’s château at Méréville, France. Robert had gleaned his artistic vocabulary from more than a decade’s study in Rome (1754–65). Like the other three large paintings from the group, all in the Art Institute, The Fountains exploits Robert’s stock-in-trade: fictive niches, arches, coffered vaults, majestic stairwells, decaying colonnades, and Roman statuary that create a fantasy of expansive space. The four paintings are inhabited by tiny figures in the foreground; they serve only to set the scale and animate the scene, for the ruins themselves are the true subject of the pictures. The Fountains and its companion pieces were set into the paneled walls of one of the château’s salons, creating an alternate space that played off of the elegant, Neoclassical decor of the room. In his use of ruins, Robert embodied the Romantic concept of the relationship of man and his works to nature, as expressed by the French philosopher and encyclopedist Denis Diderot: \"Everything vanishes, everything dies, only time endures.\"");
         w1.setImage("https://s3-eu-west-1.amazonaws.com/smartmuseum/exhibits/2048_8066/images/image0.jpg");
         w1.setAudioURL("https://".concat(AWSConfiguration.awsHostname.concat("/smartmuseum/exhibits/2048_8066/worksofart/1/audio/audio0.mp3")));
+        w1.setTimeStamp(new Date(System.currentTimeMillis()));
         list.add(w1);
         WorkofartModel w2 = new WorkofartModel();
         w2.setIdWork(2);
@@ -62,6 +64,7 @@ public class WorkofartBusiness {
         w4.setLongDescription("In 1754 Hubert Robert traveled to Italy to further his artistic training and soon found himself captivated by the crumbling ruins of ancient monuments. During his eleven-year stay in Italy, Robert assembled a vast “catalogue” of drawings of such sites, which he would later include in the historically evocative fantasy scenes that earned him both patronage and acclaim. In this painting’s combination of real and imagined structures, the recognizable pierced walls of Rome’s Colosseum loom over the coffered arches of another decaying structure, while washerwomen gather around a fire.");
         w4.setImage("https://s3-eu-west-1.amazonaws.com/smartmuseum/exhibits/20512_25367/images/image0.jpg");
         w4.setAudioURL("https://".concat(AWSConfiguration.awsHostname.concat("/smartmuseum/exhibits/2048_8066/worksofart/2/audio/audio0.mp3")));
+        w4.setTimeStamp(new Date(System.currentTimeMillis()));
         list.add(w4);
 
         WorkofartModel w5 = new WorkofartModel();
