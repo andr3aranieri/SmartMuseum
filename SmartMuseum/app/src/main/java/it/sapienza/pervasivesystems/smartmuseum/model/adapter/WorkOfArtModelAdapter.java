@@ -2,6 +2,7 @@ package it.sapienza.pervasivesystems.smartmuseum.model.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfObjectActivity;
+import it.sapienza.pervasivesystems.smartmuseum.view.Utilities;
 
 /**
  * Created by Guamaral on 5/9/2016.
@@ -48,6 +50,7 @@ public class WorkOfArtModelAdapter extends BaseAdapter {
     public class ExhibitWrapper {
         TextView obj_title;
         ImageView obj_image;
+        ImageView obj_timestamp_logo;
     }
 
     // create a new ImageView for each item referenced by the Adapter
@@ -60,9 +63,20 @@ public class WorkOfArtModelAdapter extends BaseAdapter {
 
         wrapper.obj_title=(TextView) rowView.findViewById(R.id.obj_title);
         wrapper.obj_image=(ImageView) rowView.findViewById(R.id.obj_img);
+        wrapper.obj_timestamp_logo=(ImageView) rowView.findViewById(R.id.obj_timestamp_logo);
 
-        wrapper.obj_title.setText(workofartModels.get(position).getTitle());
-        Picasso.with(mContext).load(workofartModels.get(position).getImage()).into(wrapper.obj_image);
+        WorkofartModel work = workofartModels.get(position);
+
+        wrapper.obj_title.setText(Utilities.trimString(work.getTitle(), 30));
+        Picasso.with(mContext).load(work.getImage()).into(wrapper.obj_image);
+
+
+        if(work.getTimeStamp() != null) {
+            wrapper.obj_timestamp_logo.setVisibility(View.VISIBLE);
+        } else {
+            wrapper.obj_timestamp_logo.setVisibility(View.GONE);
+        }
+
 
         rowView.setOnClickListener(new View.OnClickListener() {
 
