@@ -2,22 +2,47 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <it.sapienza.pervasivesystems.smartmuseum.view.SquareImageView
-        android:id="@+id/obj_img"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        />
-    <TextView
-        android:id="@+id/obj_title"
-        android:layout_width="match_parent"
+
+    <RelativeLayout
+        android:id="@+id/obj_img_layout"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
+        android:orientation="vertical">
+
+        <it.sapienza.pervasivesystems.smartmuseum.view.SquareImageView
+            android:id="@+id/obj_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/exh_timestamp_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:textColor="@android:color/white"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
         android:background="#55000000"
-        />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/obj_timestamp_logo"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/user_history_logo"></ImageView>
+
+        <TextView
+            android:id="@+id/obj_title"
+            android:text="You visited "
+            android:paddingLeft="4dp"
+            android:layout_toRightOf="@id/obj_timestamp_logo"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"></TextView>
+
+    </RelativeLayout>
+
 </FrameLayout>
