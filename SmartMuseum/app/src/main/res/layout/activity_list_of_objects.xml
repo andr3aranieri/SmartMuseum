@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_exhibits"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    >
 
     <GridView
         android:id="@+id/gridView"
