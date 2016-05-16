@@ -6,6 +6,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.business.aws.AWSConfiguration;
@@ -45,6 +46,26 @@ public class VisitDB {
             result = false;
         }
         return result;
+    }
+
+    public HashMap<String, VisitExhibitModel> getTodayUserExhibitHistory(UserModel um) {
+        HashMap<String, VisitExhibitModel> userExhibitHistory = new HashMap<String, VisitExhibitModel>();
+        List<CypherRow<List<Object>>> rows = null;
+        try {
+            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'exhibit'}) - [ve: WHAT_EXHIBIT] -> (e) RETURN e, v";
+            rows = this.wsOperations.getCypherMultipleResults(cypher);
+            VisitExhibitModel visitExhibitModel = null;
+            for (CypherRow<List<Object>> row: rows) {
+                visitExhibitModel = this.readVisitExhibit(row);
+                userExhibitHistory.put(this.exhibitDB.getExhibitHashmapKey(visitExhibitModel.getExhibitModel()), visitExhibitModel);
+            }
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            userExhibitHistory = null;
+        }
+
+        return userExhibitHistory;
     }
 
     public ArrayList<VisitExhibitModel> getUserExhibitHistory(UserModel um) {

@@ -158,6 +158,26 @@ public class ExhibitDB {
         return userExhibitHistory;
     }
 
+    public ArrayList<ExhibitModel> getUserExhibitHistory(UserModel um) {
+        ArrayList<ExhibitModel> userExhibitHistory = new ArrayList<ExhibitModel>();
+        List<CypherRow<List<Object>>> rows = null;
+        try {
+            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'exhibit'}) - [ve: WHAT_EXHIBIT] -> (e) RETURN e";
+            rows = this.wsOperations.getCypherMultipleResults(cypher);
+            ExhibitModel exhibitModel = null;
+            for (CypherRow<List<Object>> row: rows) {
+                exhibitModel = this.readExhibit(row);
+                userExhibitHistory.add(exhibitModel);
+            }
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            userExhibitHistory = null;
+        }
+
+        return userExhibitHistory;
+    }
+
     //key used to retrieve exhibits from the application level hashmap that contains all of them;
     public String getExhibitHashmapKey(ExhibitModel em) {
         return em.getBeaconMajor().concat(":").concat(em.getBeaconMinor());

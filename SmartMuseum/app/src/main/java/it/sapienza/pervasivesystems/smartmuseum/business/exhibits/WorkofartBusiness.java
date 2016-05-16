@@ -21,6 +21,10 @@ public class WorkofartBusiness {
         return this.workofartDB.getTodayUserWorkofartHistory(userModel);
     }
 
+    public ArrayList<WorkofartModel> getUserWorkofartHistory(UserModel um) {
+        return this.workofartDB.getUserWorkofartHistory(um);
+    }
+
     public HashMap<String, WorkofartModel> getWorkofarts(ExhibitModel exhibitModel) {
         return this.workofartDB.getWorkofarts(exhibitModel);
     }

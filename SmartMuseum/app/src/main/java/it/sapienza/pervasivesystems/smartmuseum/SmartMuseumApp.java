@@ -21,6 +21,7 @@ import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication
 import it.sapienza.pervasivesystems.smartmuseum.model.db.ExhibitDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
 
 /**
@@ -35,7 +36,8 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
     static public Collection<ExhibitModel> detectedSortedExhibits = null;
 
     //hashmap used to store only once each exhibit visit for a user;
-    static public HashMap<String, ExhibitModel> visitedExhibits = null;
+//    static public HashMap<String, ExhibitModel> visitedExhibits = null;
+    static public HashMap<String, VisitExhibitModel> visitedExhibits2 = null;
     static public HashMap<String, WorkofartModel> visitedWorksofart = null;
     static public int visitDistanceTreshold = 1;
     static public UserModel loggedUser = null;
@@ -71,7 +73,7 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
         //initial loading of today works of art history not to store a visit more than once;
         new LoadWorksofartHistoryAsync(this).execute();
 
-        visitedExhibits = new HashMap<String, ExhibitModel>();
+        visitedExhibits2 = new HashMap<String, VisitExhibitModel>();
     }
 
     public void showNotification(String title, String message) {
@@ -101,7 +103,7 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
         if (unsortedExhibits != null) {
             Log.i("Exhibit", "SOME DATA...");
             for (ExhibitModel em : unsortedExhibits.values()) {
-                Log.i("Exhibit", em.getTitle() + ", " + em.getImage() + ", " + em.getLongDescriptionURL() + ", " + em.getAudioURL());
+                Log.i("Exhibit", em.getTitle() + ", " + em.getImage() + ", " + em.getLongDescriptionURL() + ", " + em.getAudioURL() + ", " + em.getTimestamp() + ", " + em.getColor());
             }
         } else {
             Log.i("Exhibit", "NO DATA");
@@ -113,11 +115,11 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
     public void loadTodayExhibitsHistoryFinish(ILCMessage message) {
         Log.i("SmartMuseum2", "*********************");
         Log.i("SmartMuseum2", "Load of today exhibits history done");
-        visitedExhibits = (HashMap<String, ExhibitModel>) message.getMessageObject();
-        if (visitedExhibits != null) {
+        visitedExhibits2 = (HashMap<String, VisitExhibitModel>) message.getMessageObject();
+        if (visitedExhibits2 != null) {
             Log.i("ExhibitHistory", "SOME DATA...");
-            for (ExhibitModel em : visitedExhibits.values()) {
-                Log.i("ExhibitHistory", ">" + em.getTitle() + ", " + em.getImage() + ", " + em.getLongDescription() + ", " + em.getAudioURL());
+            for (VisitExhibitModel vem : visitedExhibits2.values()) {
+                Log.i("ExhibitHistory", ">" + vem.getExhibitModel().getTitle() + ", " + vem.getExhibitModel().getImage() + ", " + vem.getExhibitModel().getLongDescription() + ", " + vem.getExhibitModel().getAudioURL());
             }
         } else {
             Log.i("ExhibitHistory", "NO DATA");
@@ -191,7 +193,7 @@ class LoadExhibitsHistoryAsync extends AsyncTask<Void, Integer, String> {
     protected String doInBackground(Void... voids) {
         this.message.setMessageType(ILCMessage.MessageType.INFO);
         this.message.setMessageText("List of today exhibit user history");
-        this.message.setMessageObject(new ExhibitBusiness().getTodayUserExhibitsHistoryMap(SmartMuseumApp.loggedUser));
+        this.message.setMessageObject(new ExhibitBusiness().getTodayUserExhibitVisitsHistoryMap(SmartMuseumApp.loggedUser));
         return this.message.getMessageText();
     }
 

@@ -62,6 +62,27 @@ public class WorkofartDB {
         return userWorksofartHistory;
     }
 
+    public ArrayList<WorkofartModel> getUserWorkofartHistory(UserModel um) {
+        ArrayList<WorkofartModel> userWorksofartHistory = new ArrayList<WorkofartModel>();
+        List<CypherRow<List<Object>>> rows = null;
+        try {
+            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'Workofart'}) - [vw: WHAT_WORKOFART] -> (w) - [we: BELONGS_TO] - >(e) RETURN w, e";
+            rows = this.wsOperations.getCypherMultipleResults(cypher);
+            WorkofartModel workofartModel = null;
+            for (CypherRow<List<Object>> row: rows) {
+                workofartModel = this.readWorkofartWithExhibit(row);
+                userWorksofartHistory.add(workofartModel);
+            }
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            userWorksofartHistory = null;
+        }
+
+        return userWorksofartHistory;
+    }
+
+
     public String getWorkofartHashmapKey(String exhibitKey, WorkofartModel wam) {
         return exhibitKey.concat(":").concat(new Integer(wam.getIdWork()).toString());
     }

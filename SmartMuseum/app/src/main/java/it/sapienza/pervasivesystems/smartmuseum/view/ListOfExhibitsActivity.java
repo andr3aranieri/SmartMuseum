@@ -150,7 +150,7 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         if (estimatedDistance > -1 && estimatedDistance < SmartMuseumApp.visitDistanceTreshold) {
             String key = this.beaconBusiness.getBeaconHashmapKey(beacon);
             ExhibitModel em = SmartMuseumApp.unsortedExhibits.get(key);
-            if (!this.iAmWriting && em != null && SmartMuseumApp.unsortedExhibits != null && !SmartMuseumApp.visitedExhibits.containsKey(key)) {
+            if (!this.iAmWriting && em != null && SmartMuseumApp.unsortedExhibits != null && !SmartMuseumApp.visitedExhibits2.containsKey(key)) {
                 Log.i("ListOfExhibitsActivity", "Call visit registration async");
                 new ListOfExhibitsAsync(this, em, SmartMuseumApp.loggedUser).execute();
                 Log.i("ListOfExhibitsActivity", "Done calling visit registration async");
@@ -166,7 +166,9 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         Log.i("ListOfExhibitsActivity", message.getMessageText());
         if (message.getMessageObject() != null) {
             ExhibitModel em = (ExhibitModel) message.getMessageObject();
-            SmartMuseumApp.visitedExhibits.put(this.exhibitBusiness.getExhibitHashmapKey(em), em);
+            VisitExhibitModel visitExhibitModel = new VisitExhibitModel();
+            visitExhibitModel.setExhibitModel(em);
+            SmartMuseumApp.visitedExhibits2.put(this.exhibitBusiness.getExhibitHashmapKey(em), visitExhibitModel);
         }
 
         this.iAmWriting = false;
@@ -254,16 +256,20 @@ class ListOfExhibitsAsync extends AsyncTask<Void, Integer, String> {
 
     protected String doInBackground(Void... arg0) {
         VisitExhibitModel vme = new VisitExhibitModel();
-        vme.setTimeStamp(new Date());
+        Date timestamp = new Date();
+        vme.setTimeStamp(timestamp);
         vme.setExhibitModel(this.exhibitModel);
         if (this.visitBusiness.insertExhibitVisit(vme.getTimeStamp(), vme.getExhibitModel(), this.userModel)) {
             this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
             this.message.setMessageText("Visit registered!");
             this.message.setMessageObject(this.exhibitModel);
+            this.exhibitModel.setTimestamp(timestamp);
+            this.exhibitModel.setColor("#00ffbf");
         } else {
             this.message.setMessageType(ILCMessage.MessageType.ERROR);
             this.message.setMessageText("Error registering visit!");
             this.message.setMessageObject(null);
+            this.exhibitModel.setColor("#ffe6e6");
         }
         return this.message.getMessageText();
     }

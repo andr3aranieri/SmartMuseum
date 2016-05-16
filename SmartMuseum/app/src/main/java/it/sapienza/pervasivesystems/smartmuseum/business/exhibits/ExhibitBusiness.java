@@ -34,11 +34,23 @@ public class ExhibitBusiness {
         if(SmartMuseumApp.unsortedExhibits != null) {
             sortedExhibits = new ArrayList<ExhibitModel>();
             ExhibitModel em = null;
+            VisitExhibitModel visitExhibitModel = null;
             String bKey;
             for(Beacon b: sortedBeacons) {
                 bKey = this.beaconBusiness.getBeaconHashmapKey(b);
                 if(SmartMuseumApp.unsortedExhibits.containsKey(bKey)) {
                     em = SmartMuseumApp.unsortedExhibits.get(bKey);
+
+                    //timestamp and color;
+                    if(SmartMuseumApp.visitedExhibits2.containsKey(bKey)) {
+                        visitExhibitModel = SmartMuseumApp.visitedExhibits2.get(bKey);
+                        em.setTimestamp(visitExhibitModel.getTimeStamp());
+                        em.setColor("#00ffbf");
+                    }
+                    else {
+                        em.setColor("#ffe6e6");
+                    }
+
                     sortedExhibits.add(em);
                 }
             }
@@ -108,12 +120,20 @@ public class ExhibitBusiness {
         return e;
     }
 
-    public ArrayList<VisitExhibitModel> getUserExhibitsHistory(UserModel userModel) {
-        return this.visitDB.getUserExhibitHistory(userModel);
+//    public ArrayList<VisitExhibitModel> getUserExhibitsHistory(UserModel userModel) {
+//        return this.visitDB.getUserExhibitHistory(userModel);
+//    }
+
+    public ArrayList<ExhibitModel> getUserExhibitHistory(UserModel um) {
+        return this.exhibitDB.getUserExhibitHistory(um);
     }
 
-    public HashMap<String, ExhibitModel> getTodayUserExhibitsHistoryMap(UserModel userModel) {
-        return this.exhibitDB.getTodayUserExhibitHistory(userModel);
+//    public HashMap<String, ExhibitModel> getTodayUserExhibitsHistoryMap(UserModel userModel) {
+//        return this.exhibitDB.getTodayUserExhibitHistory(userModel);
+//    }
+//
+    public HashMap<String, VisitExhibitModel> getTodayUserExhibitVisitsHistoryMap(UserModel userModel) {
+        return this.visitDB.getTodayUserExhibitHistory(userModel);
     }
 
     public ArrayList<VisitExhibitModel> getUserExhibitHistoryList(HashMap<String, VisitExhibitModel> userHistoryMap) {
