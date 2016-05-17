@@ -15,6 +15,7 @@ import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Ranging;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.RangingDetection;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfExhibitsActivity;
+import it.sapienza.pervasivesystems.smartmuseum.view.ListOfUHExhibitsActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.LoginActivity;
 
 public class MainActivity extends AppCompatActivity implements RangingDetection {
@@ -47,7 +48,15 @@ public class MainActivity extends AppCompatActivity implements RangingDetection 
 //                    }
 //                }, 3000);
 
-        Intent intent = new Intent(this, ListOfExhibitsActivity.class);
+        Intent intent = null;
+
+        //if the user is inside of the museum, the list of exhibits will be called
+        if(SmartMuseumApp.isUserInsideMuseum) {
+            intent = new Intent(this, ListOfExhibitsActivity.class);
+        } else { // otherwise the history of users exhibits list will be called
+            intent = new Intent(this, ListOfUHExhibitsActivity.class);
+        }
+
         startActivity(intent);
     }
 
