@@ -40,13 +40,13 @@ public class MainActivity extends AppCompatActivity implements RangingDetection 
         progressDialog.setMessage("Detecting your position. Please wait...");
         progressDialog.show();
 
-//        new android.os.Handler().postDelayed(
-//                new Runnable() {
-//                    public void run() {
-//                        goToFirstActivity();
-//                        progressDialog.dismiss();
-//                    }
-//                }, 3000);
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        goToFirstActivity();
+                        progressDialog.dismiss();
+                    }
+                }, 3000);
 
         Intent intent = null;
 
