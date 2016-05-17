@@ -24,8 +24,9 @@
         <activity
             android:name=".view.SignupActivity"
             android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".view.ListOfExhibitsActivity"
-            android:theme = "@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".view.ListOfExhibitsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".view.ItemOfExhibitsActivity" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -35,13 +36,20 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".view.DetailOfExhibitActivity"
-            android:theme = "@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".view.ListOfObjectsActivity"
-            android:theme = "@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".view.DetailOfExhibitActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".view.ListOfObjectsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".view.ItemOfObjectsActivity" />
-        <activity android:name=".view.DetailOfObjectActivity"
-            android:theme = "@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".view.DetailOfObjectActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".view.ListOfUHExhibitsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".view.ListOfUHObjectsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>
