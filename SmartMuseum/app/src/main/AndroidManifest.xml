@@ -14,7 +14,6 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -37,19 +36,19 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".view.DetailOfExhibitActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:name=".view.DetailOfExhibitActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
         <activity
-            android:name=".view.ListOfObjectsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".view.ItemOfObjectsActivity" />
+            android:name=".view.ListOfObjectsActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
+        <activity android:name=".view.ItemOfObjectsActivity"  />
         <activity
-            android:name=".view.DetailOfObjectActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:name=".view.DetailOfObjectActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
         <activity android:name=".view.ListOfUHExhibitsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".view.ListOfUHObjectsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".view.ListOfUHObjectsActivity"  android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+             />
     </application>
 
 </manifest>
