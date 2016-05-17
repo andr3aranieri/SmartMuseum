@@ -34,7 +34,8 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
     private TextView musicDuration;
     private Handler seekHandler = new Handler();
     private Utilities utils;
-    String mp3 = "http://www.stephaniequinn.com/Music/Allegro%20from%20Duet%20in%20C%20Major.mp3";
+    private WorkofartModel objectDtl;
+//    String mp3 = "http://www.stephaniequinn.com/Music/Allegro%20from%20Duet%20in%20C%20Major.mp3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
 //        String key = mIntent.getStringExtra("key");
 //        WorkofartModel objectDtl = (WorkofartModel) new WorkofartBusiness().getWorkofartDetail(SmartMuseumApp.workofartModelHashMap, key);
 
-        WorkofartModel objectDtl = (WorkofartModel) mIntent.getSerializableExtra("workOfArtModel");
+        objectDtl = (WorkofartModel) mIntent.getSerializableExtra("workOfArtModel");
 
         image = (ImageView) findViewById(R.id.obj_dtl_image);
         title = (TextView) findViewById(R.id.obj_dtl_title);
@@ -72,7 +73,7 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
 
         play_button.setOnClickListener(this);
         player = new MediaPlayer();
-        player.setDataSource(mp3);
+        player.setDataSource(objectDtl.getAudioURL());
         player.prepare();
         utils = new Utilities();
 
