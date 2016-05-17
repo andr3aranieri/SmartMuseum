@@ -42,12 +42,10 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_detail_of_object);
 
         Intent mIntent = getIntent();
+//        String key = mIntent.getStringExtra("key");
+//        WorkofartModel objectDtl = (WorkofartModel) new WorkofartBusiness().getWorkofartDetail(SmartMuseumApp.workofartModelHashMap, key);
 
-//        String idWork = mIntent.getStringExtra("idWork");
-        String key = mIntent.getStringExtra("key");
-//        WorkofartModel objectDtl = (WorkofartModel) new WorkofartBusiness().getWorkOfArtDetailFAKE("2048:8066:1");
-
-        WorkofartModel objectDtl = (WorkofartModel) new WorkofartBusiness().getWorkofartDetail(SmartMuseumApp.workofartModelHashMap, key);
+        WorkofartModel objectDtl = (WorkofartModel) mIntent.getSerializableExtra("workOfArtModel");
 
         image = (ImageView) findViewById(R.id.obj_dtl_image);
         title = (TextView) findViewById(R.id.obj_dtl_title);
@@ -106,7 +104,7 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(totalDuration))
             );
 
-            String curTime = String.format("%d min, %d sec",
+            String curTime = String.format("%d : %d",
                     TimeUnit.MILLISECONDS.toMinutes(currentDuration),
                     TimeUnit.MILLISECONDS.toSeconds(currentDuration) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentDuration))

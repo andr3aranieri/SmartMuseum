@@ -44,13 +44,14 @@ public class DetailOfExhibitActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_detail_of_exhibit);
 
         Intent mIntent = getIntent();
-//        int exhibitId = mIntent.getIntExtra("exhibitId", 1);
+//        String exhibitKey = mIntent.getStringExtra("exhibitId");
+//        ExhibitModel exhDtl = (ExhibitModel) new ExhibitBusiness().getExhibitDetail(exhibitKey);
 
-//        ExhibitModel exhDtl = (ExhibitModel) new ExhibitDB().getExhibitDetail(exhibitId);
+        ExhibitModel exhDtl = (ExhibitModel) mIntent.getSerializableExtra("exhibitModel");
 
-        String exhibitKey = mIntent.getStringExtra("exhibitId");
-//        ExhibitModel exhDtl = (ExhibitModel) new ExhibitBusiness().getExhibitDetailFAKE(exhibitKey);
-        ExhibitModel exhDtl = (ExhibitModel) new ExhibitBusiness().getExhibitDetail(exhibitKey);
+        if(exhDtl == null)
+            return;
+
 
         image = (ImageView) findViewById(R.id.exh_dtl_image);
         title = (TextView) findViewById(R.id.exh_dtl_title);
@@ -115,7 +116,7 @@ public class DetailOfExhibitActivity extends AppCompatActivity implements View.O
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(totalDuration))
             );
 
-            String curTime = String.format("%d min, %d sec",
+            String curTime = String.format("%d : %d",
                     TimeUnit.MILLISECONDS.toMinutes(currentDuration),
                     TimeUnit.MILLISECONDS.toSeconds(currentDuration) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentDuration))
