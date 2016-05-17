@@ -1,11 +1,12 @@
 package it.sapienza.pervasivesystems.smartmuseum.model.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by andrearanieri on 04/05/16.
  */
-public class WorkofartModel {
+public class WorkofartModel implements Serializable{
     private int idWork;
     private String title;
     private String shortDescription;

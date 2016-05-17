@@ -18,10 +18,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
+import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfExhibitActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfObjectsActivity;
+import it.sapienza.pervasivesystems.smartmuseum.view.ListOfUHObjectsActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.Utilities;
 
 /**
@@ -39,6 +42,7 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.exhibitModels = exhibitModelsNew;
+
     }
 
     @Override
@@ -87,8 +91,18 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ListOfObjectsActivity.class);
-                intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
+                Intent intent = null;
+
+                //if the user is inside the museum, the list of object activity will be called.
+                if(SmartMuseumApp.isUserInsideMuseum) {
+                    intent = new Intent(context, ListOfObjectsActivity.class);
+                    intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
+                } else {
+                    intent = new Intent(context, ListOfUHObjectsActivity.class);
+                    intent.putExtra("exhibitId", exhibitModel.getId());
+                }
+
+
                 context.startActivity(intent);
             }
 
@@ -97,7 +111,8 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailOfExhibitActivity.class);
-                intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
+//                intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
+                intent.putExtra("exhibitModel", exhibitModel);
                 context.startActivity(intent);
             }
 

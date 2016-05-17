@@ -1,11 +1,12 @@
 package it.sapienza.pervasivesystems.smartmuseum.model.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by andrearanieri on 01/05/16.
  */
-public class ExhibitModel {
+public class ExhibitModel implements Serializable{
 
     private int id;
     private String title;
