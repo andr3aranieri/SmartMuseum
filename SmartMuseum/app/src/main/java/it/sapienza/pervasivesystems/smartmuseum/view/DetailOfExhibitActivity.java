@@ -36,7 +36,8 @@ public class DetailOfExhibitActivity extends AppCompatActivity implements View.O
     private TextView musicDuration;
     private Handler seekHandler = new Handler();
     private Utilities utils;
-    String mp3 = "http://www.stephaniequinn.com/Music/Allegro%20from%20Duet%20in%20C%20Major.mp3";
+    private ExhibitModel exhDtl;
+//    String mp3 = "http://www.stephaniequinn.com/Music/Allegro%20from%20Duet%20in%20C%20Major.mp3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class DetailOfExhibitActivity extends AppCompatActivity implements View.O
 //        String exhibitKey = mIntent.getStringExtra("exhibitId");
 //        ExhibitModel exhDtl = (ExhibitModel) new ExhibitBusiness().getExhibitDetail(exhibitKey);
 
-        ExhibitModel exhDtl = (ExhibitModel) mIntent.getSerializableExtra("exhibitModel");
+        exhDtl= (ExhibitModel) mIntent.getSerializableExtra("exhibitModel");
 
         if(exhDtl == null)
             return;
@@ -84,7 +85,7 @@ public class DetailOfExhibitActivity extends AppCompatActivity implements View.O
 
         play_button.setOnClickListener(this);
         player = new MediaPlayer();
-        player.setDataSource(mp3);
+        player.setDataSource(exhDtl.getAudioURL());
         player.prepare();
         utils = new Utilities();
 
