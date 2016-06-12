@@ -27,7 +27,7 @@ public class SlackBusiness {
         DOWNLOAD_MESSAGES
     }
 
-    static public String token = "xoxp-43100032400-43201859862-47155173957-987ed62aa5";
+    static public String token = "";
 
     private FetchingMessageHistory fetchingMessageHistory = new FetchingMessageHistory();
     private SendingMessages sendingMessages = new SendingMessages();

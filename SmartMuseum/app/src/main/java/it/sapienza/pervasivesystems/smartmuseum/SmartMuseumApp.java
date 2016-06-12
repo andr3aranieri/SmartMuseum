@@ -81,7 +81,6 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
         new LoadWorksofartHistoryAsync(this).execute();
 
         visitedExhibits2 = new HashMap<String, VisitExhibitModel>();
-
     }
 
     public void showNotification(String title, String message) {
