@@ -16,7 +16,7 @@ import it.sapienza.pervasivesystems.smartmuseum.business.beacons.RangingDetectio
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfExhibitsActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfUHExhibitsActivity;
-import it.sapienza.pervasivesystems.smartmuseum.view.LoginActivity;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.QuestionsActivity;
 
 public class MainActivity extends AppCompatActivity implements RangingDetection {
 
@@ -79,8 +79,12 @@ public class MainActivity extends AppCompatActivity implements RangingDetection 
     }
 
     private void goToFirstActivity() {
+
+        //ANDREA: Slack test. at the end goto LoginActivity;
         //TODO: control if the user is already logged in and if he is inside or outside
-        Intent intent = new Intent(this, LoginActivity.class);
+//        Intent intent = new Intent(this, LoginActivity.class);
+
+        Intent intent = new Intent(this, QuestionsActivity.class);
         startActivity(intent);
     }
 

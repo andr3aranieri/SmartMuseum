@@ -2,7 +2,6 @@ package it.sapienza.pervasivesystems.smartmuseum.model.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,6 @@ public class WorkOfArtModelAdapter extends BaseAdapter {
         mContext = c;
         this.workofartModels = workofartModels;
         inflater = LayoutInflater.from(c);
-
     }
 
     public int getCount() {

@@ -8,9 +8,10 @@ import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import java.util.Date;
 
 import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 

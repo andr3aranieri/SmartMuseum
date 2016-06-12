@@ -45,13 +45,13 @@
 
         <Button
             android:id="@+id/playPauseButton"
-            android:layout_width="70px"
-            android:layout_height="70px"
+            android:layout_width="150px"
+            android:layout_height="150px"
             android:layout_marginLeft="5px"
             android:layout_marginTop="5px"
             android:background="@drawable/play_icon_pink"
-            android:maxHeight="70px"
-            android:maxWidth="70px" />
+            android:maxHeight="150px"
+            android:maxWidth="150px" />
 
         <TextView
             android:id="@+id/musicCurrentLoc"

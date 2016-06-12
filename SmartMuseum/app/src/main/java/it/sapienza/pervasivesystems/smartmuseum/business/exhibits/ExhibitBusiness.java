@@ -1,5 +1,7 @@
 package it.sapienza.pervasivesystems.smartmuseum.business.exhibits;
 
+import android.util.Log;
+
 import com.estimote.sdk.Beacon;
 
 import java.util.ArrayList;
@@ -36,9 +38,11 @@ public class ExhibitBusiness {
             ExhibitModel em = null;
             VisitExhibitModel visitExhibitModel = null;
             String bKey;
+            Log.i("BeaconsDetected", "*******************************");
             for(Beacon b: sortedBeacons) {
                 bKey = this.beaconBusiness.getBeaconHashmapKey(b);
                 if(SmartMuseumApp.unsortedExhibits.containsKey(bKey)) {
+                    Log.i("BeaconsDetected", "key: " + bKey + " YES");
                     em = SmartMuseumApp.unsortedExhibits.get(bKey);
 
                     //timestamp and color;
@@ -53,7 +57,11 @@ public class ExhibitBusiness {
 
                     sortedExhibits.add(em);
                 }
+                else {
+                    Log.i("BeaconsDetected", "key: " + bKey + " NO");
+                }
             }
+            Log.i("BeaconsDetected", "*******************************");
         }
         else {
             sortedExhibits = null;

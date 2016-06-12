@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ullink.slack.simpleslackapi.SlackSession;
+
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,13 +33,12 @@ import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
 public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResponse, LoadExhibitHistoryAsyncResponse, LoadWorksofartHistoryAsyncResponse {
 
     private Monitoring beaconMonitoring = new Monitoring();
-    static public boolean isUserInsideMuseum = false;
+    static public boolean isUserInsideMuseum = true;
     static public HashMap<String, ExhibitModel> unsortedExhibits = null;
     static public HashMap<String, WorkofartModel> workofartModelHashMap = null;
     static public Collection<ExhibitModel> detectedSortedExhibits = null;
 
     //hashmap used to store only once each exhibit visit for a user;
-//    static public HashMap<String, ExhibitModel> visitedExhibits = null;
     static public HashMap<String, VisitExhibitModel> visitedExhibits2 = null;
     static public HashMap<String, WorkofartModel> visitedWorksofart = null;
     static public int visitDistanceTreshold = 1;
@@ -45,6 +47,11 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
     static public Date lastOrderingTimeStamp;
     static public int exhibitsReorderingPeriod = 5;
     static public boolean noBeacons = false;
+
+    static public SimpleDateFormat myDateFormat = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
+
+    //Slack integration;
+    static public SlackSession slackSession = null;
 
     private ExhibitDB exhibitDB = new ExhibitDB();
 
@@ -74,6 +81,7 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
         new LoadWorksofartHistoryAsync(this).execute();
 
         visitedExhibits2 = new HashMap<String, VisitExhibitModel>();
+
     }
 
     public void showNotification(String title, String message) {

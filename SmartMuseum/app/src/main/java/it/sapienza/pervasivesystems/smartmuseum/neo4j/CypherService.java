@@ -28,7 +28,7 @@ import retrofit.converter.GsonConverter;
  */
 public class CypherService {
 
-    protected static final String SERVER_ROOT_URI = "http://ec2-52-50-191-242.eu-west-1.compute.amazonaws.com:4126";
+    protected static final String SERVER_ROOT_URI = "http://ec2-52-50-0-114.eu-west-1.compute.amazonaws.com:4126";
     protected static final String USERNAME = "neo4j";
     protected static final String PASSWORD = "andreaguamaral4123";
 
