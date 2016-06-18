@@ -9,6 +9,7 @@ public class ChatModel {
 
     private String userName;
     private Date timeStamp;
+    private String sTimeStamp;
     private String message;
 
     public String getUserName() {
@@ -33,5 +34,13 @@ public class ChatModel {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getsTimeStamp() {
+        return sTimeStamp;
+    }
+
+    public void setsTimeStamp(String sTimeStamp) {
+        this.sTimeStamp = sTimeStamp;
     }
 }

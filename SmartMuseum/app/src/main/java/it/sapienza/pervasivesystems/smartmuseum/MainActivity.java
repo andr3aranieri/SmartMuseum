@@ -14,50 +14,63 @@ import java.util.List;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Ranging;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.RangingDetection;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
-import it.sapienza.pervasivesystems.smartmuseum.view.ListOfExhibitsActivity;
-import it.sapienza.pervasivesystems.smartmuseum.view.ListOfUHExhibitsActivity;
+import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsync;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsyncResponse;
 import it.sapienza.pervasivesystems.smartmuseum.view.slack.QuestionsActivity;
 
-public class MainActivity extends AppCompatActivity implements RangingDetection {
+public class MainActivity extends AppCompatActivity implements RangingDetection, ChatAsyncResponse {
 
     //This activity will range for beacons for some seconds to understand if the user is inside or outside
     //the museum;
     public static Ranging beaconsRanging;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Open Slack Session;
+        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.OPEN_SESSION, "", "").execute();
+
+        //show progress popup
+        this.progressDialog = new ProgressDialog(MainActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+        this.progressDialog.setIndeterminate(true);
+        this.progressDialog.setMessage("Loading data... Please wait.");
+        this.progressDialog.show();
+
         //start ranging;
         this.beaconsRanging = new Ranging(this);
         Ranging.rangingDetection = this;
         this.beaconsRanging.initRanging();
 
-        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Detecting your position. Please wait...");
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,
+//                R.style.AppTheme_Dark_Dialog);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Detecting your position. Please wait...");
+//        progressDialog.show();
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        goToFirstActivity();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+//        new android.os.Handler().postDelayed(
+//                new Runnable() {
+//                    public void run() {
+//                        goToFirstActivity();
+//                        progressDialog.dismiss();
+//                    }
+//                }, 3000);
 
-        Intent intent = null;
-
-        //if the user is inside of the museum, the list of exhibits will be called
-        if(SmartMuseumApp.isUserInsideMuseum) {
-            intent = new Intent(this, ListOfExhibitsActivity.class);
-        } else { // otherwise the history of users exhibits list will be called
-            intent = new Intent(this, ListOfUHExhibitsActivity.class);
-        }
-
-        startActivity(intent);
+//        Intent intent = null;
+//
+//        //if the user is inside of the museum, the list of exhibits will be called
+//        if(SmartMuseumApp.isUserInsideMuseum) {
+//            intent = new Intent(this, ListOfExhibitsActivity.class);
+//        } else { // otherwise the history of users exhibits list will be called
+//            intent = new Intent(this, ListOfUHExhibitsActivity.class);
+//        }
+//
+//        startActivity(intent);
     }
 
     @Override
@@ -85,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements RangingDetection 
 //        Intent intent = new Intent(this, LoginActivity.class);
 
         Intent intent = new Intent(this, QuestionsActivity.class);
+
         startActivity(intent);
     }
 
@@ -101,5 +115,25 @@ public class MainActivity extends AppCompatActivity implements RangingDetection 
         this.beaconsRanging.stopRanging();
 
         SmartMuseumApp.isUserInsideMuseum = true;
+    }
+
+    @Override
+    public void sessionOpened(ILCMessage message) {
+        Log.i("CHATACTIVITY", message.getMessageText());
+
+        //hide progress popup;
+        this.progressDialog.dismiss();
+        goToFirstActivity();
+
+//        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.DOWNLOAD_MESSAGES).execute();
+    }
+
+    @Override
+    public void sessionClosed(ILCMessage message) {
+        Log.i("CHATACTIVITY", message.getMessageText());
+    }
+
+    @Override
+    public void messagesDownloaed(ILCMessage message) {
     }
 }

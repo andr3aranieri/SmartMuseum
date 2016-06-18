@@ -1,148 +1,110 @@
 package it.sapienza.pervasivesystems.smartmuseum.view.slack;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 
-import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
-import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
+import it.sapienza.pervasivesystems.smartmuseum.model.adapter.ChatModelArrayAdapter;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.ChatModel;
 
 public class ChatActivity extends AppCompatActivity implements ChatAsyncResponse {
 
     static public String channelToLoad;
+    private ProgressDialog progressDialog;
+    private ChatModelArrayAdapter chatModelArrayAdapter = null;
+    private SlackBusiness slackBusiness = new SlackBusiness();
+    private ListView listView;
+
+    @Bind(R.id.btn_sendMessage)
+    Button sendButton;
+    @Bind(R.id.input_message)
+    EditText inputMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        ButterKnife.bind(this);
 
         Intent mIntent = getIntent();
         channelToLoad = mIntent.getStringExtra("channelToLoad");
 
-        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.OPEN_SESSION).execute();
+        this.showProgressPopup("Loading messages. Please wait...");
+
+        //Loading messages;
+        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.DOWNLOAD_MESSAGES, "channelslack1", "").execute();
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                sendMessage();
+            }
+        });
     }
 
-    @Override
-    public void onStop(){
-        super.onStop();
-
-        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.CLOSE_SESSION).execute();
+    private void showProgressPopup(String message) {
+        //show progress popup
+        this.progressDialog = new ProgressDialog(ChatActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+        this.progressDialog.setIndeterminate(true);
+        this.progressDialog.setMessage(message);
+        this.progressDialog.show();
     }
 
-//    @Override
-//    public void onResume(){
-//        super.onResume();
-//
-//        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.OPEN_SESSION).execute();
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//
-//        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.CLOSE_SESSION).execute();
-//    }
+    public void sendMessage() {
+
+        this.showProgressPopup("Sending. Please wait...");
+
+        //send message;
+        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.SEND_MESSAGE, "channelslack1", inputMessage.getText().toString()).execute();
+    }
 
     @Override
     public void sessionOpened(ILCMessage message) {
-        Log.i("CHATACTIVITY", message.getMessageText());
-
-        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.DOWNLOAD_MESSAGES).execute();
+        Log.i("CHATACTIVITY2", message.getMessageText());
     }
 
     @Override
     public void sessionClosed(ILCMessage message) {
-        Log.i("CHATACTIVITY", message.getMessageText());
+        Log.i("CHATACTIVITY2", message.getMessageText());
     }
 
     @Override
     public void messagesDownloaed(ILCMessage message) {
-        Log.i("CHATACTIVITY", message.getMessageText());
+        Log.i("CHATACTIVITY2", message.getMessageText());
 
-        List<SlackMessagePosted> messages = (List<SlackMessagePosted>) message.getMessageObject();
-        for(SlackMessagePosted m: messages) {
-            Log.i("CHATACTIVITY", m.getMessageContent());
+        ArrayList<SlackMessagePosted> messages = (ArrayList<SlackMessagePosted>) message.getMessageObject();
+        ArrayList<ChatModel> chatModels = this.slackBusiness.convertSlackMessages(messages);
+
+        if(messages != null) {
+            // Getting a reference to listview of activity_item_of_exhibits layout file
+            chatModelArrayAdapter = new ChatModelArrayAdapter(this, R.layout.activity_item_of_chat, chatModels);
+
+            listView = (ListView) findViewById(R.id.listview);
+            listView.setItemsCanFocus(false);
+            listView.setAdapter(chatModelArrayAdapter);
         }
+
+        //hide progress popup;
+        progressDialog.dismiss();
     }
 }
 
-interface ChatAsyncResponse {
-    void sessionOpened(ILCMessage message);
-    void sessionClosed(ILCMessage message);
-    void messagesDownloaed(ILCMessage message);
-}
-
-class ChatAsync extends AsyncTask<Void, Integer, String> {
-
-    private SlackBusiness.SlackCommand command;
-    private UserModel userModel;
-    private ChatActivity delegate;
-    private ILCMessage message = new ILCMessage();
-    private SlackBusiness slackBusiness = new SlackBusiness();
-
-    public ChatAsync(ChatActivity ca, UserModel um, SlackBusiness.SlackCommand c) {
-        this.delegate = ca;
-        this.userModel = um;
-        this.command = c;
-    }
-
-    @Override
-    protected String doInBackground(Void... voids) {
-        switch(this.command) {
-            case OPEN_SESSION:
-                //slack session creation;
-                try {
-                    SmartMuseumApp.slackSession = new SlackBusiness().createSession(SlackBusiness.token);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
-                this.message.setMessageObject(null);
-                this.message.setMessageText("Slack session opened");
-                break;
-            case CLOSE_SESSION:
-                try {
-                    SmartMuseumApp.slackSession.disconnect();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
-                this.message.setMessageObject(null);
-                this.message.setMessageText("Slack session closed");
-                break;
-            case DOWNLOAD_MESSAGES:
-                List<SlackMessagePosted> messages = this.slackBusiness.getMessagesInChannel(SmartMuseumApp.slackSession, ChatActivity.channelToLoad, 100);
-                this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
-                this.message.setMessageObject(messages);
-                this.message.setMessageText("Messages Downloaded");
-                break;
-        }
-
-        return null;
-    }
-
-    protected void onPostExecute(String result) {
-        switch(this.command) {
-            case OPEN_SESSION:
-                this.delegate.sessionOpened(this.message);
-                break;
-            case CLOSE_SESSION:
-                this.delegate.sessionClosed(this.message);
-                break;
-            case DOWNLOAD_MESSAGES:
-                this.delegate.messagesDownloaed(this.message);
-                break;
-        }
-    }
-}
 
