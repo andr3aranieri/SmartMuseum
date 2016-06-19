@@ -64,6 +64,7 @@ public class ChatAsync extends AsyncTask<Void, Integer, String> {
                 break;
             case SEND_MESSAGE:
                 this.slackBusiness.sendMessageToChannel(SmartMuseumApp.slackSession, this.currentChannel, messageToSend, this.userModel);
+//                this.slackBusiness.sendMessageToUser(SmartMuseumApp.slackSession);
                 List<SlackMessagePosted> updatedMessages = this.slackBusiness.getMessagesInChannel(SmartMuseumApp.slackSession, this.currentChannel, 100);
                 this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
                 this.message.setMessageObject(updatedMessages);

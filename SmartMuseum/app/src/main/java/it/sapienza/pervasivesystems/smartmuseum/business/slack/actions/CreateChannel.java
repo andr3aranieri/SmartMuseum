@@ -1,7 +1,5 @@
 package it.sapienza.pervasivesystems.smartmuseum.business.slack.actions;
 
-import android.util.Log;
-
 import com.ullink.slack.simpleslackapi.SlackMessageHandle;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
@@ -20,7 +18,6 @@ public class CreateChannel {
         String command = "channels.create";
 
         SlackMessageHandle<GenericSlackReply> replySlackMessageHandle = session.postGenericSlackCommand(parameters, command);
-        Log.i("per per", "perdere tempo");
         return "CREATED";
     }
 }

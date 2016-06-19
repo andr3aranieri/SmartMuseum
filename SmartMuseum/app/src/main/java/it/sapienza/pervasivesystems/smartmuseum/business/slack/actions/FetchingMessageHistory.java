@@ -5,9 +5,12 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.ChannelHistoryModuleFactory;
+
 import org.threeten.bp.LocalDate;
 
 import java.util.List;
+
+import it.sapienza.pervasivesystems.smartmuseum.business.slack.custom.MyChannelHistoryModuleFactory;
 
 /**
  * This sample code is showing various ways on how to query a channel message history assuming you already have a SlackSession
@@ -32,7 +35,8 @@ public class FetchingMessageHistory
     public List<SlackMessagePosted> fetchSomeMessagesFromChannelHistory(SlackSession session, SlackChannel slackChannel, int numberOfMessages)
     {
         //build a channelHistory module from the slack session
-        ChannelHistoryModule channelHistoryModule = ChannelHistoryModuleFactory.createChannelHistoryModule(session);
+//        ChannelHistoryModule channelHistoryModule = ChannelHistoryModuleFactory.createChannelHistoryModule(session);
+        ChannelHistoryModule channelHistoryModule = MyChannelHistoryModuleFactory.createChannelHistoryModule(session);
 
         List<SlackMessagePosted> messages = channelHistoryModule.fetchHistoryOfChannel(slackChannel.getId(), numberOfMessages);
         return messages;

@@ -33,7 +33,7 @@ public class SendingMessages
     {
 
         //get a user
-        SlackUser user = session.findUserByUserName("killroy");
+        SlackUser user = session.findUserByUserName("adelie");
 
         session.sendMessageToUser(user, "Hi, how are you", null);
 
@@ -47,7 +47,7 @@ public class SendingMessages
     {
 
         //get a user
-        SlackUser user = session.findUserByUserName("killroy");
+        SlackUser user = session.findUserByUserName("adelie");
 
         //get its direct message channel
         SlackMessageHandle<SlackChannelReply> reply = session.openDirectMessageChannel(user);
@@ -56,7 +56,7 @@ public class SendingMessages
         SlackChannel channel = reply.getReply().getSlackChannel();
 
         //send the message to this channel
-        session.sendMessage(channel, "Hi, how are you", null);
+        session.sendMessage(channel, "Hi, how are you, Adelie!", null);
     }
 
     /**

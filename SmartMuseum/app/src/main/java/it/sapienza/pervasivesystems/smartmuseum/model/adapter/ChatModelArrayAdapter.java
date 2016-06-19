@@ -57,6 +57,7 @@ public class ChatModelArrayAdapter extends ArrayAdapter<ChatModel>  {
         chatWrapper.message.setText(chatModel.getMessage());
         chatWrapper.userName.setText(chatModel.getUserName());
         chatWrapper.timeStamp.setText(new Utilities().formatDateToString(chatModel.getTimeStamp(), "dd/MM/yyyy HH:mm"));
+//        chatWrapper.timeStamp.setText(chatModel.getsTimeStamp());
 
         return item;
 
