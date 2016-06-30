@@ -39,7 +39,7 @@ public class MySlackJSONMessageParser {
         String subtype = (String) obj.get("subtype");
         SlackUser user = slackSession.findUserById(userId);
         Map<String, Integer> reacs = null;
-        MySlackMessagePostedImpl message = new MySlackMessagePostedImpl(text, null, user, channel, ts, null, obj, null, userName);
+        MySlackMessagePostedImpl message = new MySlackMessagePostedImpl(text, null, user, channel, ts, null, obj, null, userName, subtype);
         message.setReactions(reacs);
         return message;
     }

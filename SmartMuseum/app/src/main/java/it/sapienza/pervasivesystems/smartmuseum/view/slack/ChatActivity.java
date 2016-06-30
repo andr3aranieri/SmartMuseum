@@ -105,6 +105,16 @@ public class ChatActivity extends AppCompatActivity implements ChatAsyncResponse
         //hide progress popup;
         progressDialog.dismiss();
     }
+
+    @Override
+    public void messageSent(ILCMessage message) {
+
+    }
+
+    @Override
+    public void messagesPushed(ILCMessage message) {
+
+    }
 }
 
 

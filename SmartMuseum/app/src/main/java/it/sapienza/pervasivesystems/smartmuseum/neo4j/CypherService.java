@@ -28,9 +28,9 @@ import retrofit.converter.GsonConverter;
  */
 public class CypherService {
 
-    protected static String SERVER_ROOT_URI = "";
-    protected static String USERNAME = "";
-    protected static String PASSWORD = "";
+    protected static String SERVER_ROOT_URI = "http://ec2-52-50-0-114.eu-west-1.compute.amazonaws.com:4126";
+    protected static String USERNAME = "neo4j";
+    protected static String PASSWORD = "andreaguamaral4123";
 
     private static final String[] DATE_FORMATS = new String[]{
             "yyyy-MM-dd'T'HH:mm:ssZ",

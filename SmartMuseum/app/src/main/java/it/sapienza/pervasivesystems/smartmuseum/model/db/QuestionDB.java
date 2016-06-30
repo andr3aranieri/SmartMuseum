@@ -70,7 +70,7 @@ public class QuestionDB {
     private QuestionModel readQuestion(CypherRow row) {
         QuestionModel questionModel = new QuestionModel();
         LinkedTreeMap<String, Object> objectMap = ((ArrayList<LinkedTreeMap<String, Object>>) row.getRow()).get(0);
-        questionModel.setChannelName((String) (objectMap.get("channelname")));
+        questionModel.setChannelName((String) (objectMap.get("channelName")));
         questionModel.setTitle((String) objectMap.get("title"));
         questionModel.setTimeStamp(DateTimeBusiness.getDateFromMillis(Math.round((Double) objectMap.get("timestamp"))));
         questionModel.setOpen(((Double) objectMap.get("open")) == 1 ? true : false);

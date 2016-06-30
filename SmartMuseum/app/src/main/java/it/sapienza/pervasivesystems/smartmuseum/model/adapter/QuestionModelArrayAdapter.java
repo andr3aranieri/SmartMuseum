@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.QuestionModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.Utilities;
-import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatActivity;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.gui.MainChatActivity;
 
 /**
  * Created by andrearanieri on 03/06/16.
@@ -65,7 +65,8 @@ public class QuestionModelArrayAdapter extends ArrayAdapter<QuestionModel> {
             @Override
             public void onClick(View v) {
                 Intent intent = null;
-                intent = new Intent(context, ChatActivity.class);
+//                intent = new Intent(context, ChatActivity.class);
+                intent = new Intent(context, MainChatActivity.class);
                 intent.putExtra("channelToLoad", questionModel.getChannelName());
                 context.startActivity(intent);
             }

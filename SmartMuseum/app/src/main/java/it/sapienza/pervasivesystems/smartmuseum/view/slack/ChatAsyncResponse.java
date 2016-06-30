@@ -11,4 +11,8 @@ public interface ChatAsyncResponse {
     void sessionClosed(ILCMessage message);
 
     void messagesDownloaed(ILCMessage message);
+
+    void messageSent(ILCMessage message);
+
+    void messagesPushed(ILCMessage message);
 }

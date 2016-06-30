@@ -27,13 +27,15 @@ public class MySlackMessagePostedImpl implements SlackMessagePosted {
     private SlackEventType eventType;
     private SlackUser sender;
     private String userName;
+    private String subtype;
 
-    public MySlackMessagePostedImpl(String text, Object o, SlackUser user, SlackChannel channel, String ts, Object o1, JSONObject obj, Object o2, String un) {
+    public MySlackMessagePostedImpl(String text, Object o, SlackUser user, SlackChannel channel, String ts, Object o1, JSONObject obj, Object o2, String un, String st) {
         this.messageContent = text;
         this.timeStamp = ts;
         this.channel = channel;
         this.sender = user;
         this.userName = un;
+        this.subtype = st;
     }
 
     @Override
@@ -136,5 +138,13 @@ public class MySlackMessagePostedImpl implements SlackMessagePosted {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getSubtype() {
+        return subtype;
+    }
+
+    public void setSubtype(String subtype) {
+        this.subtype = subtype;
     }
 }

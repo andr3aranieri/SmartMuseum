@@ -124,8 +124,6 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
         //hide progress popup;
         this.progressDialog.dismiss();
         goToFirstActivity();
-
-//        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.DOWNLOAD_MESSAGES).execute();
     }
 
     @Override
@@ -135,5 +133,15 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
 
     @Override
     public void messagesDownloaed(ILCMessage message) {
+    }
+
+    @Override
+    public void messageSent(ILCMessage message) {
+
+    }
+
+    @Override
+    public void messagesPushed(ILCMessage message) {
+
     }
 }

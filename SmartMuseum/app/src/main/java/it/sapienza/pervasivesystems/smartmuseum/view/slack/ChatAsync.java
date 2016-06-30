@@ -23,6 +23,9 @@ public class ChatAsync extends AsyncTask<Void, Integer, String> {
     private SlackBusiness slackBusiness = new SlackBusiness();
     private String currentChannel;
     private String messageToSend;
+    private List<SlackMessagePosted> newMessagesOld;
+    private List<SlackMessagePosted> newMessages;
+    private boolean pushMessages;
 
     public ChatAsync(ChatAsyncResponse ca, UserModel um, SlackBusiness.SlackCommand c, String cc, String mts) {
         this.delegate = ca;
@@ -39,16 +42,18 @@ public class ChatAsync extends AsyncTask<Void, Integer, String> {
                 //slack session creation;
                 try {
                     SmartMuseumApp.slackSession = new SlackBusiness().createSession(SlackBusiness.token);
+                    //SmartMuseumApp.slackSession2 = new SlackBusiness().createSession(SlackBusiness.token2);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
                 this.message.setMessageObject(null);
-                this.message.setMessageText("Slack session opened");
+                this.message.setMessageText("both Slack sessions opened");
                 break;
             case CLOSE_SESSION:
                 try {
                     SmartMuseumApp.slackSession.disconnect();
+                    //SmartMuseumApp.slackSession2.disconnect();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -64,14 +69,23 @@ public class ChatAsync extends AsyncTask<Void, Integer, String> {
                 break;
             case SEND_MESSAGE:
                 this.slackBusiness.sendMessageToChannel(SmartMuseumApp.slackSession, this.currentChannel, messageToSend, this.userModel);
-//                this.slackBusiness.sendMessageToUser(SmartMuseumApp.slackSession);
-                List<SlackMessagePosted> updatedMessages = this.slackBusiness.getMessagesInChannel(SmartMuseumApp.slackSession, this.currentChannel, 100);
                 this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
-                this.message.setMessageObject(updatedMessages);
+                this.message.setMessageObject(true);
                 this.message.setMessageText("Message written");
                 break;
+            case PUSH_MESSAGES:
+                while(pushMessages) {
+                    newMessagesOld = newMessages;
+                    newMessages = this.slackBusiness.getMessagesInChannel(SmartMuseumApp.slackSession, this.currentChannel, 100);
+                    if (newMessages != null && newMessagesOld != null && newMessages.size() != newMessagesOld.size()) {
+                        this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
+                        this.message.setMessageObject(newMessages);
+                        this.message.setMessageText("Message pushed");
+                        this.delegate.messagesPushed(this.message);
+                    }
+                }
+                break;
         }
-
         return null;
     }
 
@@ -84,9 +98,19 @@ public class ChatAsync extends AsyncTask<Void, Integer, String> {
                 this.delegate.sessionClosed(this.message);
                 break;
             case DOWNLOAD_MESSAGES:
-            case SEND_MESSAGE:
                 this.delegate.messagesDownloaed(this.message);
                 break;
+            case SEND_MESSAGE:
+                this.delegate.messageSent(this.message);
+                break;
         }
+    }
+
+    public boolean isPushMessages() {
+        return pushMessages;
+    }
+
+    public void setPushMessages(boolean pushMessages) {
+        this.pushMessages = pushMessages;
     }
 }

@@ -51,7 +51,8 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
     static public SimpleDateFormat myDateFormat = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
 
     //Slack integration;
-    static public SlackSession slackSession = null;
+    static public SlackSession slackSession = null; //download messages;
+//    static public SlackSession slackSession2 = null; //push messages;
 
     private ExhibitDB exhibitDB = new ExhibitDB();
 
