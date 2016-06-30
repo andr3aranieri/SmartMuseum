@@ -54,8 +54,6 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".view.slack.QuestionsActivity" />
         <activity android:name=".view.slack.ItemOfQuestionsActivity" />
-        <activity android:name=".view.slack.ChatActivity" />
-        <activity android:name=".view.slack.ItemOfChatActivity" />
         <activity android:name=".view.slack.gui.MainChatActivity" />
         <activity android:name=".view.slack.gui.LeftChatActivity" />
         <activity android:name=".view.slack.gui.RightChatActivity"></activity>
