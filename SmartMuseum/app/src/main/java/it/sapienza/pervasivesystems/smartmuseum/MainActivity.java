@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
     }
 
     @Override
-    public void messagesPushed(ILCMessage message) {
+    public void channelCreated(ILCMessage message) {
 
     }
 }

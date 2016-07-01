@@ -47,12 +47,12 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
     static public Date lastOrderingTimeStamp;
     static public int exhibitsReorderingPeriod = 5;
     static public boolean noBeacons = false;
+    static public String newQuestionText;
 
     static public SimpleDateFormat myDateFormat = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
 
     //Slack integration;
-    static public SlackSession slackSession = null; //download messages;
-//    static public SlackSession slackSession2 = null; //push messages;
+    static public SlackSession slackSession = null;
 
     private ExhibitDB exhibitDB = new ExhibitDB();
 

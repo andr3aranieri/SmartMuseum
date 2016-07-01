@@ -182,34 +182,8 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
     }
 
     @Override
-    public void messagesPushed(final ILCMessage message) {
-        Log.i("CHATACTIVITY2", message.getMessageText());
+    public void channelCreated(ILCMessage message) {
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ArrayList<SlackMessagePosted> messages = (ArrayList<SlackMessagePosted>) message.getMessageObject();
-                ArrayList<ChatMessage> chatMessages = new SlackBusiness().convertSlackMessages2(messages);
-                if (messages != null) {
-
-                    // Getting a reference to listview of activity_item_of_exhibits layout file
-                    listView = (ListView) findViewById(R.id.msgview);
-                    chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.activity_right_chat, chatMessages);
-                    listView.setAdapter(chatArrayAdapter);
-                    listView.setItemsCanFocus(false);
-                    listView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-
-                    //to scroll the list view to bottom on data change
-                    chatArrayAdapter.registerDataSetObserver(new DataSetObserver() {
-                        @Override
-                        public void onChanged() {
-                            super.onChanged();
-                            listView.setSelection(chatArrayAdapter.getCount() - 1);
-                        }
-                    });
-                }
-            }
-        });
     }
 }
 
