@@ -36,7 +36,7 @@ public class SlackBusiness {
         CREATE_CHANNEL
     }
 
-    static public String token = "xoxb-55394601826-85vkSJykW97Zs3HfhLCHYBGS"; //send messages;
+    static public String token = ""; //send messages;
 
     private FetchingMessageHistory fetchingMessageHistory = new FetchingMessageHistory();
     private SendingMessages sendingMessages = new SendingMessages();
