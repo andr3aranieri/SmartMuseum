@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
@@ -19,14 +20,20 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
+import it.sapienza.pervasivesystems.smartmuseum.business.InternalStorage.FileSystemBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.cryptography.SHA1Business;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
+import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.UserDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsync;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsyncResponse;
 
-public class LoginActivity extends AppCompatActivity implements LoginAsyncResponse {
+public class LoginActivity extends AppCompatActivity implements LoginAsyncResponse, ChatAsyncResponse {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
+    private ProgressDialog progressDialog;
+
 
     @Bind(R.id.input_email)
     EditText _emailText;
@@ -60,6 +67,8 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
                 startActivityForResult(intent, REQUEST_SIGNUP);
             }
         });
+
+        this.progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
     }
 
     public void login() {
@@ -83,6 +92,10 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
             Log.i("LoginActivity", "The User is inside");
         else
             Log.i("LoginActivity", "The User is outside");
+
+        this.progressDialog.setIndeterminate(true);
+        this.progressDialog.setMessage("Authenticating...");
+        this.progressDialog.show();
     }
 
 
@@ -107,6 +120,7 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         finish();
+        this.goToFirstActivity();
     }
 
     public void onLoginFailed(String msg) {
@@ -137,19 +151,33 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
         return valid;
     }
 
+    private void goToFirstActivity() {
+        Intent intent = new Intent(this, ListOfExhibitsActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void processFinish(ILCMessage message) {
         Log.i("LoginActivity", message.getMessageText());
-
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-
+        this.progressDialog.dismiss();
         switch (message.getMessageType()) {
             case SUCCESS:
+                //write logged user to file;
+                try {
+                    new FileSystemBusiness(this).writeUserToFile(SmartMuseumApp.localLoginFile, (UserModel) message.getMessageObject());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-                progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Authenticating...");
-                progressDialog.show();
+                //the first time the user opens the app, we Open Slack Session after the user clicks on the login button;
+                if(SmartMuseumApp.loggedUser != null) {
+                    new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.OPEN_SESSION, "", "").execute();
+
+                    //show progress popup
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setMessage("Connecting to Slack... Please Wait.");
+                    progressDialog.show();
+                }
 
                 new android.os.Handler().postDelayed(
                         new Runnable() {
@@ -163,6 +191,39 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
                 onLoginFailed(message.getMessageText());
                 break;
         }
+    }
+
+    @Override
+    public void sessionOpened(ILCMessage message) {
+        Log.i("CHATACTIVITY", message.getMessageText());
+
+        //hide progress popup;
+        this.progressDialog.dismiss();
+        goToFirstActivity();
+    }
+
+    @Override
+    public void sessionClosed(ILCMessage message) {
+        Log.i("CHATACTIVITY", message.getMessageText());
+    }
+
+    @Override
+    public void messagesDownloaed(ILCMessage message) {
+    }
+
+    @Override
+    public void messageSent(ILCMessage message) {
+
+    }
+
+    @Override
+    public void channelCreated(ILCMessage message) {
+
+    }
+
+    @Override
+    public void channelListFetched(ILCMessage message) {
+
     }
 }
 
@@ -201,7 +262,6 @@ class LoginAsync extends AsyncTask<Void, Integer, String> {
                 this.message.setMessageType(ILCMessage.MessageType.ERROR);
                 this.message.setMessageText("The email that you entered is incorrect. Please try again");
                 this.message.setMessageObject(this.userModel);
-
             } else if (!userModel.getPassword().trim().equalsIgnoreCase(SHA1Business.SHA1(this.password.trim()))) {
                 this.userModel = null;
                 this.message.setMessageType(ILCMessage.MessageType.ERROR);

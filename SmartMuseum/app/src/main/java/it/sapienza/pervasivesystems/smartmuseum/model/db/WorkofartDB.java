@@ -42,7 +42,27 @@ public class WorkofartDB {
         return hashMapWorkofarts;
     }
 
-    public HashMap<String, WorkofartModel> getTodayUserWorkofartHistory(UserModel um) {
+    public HashMap<String, WorkofartModel> getTodayUserWorkofartHistoryHashMap(UserModel um) {
+        HashMap<String, WorkofartModel> userWorksofartHistory = new HashMap<String, WorkofartModel>();
+        List<CypherRow<List<Object>>> rows = null;
+        try {
+            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'Workofart'}) - [vw: WHAT_WORKOFART] -> (w) - [we: BELONGS_TO] - >(e) RETURN w, e";
+            rows = this.wsOperations.getCypherMultipleResults(cypher);
+            WorkofartModel workofartModel = null;
+            for (CypherRow<List<Object>> row: rows) {
+                workofartModel = this.readWorkofartWithExhibit(row);
+                userWorksofartHistory.put(this.getWorkofartHashmapKey(this.exhibitDB.getExhibitHashmapKey(workofartModel.getExhibitModel()), workofartModel), workofartModel);
+            }
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            userWorksofartHistory = null;
+        }
+
+        return userWorksofartHistory;
+    }
+
+    public HashMap<String, WorkofartModel> getTotalUserWorkofartHistoryHashMap(UserModel um) {
         HashMap<String, WorkofartModel> userWorksofartHistory = new HashMap<String, WorkofartModel>();
         List<CypherRow<List<Object>>> rows = null;
         try {

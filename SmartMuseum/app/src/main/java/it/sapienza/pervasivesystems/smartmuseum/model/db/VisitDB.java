@@ -48,7 +48,42 @@ public class VisitDB {
         return result;
     }
 
-    public HashMap<String, VisitExhibitModel> getTodayUserExhibitHistory(UserModel um) {
+    //returns an hashmap with the today user history;
+    public HashMap<String, VisitExhibitModel> getTodayUserExhibitHistoryHashMap(UserModel um) {
+        HashMap<String, VisitExhibitModel> userExhibitHistory = new HashMap<String, VisitExhibitModel>();
+        List<CypherRow<List<Object>>> rows = null;
+        DateTimeBusiness dateTimeBusiness = new DateTimeBusiness(new Date());
+        try {
+            String cypher = "MATCH\n" +
+                    "(y:Year {id:" + dateTimeBusiness.getYear() + "}) <- [:PART_OF] - \n" +
+                    "(m:Month {id:" + dateTimeBusiness.getMonth() + "}) <- [:PART_OF] - \n" +
+                    "(d:Day {id:" + dateTimeBusiness.getDayOfMonth() + "}) <- [:PART_OF] - \n" +
+                    "(h:Hour) <- [:PART_OF] - \n" +
+                    "(mm:Minute) <- [:PART_OF] - \n" +
+                    "(s:Second) <- [:HAPPENED_AT] - \n" +
+                    "(v:Visit {type: 'exhibit'}) - [:WHAT_EXHIBIT] -> \n" +
+                    "(e:Exhibit) \n" +
+                    "WITH v, e\n" +
+                    "MATCH \n" +
+                    "(u:User {email: '" + um.getEmail() + "'}) - [:VISITED] -> (v)\n" +
+                    "RETURN e, v";
+            rows = this.wsOperations.getCypherMultipleResults(cypher);
+            VisitExhibitModel visitExhibitModel = null;
+            for (CypherRow<List<Object>> row: rows) {
+                visitExhibitModel = this.readVisitExhibit(row);
+                userExhibitHistory.put(this.exhibitDB.getExhibitHashmapKey(visitExhibitModel.getExhibitModel()), visitExhibitModel);
+            }
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            userExhibitHistory = null;
+        }
+
+        return userExhibitHistory;
+    }
+
+    //returns an hashmap with the whole user exhibit history;
+    public HashMap<String, VisitExhibitModel> getUserExhibitHistoryHashMap(UserModel um) {
         HashMap<String, VisitExhibitModel> userExhibitHistory = new HashMap<String, VisitExhibitModel>();
         List<CypherRow<List<Object>>> rows = null;
         try {
@@ -68,16 +103,29 @@ public class VisitDB {
         return userExhibitHistory;
     }
 
-    public ArrayList<VisitExhibitModel> getUserExhibitHistory(UserModel um) {
-        ArrayList<VisitExhibitModel> userExhibitHistory = new ArrayList<>();
+    public HashMap<String, VisitWorkofartModel> getTodayUserWorkofartHistoryHashMap(UserModel um) {
+        HashMap<String, VisitWorkofartModel> userExhibitHistory = new HashMap<String, VisitWorkofartModel>();
         List<CypherRow<List<Object>>> rows = null;
+        DateTimeBusiness dateTimeBusiness = new DateTimeBusiness(new Date());
         try {
-            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'exhibit'}) - [ve: WHAT_EXHIBIT] -> (e) RETURN e, v";
+            String cypher = "MATCH\n" +
+            "(y:Year {id:" + dateTimeBusiness.getYear() + "}) <- [:PART_OF] - \n" +
+                    "(m:Month {id:" + dateTimeBusiness.getMonth() + "}) <- [:PART_OF] - \n" +
+                    "(d:Day {id:" + dateTimeBusiness.getDayOfMonth() + "}) <- [:PART_OF] - \n" +
+                    "(h:Hour) <- [:PART_OF] - \n" +
+                    "(mm:Minute) <- [:PART_OF] - \n" +
+                    "(s:Second) <- [:HAPPENED_AT] - \n" +
+                    "(v:Visit {type: 'Workofart'}) - [:WHAT_WORKOFART] -> \n" +
+                    "(w:Workofart) \n" +
+                    "WITH v, w\n" +
+                    "MATCH \n" +
+                    "(u:User {email: '" + um.getEmail() + "'}) - [:VISITED] -> (v)\n" +
+                    "RETURN w, v";
             rows = this.wsOperations.getCypherMultipleResults(cypher);
-            VisitExhibitModel visitExhibitModel = null;
+            VisitWorkofartModel visitWorkofartModel = null;
             for (CypherRow<List<Object>> row: rows) {
-                visitExhibitModel = this.readVisitExhibit(row);
-                userExhibitHistory.add(visitExhibitModel);
+                visitWorkofartModel = this.readWorkofartVisit(row);
+                userExhibitHistory.put(visitWorkofartModel.getWorkofartModel().getIdWork()+"", visitWorkofartModel);
             }
         }
         catch(Exception ex) {
@@ -88,8 +136,8 @@ public class VisitDB {
         return userExhibitHistory;
     }
 
-    public ArrayList<VisitWorkofartModel> getUserWorkofartHistory(UserModel um) {
-        ArrayList<VisitWorkofartModel> userExhibitHistory = new ArrayList<>();
+    public HashMap<String, VisitWorkofartModel> getTotalUserWorkofartHistoryHashMap(UserModel um) {
+        HashMap<String, VisitWorkofartModel> userExhibitHistory = new HashMap<String, VisitWorkofartModel>();
         List<CypherRow<List<Object>>> rows = null;
         try {
             String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'Workofart'}) - [vw: WHAT_WORKOFART] -> (w) RETURN w, v";
@@ -97,7 +145,7 @@ public class VisitDB {
             VisitWorkofartModel visitWorkofartModel = null;
             for (CypherRow<List<Object>> row: rows) {
                 visitWorkofartModel = this.readWorkofartVisit(row);
-                userExhibitHistory.add(visitWorkofartModel);
+                userExhibitHistory.put(visitWorkofartModel.getWorkofartModel().getIdWork()+"", visitWorkofartModel);
             }
         }
         catch(Exception ex) {

@@ -1,7 +1,6 @@
 package it.sapienza.pervasivesystems.smartmuseum.view.slack.gui;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,7 +35,7 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
     private ProgressDialog progressDialog;
     private SlackBusiness slackBusiness = new SlackBusiness();
     private ChatAsync chatAsyncPushMessages;
-    private ArrayList<SlackMessagePosted> oldMessages;
+    private ArrayList<ChatMessage> oldMessages;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,8 +45,7 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
 
         /****** LOADING OLD MESSAGES**********/
         ButterKnife.bind(this);
-        Intent mIntent = getIntent();
-        channelToLoad = mIntent.getStringExtra("channelToLoad");
+        channelToLoad = SmartMuseumApp.loggedUser.getSlackChannel().getChannelName();
 
         this.showProgressPopup("Loading messages. Please wait...");
 
@@ -94,9 +92,11 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
     }
 
     private boolean sendChatMessage() {
-        chatArrayAdapter.add(new ChatMessage(false, chatText.getText().toString()));
+        String messageShowToUser = chatText.getText().toString();
+        String messageToShowToExpert = SmartMuseumApp.getNearestExhibitDescription() + "\n" + chatText.getText().toString();
+        chatArrayAdapter.add(new ChatMessage(false, messageShowToUser));
         //send message to slack;
-        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.SEND_MESSAGE, channelToLoad, chatText.getText().toString()).execute();
+        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.SEND_MESSAGE, channelToLoad, messageToShowToExpert).execute();
         chatText.setText("");
         this.showProgressPopup("Sending. Please wait...");
         return true;
@@ -137,10 +137,10 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
 
         boolean reloadMessages = false;
 
-        if(oldMessages == null) {
+        if(oldMessages == null || (oldMessages.size() == 0 && chatMessages.size() > 0)) {
             reloadMessages = true;
         }
-        else if(messages != null && !messages.get(messages.size()-1).getMessageContent().equals(oldMessages.get(oldMessages.size()-1).getMessageContent())) {
+        else if(chatMessages != null && chatMessages.size() > 0 && !chatMessages.get(chatMessages.size()-1).message.equals(oldMessages.get(oldMessages.size()-1).message)) {
             reloadMessages = true;
         }
         else {
@@ -148,7 +148,7 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
         }
 
         if (reloadMessages) {
-            oldMessages = messages;
+            oldMessages = chatMessages;
 
             Log.i("CHATACTIVITY2", "LOAD MESSAGES");
             // Getting a reference to listview of activity_item_of_exhibits layout file
@@ -183,6 +183,11 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
 
     @Override
     public void channelCreated(ILCMessage message) {
+
+    }
+
+    @Override
+    public void channelListFetched(ILCMessage message) {
 
     }
 }

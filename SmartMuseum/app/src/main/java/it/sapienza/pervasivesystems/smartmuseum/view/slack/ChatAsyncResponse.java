@@ -15,4 +15,6 @@ public interface ChatAsyncResponse {
     void messageSent(ILCMessage message);
 
     void channelCreated(ILCMessage message);
+
+    void channelListFetched(ILCMessage message);
 }

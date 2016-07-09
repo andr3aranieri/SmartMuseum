@@ -46,8 +46,8 @@ public class ExhibitBusiness {
                     em = SmartMuseumApp.unsortedExhibits.get(bKey);
 
                     //timestamp and color;
-                    if(SmartMuseumApp.visitedExhibits2.containsKey(bKey)) {
-                        visitExhibitModel = SmartMuseumApp.visitedExhibits2.get(bKey);
+                    if(SmartMuseumApp.todayVisitedExhibits.containsKey(bKey)) {
+                        visitExhibitModel = SmartMuseumApp.todayVisitedExhibits.get(bKey);
                         em.setTimestamp(visitExhibitModel.getTimeStamp());
                         em.setColor("#00ffbf");
                     }
@@ -141,7 +141,11 @@ public class ExhibitBusiness {
 //    }
 //
     public HashMap<String, VisitExhibitModel> getTodayUserExhibitVisitsHistoryMap(UserModel userModel) {
-        return this.visitDB.getTodayUserExhibitHistory(userModel);
+        return this.visitDB.getTodayUserExhibitHistoryHashMap(userModel);
+    }
+
+    public HashMap<String, VisitExhibitModel> getUserExhibitVisitsHistoryMap(UserModel userModel) {
+        return this.visitDB.getUserExhibitHistoryHashMap(userModel);
     }
 
     public ArrayList<VisitExhibitModel> getUserExhibitHistoryList(HashMap<String, VisitExhibitModel> userHistoryMap) {

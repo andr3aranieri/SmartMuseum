@@ -1,6 +1,7 @@
 package it.sapienza.pervasivesystems.smartmuseum.view;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +16,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
-import it.sapienza.pervasivesystems.smartmuseum.model.db.UserDB;
+import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.business.user.UserBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.SlackChannelModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 
 public class SignupActivity extends AppCompatActivity implements SignupAsyncResponse {
@@ -78,11 +81,11 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
 
     }
 
-
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
-        finish();
+        //finish();
+        this.goToLoginActivity();
     }
 
     public void onSignupFailed(String msg) {
@@ -120,6 +123,12 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
 
         return valid;
     }
+
+    private void goToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
 
     @Override
     public void processFinish(ILCMessage message) {
@@ -170,8 +179,9 @@ class SignupAsync extends AsyncTask<Void, Integer, String>
 
     private UserModel userModel;
     private boolean operationResult = false;
-    private final UserDB userDB = new UserDB();
+    private final UserBusiness userBusiness = new UserBusiness();
     private ILCMessage message = new ILCMessage();
+    private SlackBusiness slackBusiness = new SlackBusiness();
 
     public SignupAsync(SignupAsyncResponse d, UserModel um) {
         this.userModel = um;
@@ -185,18 +195,27 @@ class SignupAsync extends AsyncTask<Void, Integer, String>
     protected String doInBackground(Void...arg0) {
         Log.d("SignupAsync","On doInBackground...");
 
-        UserModel userAlreadyRegistered = this.userDB.getUserByEmail(this.userModel.getEmail());
+        UserModel userAlreadyRegistered = this.userBusiness.getUserByEmail(this.userModel.getEmail());
         if(userAlreadyRegistered == null) {
-            this.operationResult = this.userDB.createUser(userModel);
-            if(this.operationResult) {
-                this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
-                this.message.setMessageText("You correctly registered to SmartMuseum!");
-                this.message.setMessageObject(new Boolean(this.operationResult));
+
+            //We choose one of the slack channels for the chat implementation;
+            SlackChannelModel freeChannel = this.slackBusiness.getFreeSlackChannel();
+            if(freeChannel == null) {
+                this.message.setMessageType(ILCMessage.MessageType.ERROR);
+                this.message.setMessageText("Error. We ran out of free slack channels. Please contact the system administrator.");
+                this.message.setMessageObject(new Boolean(false));
             }
             else {
-                this.message.setMessageType(ILCMessage.MessageType.ERROR);
-                this.message.setMessageText("There was a problem with your registration. Please try again.");
-                this.message.setMessageObject(new Boolean(this.operationResult));
+                this.operationResult = this.userBusiness.createUser(userModel, freeChannel);
+                if (this.operationResult) {
+                    this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
+                    this.message.setMessageText("You correctly registered to SmartMuseum!");
+                    this.message.setMessageObject(new Boolean(this.operationResult));
+                } else {
+                    this.message.setMessageType(ILCMessage.MessageType.ERROR);
+                    this.message.setMessageText("There was a problem with your registration. Please try again.");
+                    this.message.setMessageObject(new Boolean(this.operationResult));
+                }
             }
         }
         else {

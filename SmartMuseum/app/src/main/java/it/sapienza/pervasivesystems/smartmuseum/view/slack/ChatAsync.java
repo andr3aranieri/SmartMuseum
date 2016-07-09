@@ -10,6 +10,7 @@ import java.util.List;
 import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.business.slack.mymodel.MySlackChannel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 
 /**
@@ -50,7 +51,6 @@ public class ChatAsync extends AsyncTask<Void, Integer, String> {
             case CLOSE_SESSION:
                 try {
                     SmartMuseumApp.slackSession.disconnect();
-                    //SmartMuseumApp.slackSession2.disconnect();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -76,6 +76,12 @@ public class ChatAsync extends AsyncTask<Void, Integer, String> {
                 this.message.setMessageObject(createdChannelName);
                 this.message.setMessageText("Channel created");
                 break;
+            case CHANNEL_LIST:
+                List<MySlackChannel> channels = this.slackBusiness.getChannelList(SmartMuseumApp.slackSession);
+                this.message.setMessageType(ILCMessage.MessageType.SUCCESS);
+                this.message.setMessageObject(channels);
+                this.message.setMessageText("Channels list fetched");
+                break;
         }
         return null;
     }
@@ -96,6 +102,9 @@ public class ChatAsync extends AsyncTask<Void, Integer, String> {
                 break;
             case CREATE_CHANNEL:
                 this.delegate.messageSent(this.message);
+                break;
+            case CHANNEL_LIST:
+                this.delegate.channelListFetched(this.message);
                 break;
         }
     }

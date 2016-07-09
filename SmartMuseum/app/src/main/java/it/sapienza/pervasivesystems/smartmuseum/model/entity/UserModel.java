@@ -17,6 +17,8 @@ public class UserModel {
     @Expose
     private String profileImage;
 
+    private SlackChannelModel slackChannel;
+
     public String getProfileImage() {
         return profileImage;
     }
@@ -47,5 +49,13 @@ public class UserModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public SlackChannelModel getSlackChannel() {
+        return slackChannel;
+    }
+
+    public void setSlackChannel(SlackChannelModel slackChannel) {
+        this.slackChannel = slackChannel;
     }
 }

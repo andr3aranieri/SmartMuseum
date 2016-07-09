@@ -15,9 +15,10 @@ import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Ranging;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.RangingDetection;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.view.ListOfExhibitsActivity;
+import it.sapienza.pervasivesystems.smartmuseum.view.LoginActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsync;
 import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsyncResponse;
-import it.sapienza.pervasivesystems.smartmuseum.view.slack.QuestionsActivity;
 
 public class MainActivity extends AppCompatActivity implements RangingDetection, ChatAsyncResponse {
 
@@ -31,16 +32,6 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Open Slack Session;
-        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.OPEN_SESSION, "", "").execute();
-
-        //show progress popup
-        this.progressDialog = new ProgressDialog(MainActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        this.progressDialog.setIndeterminate(true);
-        this.progressDialog.setMessage("Loading data... Please wait.");
-        this.progressDialog.show();
 
         //start ranging;
         this.beaconsRanging = new Ranging(this);
@@ -71,6 +62,21 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
 //        }
 //
 //        startActivity(intent);
+
+        //Open Slack Session from here only if the user is already logged;
+        if(SmartMuseumApp.loggedUser != null) {
+            new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.OPEN_SESSION, "", "").execute();
+
+            //show progress popup
+            this.progressDialog = new ProgressDialog(MainActivity.this,
+                    R.style.AppTheme_Dark_Dialog);
+            this.progressDialog.setIndeterminate(true);
+            this.progressDialog.setMessage("Connecting to Slack... Please Wait.");
+            this.progressDialog.show();
+        }
+        else { //if the user it not logget, we go to the loginactivity;
+            this.goToLoginActivity();
+        }
     }
 
     @Override
@@ -91,14 +97,13 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
         super.onPause();
     }
 
-    private void goToFirstActivity() {
+    private void goToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
 
-        //ANDREA: Slack test. at the end goto LoginActivity;
-        //TODO: control if the user is already logged in and if he is inside or outside
-//        Intent intent = new Intent(this, LoginActivity.class);
-
-        Intent intent = new Intent(this, QuestionsActivity.class);
-
+    private void goToListOfExhibitsActivity() {
+        Intent intent = new Intent(this, ListOfExhibitsActivity.class);
         startActivity(intent);
     }
 
@@ -106,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
     public void beaconsDetected(ILCMessage message) {
         Log.i("MainActivity", message.getMessageText());
         List<Beacon> listOfBeaconsDetected = (List<Beacon>) message.getMessageObject();
-        for(Beacon b: listOfBeaconsDetected) {
+        for (Beacon b : listOfBeaconsDetected) {
             Log.i("MainActivity", "Beacon detected: " + b.getMajor() + ":" + b.getMinor() + ", " + b.getMacAddress() + ", " + b.getRssi());
         }
 
@@ -123,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
 
         //hide progress popup;
         this.progressDialog.dismiss();
-        goToFirstActivity();
+        this.goToListOfExhibitsActivity();
     }
 
     @Override
@@ -142,6 +147,11 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
 
     @Override
     public void channelCreated(ILCMessage message) {
+
+    }
+
+    @Override
+    public void channelListFetched(ILCMessage message) {
 
     }
 }

@@ -20,6 +20,7 @@ import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.cryptography.SHA1Business;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.business.slack.mymodel.MySlackChannel;
 import it.sapienza.pervasivesystems.smartmuseum.business.visits.VisitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.adapter.QuestionModelArrayAdapter;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.QuestionModel;
@@ -63,7 +64,9 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsAsy
             ex.printStackTrace();
             this.newChannelName = "";
         }
-        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.CREATE_CHANNEL, this.newChannelName, "").execute();
+//        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.CREATE_CHANNEL, this.newChannelName.substring(0, 21), "").execute();
+        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.CHANNEL_LIST, this.newChannelName.substring(0, 21), "").execute();
+
         this.showProgressPopup("Sending Question. Please wait...");
     }
 
@@ -121,6 +124,15 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsAsy
         intent = new Intent(this, MainChatActivity.class);
         intent.putExtra("channelToLoad", this.newChannelName);
         this.startActivity(intent);
+    }
+
+    @Override
+    public void channelListFetched(ILCMessage message) {
+        Log.i("QuestionActivity", message.getMessageText());
+        List<MySlackChannel> channels = (List<MySlackChannel>) message.getMessageObject();
+        for(MySlackChannel channel: channels) {
+            Log.i("mychannel", channel.getId() + ", " + channel.getName() + ", " + channel.getMembers());
+        }
     }
 }
 

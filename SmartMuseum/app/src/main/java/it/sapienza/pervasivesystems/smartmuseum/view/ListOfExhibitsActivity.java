@@ -1,5 +1,6 @@
 package it.sapienza.pervasivesystems.smartmuseum.view;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import com.estimote.sdk.Utils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
@@ -21,15 +23,16 @@ import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Ranging;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.RangingDetection;
 import it.sapienza.pervasivesystems.smartmuseum.business.datetime.DateTimeBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.WorkofartBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.business.visits.VisitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.adapter.ExhibitModelArrayAdapter;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitWorkofartModel;
 
-
-public class ListOfExhibitsActivity extends AppCompatActivity implements RangingDetection, ListOfExhibitsAsyncResponse {
+public class ListOfExhibitsActivity extends AppCompatActivity implements RangingDetection, ListOfExhibitsAsyncResponse, LoadUserHistoryAsyncResponse {
 
     private ListView listView;
     ExhibitModelArrayAdapter exhibitAdapter;
@@ -39,6 +42,7 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
     private BeaconBusiness beaconBusiness = new BeaconBusiness();
     private VisitBusiness visitBusiness = new VisitBusiness();
     private boolean iAmWriting = false;
+    private ProgressDialog progressDialog;
 
     /**
      * Called when the activity is first created.
@@ -56,6 +60,14 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
 //        listView = (ListView) findViewById(R.id.listview);
 //        listView.setItemsCanFocus(false);
 //        listView.setAdapter(exhibitAdapter);
+
+        //initial loading of the today user exhibit history not to store a visit more than once;
+        new LoadUserHistoryAsync(this).execute();
+
+        this.progressDialog = new ProgressDialog(ListOfExhibitsActivity.this, R.style.AppTheme_Dark_Dialog);
+        this.progressDialog.setIndeterminate(true);
+        this.progressDialog.setMessage("Loading User History... Please wait.");
+        this.progressDialog.show();
 
         try {
             Thread.sleep(3000);
@@ -144,12 +156,14 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
 
         //if the user is nearer than a treshold to the nearest beacon, we store only once the visit on the DB;
         Beacon beacon = listOfBeaconsDetected.get(0); //nearest beacon;
+        //we store the nearest beacon to include its information in chat messages;
+        SmartMuseumApp.nearestExhibitBeacon = beacon;
         double estimatedDistance = Utils.computeAccuracy(beacon);
         Log.i("ListOfExhibitsActivity", "The nearest beacon is at " + estimatedDistance + " meters!");
         if (estimatedDistance > -1 && estimatedDistance < SmartMuseumApp.visitDistanceTreshold) {
             String key = this.beaconBusiness.getBeaconHashmapKey(beacon);
             ExhibitModel em = SmartMuseumApp.unsortedExhibits.get(key);
-            if (!this.iAmWriting && em != null && SmartMuseumApp.unsortedExhibits != null && !SmartMuseumApp.visitedExhibits2.containsKey(key)) {
+            if (!this.iAmWriting && em != null && SmartMuseumApp.unsortedExhibits != null && !SmartMuseumApp.todayVisitedExhibits.containsKey(key)) {
                 Log.i("ListOfExhibitsActivity", "Call visit registration async");
                 new ListOfExhibitsAsync(this, em, SmartMuseumApp.loggedUser).execute();
                 Log.i("ListOfExhibitsActivity", "Done calling visit registration async");
@@ -167,10 +181,21 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
             ExhibitModel em = (ExhibitModel) message.getMessageObject();
             VisitExhibitModel visitExhibitModel = new VisitExhibitModel();
             visitExhibitModel.setExhibitModel(em);
-            SmartMuseumApp.visitedExhibits2.put(this.exhibitBusiness.getExhibitHashmapKey(em), visitExhibitModel);
+            SmartMuseumApp.todayVisitedExhibits.put(this.exhibitBusiness.getExhibitHashmapKey(em), visitExhibitModel);
         }
 
         this.iAmWriting = false;
+    }
+
+    @Override
+    public void loadUserHistoryFinish(ILCMessage message) {
+        Object[] objects = (Object[]) message.getMessageObject();
+        SmartMuseumApp.todayVisitedExhibits = (HashMap<String, VisitExhibitModel>) objects[0];
+        SmartMuseumApp.totalVisitedExhibits = (HashMap<String, VisitExhibitModel>) objects[1];
+        SmartMuseumApp.todayVisitedWorksofart = (HashMap<String, VisitWorkofartModel>) objects[2];
+        SmartMuseumApp.totalVisitedWorksofart = (HashMap<String, VisitWorkofartModel>) objects[3];
+
+        this.progressDialog.dismiss();
     }
 
     private void loadExhibitsNoBeacons() {
@@ -275,6 +300,43 @@ class ListOfExhibitsAsync extends AsyncTask<Void, Integer, String> {
 
     protected void onPostExecute(String result) {
         this.delegate.processFinish(this.message);
+    }
+}
+
+/* Load User Exhibit History: exhibits he already visited today */
+interface LoadUserHistoryAsyncResponse {
+    void loadUserHistoryFinish(ILCMessage message);
+}
+
+class LoadUserHistoryAsync extends AsyncTask<Void, Integer, String> {
+
+    private ListOfExhibitsActivity delegate;
+    private ILCMessage message = new ILCMessage();
+
+    public LoadUserHistoryAsync(ListOfExhibitsActivity d) {
+        this.delegate = d;
+    }
+
+    @Override
+    protected String doInBackground(Void... voids) {
+        this.message.setMessageType(ILCMessage.MessageType.INFO);
+        this.message.setMessageText("List of today exhibit user history");
+        ExhibitBusiness exhibitBusiness = new ExhibitBusiness();
+        HashMap<String, VisitExhibitModel> todayVisits = exhibitBusiness.getTodayUserExhibitVisitsHistoryMap(SmartMuseumApp.loggedUser);
+        HashMap<String, VisitExhibitModel> totalVisits = exhibitBusiness.getUserExhibitVisitsHistoryMap(SmartMuseumApp.loggedUser);
+
+        WorkofartBusiness workofartBusiness = new WorkofartBusiness();
+        HashMap<String, VisitWorkofartModel> todayWorkofartsVisits = workofartBusiness.getTodayUserWorksofartHistoryHashMap(SmartMuseumApp.loggedUser);
+        HashMap<String, VisitWorkofartModel> totalWorkofartsVisits = workofartBusiness.getTotalUserWorksofartHistoryHashMap(SmartMuseumApp.loggedUser);
+
+        Object[] objects = new Object[] {todayVisits, totalVisits, todayWorkofartsVisits, totalWorkofartsVisits};
+        this.message.setMessageObject(objects);
+        return this.message.getMessageText();
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        this.delegate.loadUserHistoryFinish(this.message);
     }
 }
 
