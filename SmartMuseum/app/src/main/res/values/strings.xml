@@ -6,6 +6,8 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="header_questions" value="Opened Quesitons" />
-    <string name="header_chat" value="Chat messages" />
+    <string name="ask"></string>
+    <string name="logout_action">Logout_action</string>
+
 
 </resources>
