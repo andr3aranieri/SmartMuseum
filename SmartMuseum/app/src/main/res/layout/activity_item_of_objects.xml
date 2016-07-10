@@ -16,7 +16,6 @@
             android:scaleType="centerCrop" />
     </RelativeLayout>
 
-
     <RelativeLayout
         android:id="@+id/exh_timestamp_layout"
         android:layout_width="fill_parent"

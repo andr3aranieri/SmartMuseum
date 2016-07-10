@@ -46,7 +46,7 @@ public class ExhibitBusiness {
                     em = SmartMuseumApp.unsortedExhibits.get(bKey);
 
                     //timestamp and color;
-                    if(SmartMuseumApp.todayVisitedExhibits.containsKey(bKey)) {
+                    if(SmartMuseumApp.todayVisitedExhibits != null && SmartMuseumApp.todayVisitedExhibits.containsKey(bKey)) {
                         visitExhibitModel = SmartMuseumApp.todayVisitedExhibits.get(bKey);
                         em.setTimestamp(visitExhibitModel.getTimeStamp());
                         em.setColor("#00ffbf");

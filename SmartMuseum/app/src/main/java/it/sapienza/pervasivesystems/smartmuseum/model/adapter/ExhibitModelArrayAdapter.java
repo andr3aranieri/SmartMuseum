@@ -20,6 +20,7 @@ import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfExhibitActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfObjectsActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfUHObjectsActivity;
@@ -77,9 +78,12 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
         exhibitWrapper.shortDesc.setText(exhibitModel.getShortDescription());
         exhibitWrapper.exhDate.setText(exhibitModel.getPeriod());
 
-        if(exhibitModel.getTimestamp() != null) {
+//        if(exhibitModel.getTimestamp() != null) {
+        String key = new ExhibitBusiness().getExhibitHashmapKey(exhibitModel);
+        VisitExhibitModel visitExhibitModel = SmartMuseumApp.totalVisitedExhibits.get(key);
+        if(visitExhibitModel != null) {
             exhibitWrapper.exhTimestampLayout.setVisibility(View.VISIBLE);
-            exhibitWrapper.exhTimestamp.setText(new Utilities().formatDateToString(exhibitModel.getTimestamp(), "dd/MM/yyyy HH:mm"));
+            exhibitWrapper.exhTimestamp.setText(new Utilities().formatDateToString(visitExhibitModel.getTimeStamp(), "dd/MM/yyyy HH:mm"));
         } else {
             exhibitWrapper.exhTimestampLayout.setVisibility(View.GONE);
         }

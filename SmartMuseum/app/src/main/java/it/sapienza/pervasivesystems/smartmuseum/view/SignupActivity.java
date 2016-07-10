@@ -15,15 +15,18 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.sapienza.pervasivesystems.smartmuseum.R;
+import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.user.UserBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.SlackChannelModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsync;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsyncResponse;
 
-public class SignupActivity extends AppCompatActivity implements SignupAsyncResponse {
+public class SignupActivity extends AppCompatActivity implements SignupAsyncResponse, ChatAsyncResponse {
     private static final String TAG = "SignupActivity";
-
+    private ProgressDialog progressDialog;
 
     @Bind(R.id.input_name)
     EditText _nameText;
@@ -45,7 +48,7 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signup();
+                connectToSlack();
             }
         });
 
@@ -56,13 +59,27 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
                 finish();
             }
         });
+
+        this.progressDialog = new ProgressDialog(SignupActivity.this, R.style.AppTheme_Dark_Dialog);
     }
 
-    public void signup() {
-        Log.d(TAG, "Signup");
+    private void connectToSlack() {
+        // Open Slack Session only if it is not already been opened;
+        if (SmartMuseumApp.slackSession == null) {
+            new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.OPEN_SESSION, "", "").execute();
 
+            //show progress popup
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Connecting to Slack... Please Wait.");
+            progressDialog.show();
+        } else {
+            this.signup();
+        }
+    }
+
+    private void signup() {
         if (!validate()) {
-            onSignupFailed("Login failed");
+            onSignupFailed("Registration failed. Please try again.");
             return;
         }
 
@@ -77,23 +94,27 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
         userModel.setEmail(email);
         userModel.setPassword(password);
         userModel.setProfileImage("img111111111");
-        new SignupAsync(this, userModel).execute();
 
+        this.progressDialog.setIndeterminate(true);
+        this.progressDialog.setMessage("Creating Account... Please wait.");
+        this.progressDialog.show();
+
+        new SignupAsync(this, userModel).execute();
     }
 
-    public void onSignupSuccess() {
+    private void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
         //finish();
         this.goToLoginActivity();
     }
 
-    public void onSignupFailed(String msg) {
+    private void onSignupFailed(String msg) {
         Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
         _signupButton.setEnabled(true);
     }
 
-    public boolean validate() {
+    private boolean validate() {
         boolean valid = true;
 
         String name = _nameText.getText().toString();
@@ -129,27 +150,14 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
         startActivity(intent);
     }
 
-
     @Override
     public void processFinish(ILCMessage message) {
         Log.i("SignupActivity", message.getMessageText());
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme_Dark_Dialog);
 
         switch(message.getMessageType()) {
             case SUCCESS:
-
-                progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Creating Account...");
-                progressDialog.show();
-
-                new android.os.Handler().postDelayed(
-                        new Runnable() {
-                            public void run() {
-                                onSignupSuccess();
-                                progressDialog.dismiss();
-                            }
-                        }, 3000);
+                this.progressDialog.dismiss();
+                this.onSignupSuccess();
                 break;
             case ERROR:
                 onSignupFailed(message.getMessageText());
@@ -164,6 +172,38 @@ public class SignupActivity extends AppCompatActivity implements SignupAsyncResp
                 progressDialog.dismiss();
                 break;
         }
+    }
+
+    @Override
+    public void sessionOpened(ILCMessage message) {
+        //hide progress popup;
+        this.progressDialog.dismiss();
+        this.signup();
+    }
+
+    @Override
+    public void sessionClosed(ILCMessage message) {
+
+    }
+
+    @Override
+    public void messagesDownloaed(ILCMessage message) {
+
+    }
+
+    @Override
+    public void messageSent(ILCMessage message) {
+
+    }
+
+    @Override
+    public void channelCreated(ILCMessage message) {
+
+    }
+
+    @Override
+    public void channelListFetched(ILCMessage message) {
+
     }
 }
 

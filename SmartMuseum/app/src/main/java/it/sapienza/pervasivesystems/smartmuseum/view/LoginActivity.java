@@ -169,23 +169,18 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
                     e.printStackTrace();
                 }
 
-                //the first time the user opens the app, we Open Slack Session after the user clicks on the login button;
-                if(SmartMuseumApp.loggedUser != null) {
+                //the first time the user opens the app, we Open Slack Session after the user clicks on the login button, if he didn't already open the signup page;
+                if(SmartMuseumApp.slackSession == null && SmartMuseumApp.loggedUser != null) {
                     new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.OPEN_SESSION, "", "").execute();
 
                     //show progress popup
                     progressDialog.setIndeterminate(true);
                     progressDialog.setMessage("Connecting to Slack... Please Wait.");
                     progressDialog.show();
+                } else {
+                    this.goToFirstActivity();
                 }
 
-                new android.os.Handler().postDelayed(
-                        new Runnable() {
-                            public void run() {
-                                onLoginSuccess();
-                                progressDialog.dismiss();
-                            }
-                        }, 3000);
                 break;
             case ERROR:
                 onLoginFailed(message.getMessageText());
@@ -199,7 +194,7 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
 
         //hide progress popup;
         this.progressDialog.dismiss();
-        goToFirstActivity();
+        this.goToFirstActivity();
     }
 
     @Override

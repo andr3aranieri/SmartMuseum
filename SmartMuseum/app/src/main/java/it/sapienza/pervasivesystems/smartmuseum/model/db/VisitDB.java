@@ -11,6 +11,7 @@ import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.business.aws.AWSConfiguration;
 import it.sapienza.pervasivesystems.smartmuseum.business.datetime.DateTimeBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
@@ -37,10 +38,10 @@ public class VisitDB {
         return result;
     }
 
-    public boolean insertWorkofartVisit(Date timeStamp, WorkofartModel wm, ExhibitModel em, UserModel um) {
+    public boolean insertWorkofartVisit(Date timeStamp, WorkofartModel wm, UserModel um) {
         boolean result = false;
         try {
-            result = this.wsOperations.getCypherResponse(this.createCypherInsertWorkofartVisit(timeStamp, wm, em, um));
+            result = this.wsOperations.getCypherResponse(this.createCypherInsertWorkofartVisit(timeStamp, wm, um));
         } catch (Exception ex) {
             ex.printStackTrace();
             result = false;
@@ -86,13 +87,25 @@ public class VisitDB {
     public HashMap<String, VisitExhibitModel> getUserExhibitHistoryHashMap(UserModel um) {
         HashMap<String, VisitExhibitModel> userExhibitHistory = new HashMap<String, VisitExhibitModel>();
         List<CypherRow<List<Object>>> rows = null;
+        String key;
+        ExhibitBusiness exhibitBusiness = new ExhibitBusiness();
+        VisitExhibitModel visitExhibitModel2;
         try {
             String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'exhibit'}) - [ve: WHAT_EXHIBIT] -> (e) RETURN e, v";
             rows = this.wsOperations.getCypherMultipleResults(cypher);
             VisitExhibitModel visitExhibitModel = null;
             for (CypherRow<List<Object>> row: rows) {
                 visitExhibitModel = this.readVisitExhibit(row);
-                userExhibitHistory.put(this.exhibitDB.getExhibitHashmapKey(visitExhibitModel.getExhibitModel()), visitExhibitModel);
+                key = this.exhibitDB.getExhibitHashmapKey(visitExhibitModel.getExhibitModel());
+                visitExhibitModel2 = userExhibitHistory.get(key);
+                if(visitExhibitModel2 == null) {
+                    userExhibitHistory.put(key, visitExhibitModel);
+                } else {
+                    if(visitExhibitModel.getTimeStamp().after(visitExhibitModel2.getTimeStamp())) {
+                        userExhibitHistory.remove(key);
+                        userExhibitHistory.put(key, visitExhibitModel);
+                    }
+                }
             }
         }
         catch(Exception ex) {
@@ -116,16 +129,17 @@ public class VisitDB {
                     "(mm:Minute) <- [:PART_OF] - \n" +
                     "(s:Second) <- [:HAPPENED_AT] - \n" +
                     "(v:Visit {type: 'Workofart'}) - [:WHAT_WORKOFART] -> \n" +
-                    "(w:Workofart) \n" +
-                    "WITH v, w\n" +
+                    "(w:Workofart)  - [:BELONGS_TO] -> \n" +
+                    "(e: Exhibit) \n" +
+                    "WITH v, w, e\n" +
                     "MATCH \n" +
                     "(u:User {email: '" + um.getEmail() + "'}) - [:VISITED] -> (v)\n" +
-                    "RETURN w, v";
+                    "RETURN w, v, e";
             rows = this.wsOperations.getCypherMultipleResults(cypher);
             VisitWorkofartModel visitWorkofartModel = null;
             for (CypherRow<List<Object>> row: rows) {
                 visitWorkofartModel = this.readWorkofartVisit(row);
-                userExhibitHistory.put(visitWorkofartModel.getWorkofartModel().getIdWork()+"", visitWorkofartModel);
+                userExhibitHistory.put(visitWorkofartModel.getWorkofartModel().getExhibitModel().getBeaconMajor() + ":" + visitWorkofartModel.getWorkofartModel().getExhibitModel().getBeaconMinor() +  ":" + visitWorkofartModel.getWorkofartModel().getIdWork(), visitWorkofartModel);
             }
         }
         catch(Exception ex) {
@@ -140,12 +154,12 @@ public class VisitDB {
         HashMap<String, VisitWorkofartModel> userExhibitHistory = new HashMap<String, VisitWorkofartModel>();
         List<CypherRow<List<Object>>> rows = null;
         try {
-            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'Workofart'}) - [vw: WHAT_WORKOFART] -> (w) RETURN w, v";
+            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'Workofart'}) - [vw: WHAT_WORKOFART] -> (w) - [:BELONGS_TO] -> (e: Exhibit)  RETURN w, v, e";
             rows = this.wsOperations.getCypherMultipleResults(cypher);
             VisitWorkofartModel visitWorkofartModel = null;
             for (CypherRow<List<Object>> row: rows) {
                 visitWorkofartModel = this.readWorkofartVisit(row);
-                userExhibitHistory.put(visitWorkofartModel.getWorkofartModel().getIdWork()+"", visitWorkofartModel);
+                userExhibitHistory.put(visitWorkofartModel.getWorkofartModel().getExhibitModel().getBeaconMajor() + ":" + visitWorkofartModel.getWorkofartModel().getExhibitModel().getBeaconMinor() +  ":" + visitWorkofartModel.getWorkofartModel().getIdWork(), visitWorkofartModel);
             }
         }
         catch(Exception ex) {
@@ -183,7 +197,7 @@ public class VisitDB {
         return cypher;
     }
 
-    private String createCypherInsertWorkofartVisit(Date ts, WorkofartModel wm, ExhibitModel em, UserModel um){
+    private String createCypherInsertWorkofartVisit(Date ts, WorkofartModel wm, UserModel um){
         DateTimeBusiness dateTimeBusiness = new DateTimeBusiness(ts);
         int year = dateTimeBusiness.getYear(),
                 month = dateTimeBusiness.getMonth(),
@@ -201,7 +215,7 @@ public class VisitDB {
                 "MERGE (s)<-[:HAPPENED_AT]-(v: Visit {type:'Workofart',timestamp:'" + timeStamp + "'})\n" +
                 "WITH v\n" +
                 "MATCH (u:User {email:'" + um.getEmail() + "'})\n" +
-                "MATCH (e:Exhibit {beaconMajor:'" + em.getBeaconMajor() + "', beaconMinor:'" + em.getBeaconMinor() + "'})\n" +
+                "MATCH (e:Exhibit {beaconMajor:'" + wm.getExhibitModel().getBeaconMajor() + "', beaconMinor:'" + wm.getExhibitModel().getBeaconMinor() + "'})\n" +
                 "MATCH (w:Workofart {idWork:'" + wm.getIdWork() + "'}) - [:BELONGS_TO] -> (e)\n" +
                 "MERGE (u)-[:VISITED]->(v)\n" +
                 "MERGE (v)-[:WHAT_WORKOFART]->(w)";
@@ -246,8 +260,15 @@ public class VisitDB {
         workofartModel.setAudioURL("https://".concat(AWSConfiguration.awsHostname.concat(objectMap.get("audio"))));
         visitWorkofartModel.setWorkofartModel(workofartModel);
 
+        LinkedTreeMap<String, String> objectMap3 = ((ArrayList<LinkedTreeMap<String,String>>)row.getRow()).get(2);
+        ExhibitModel exhibitModel = new ExhibitModel();
+        exhibitModel.setBeaconMajor(objectMap3.get("beaconMajor"));
+        exhibitModel.setBeaconMinor(objectMap3.get("beaconMinor"));
+        workofartModel.setExhibitModel(exhibitModel);
+
         LinkedTreeMap<String, String> objectMap2 = ((ArrayList<LinkedTreeMap<String,String>>)row.getRow()).get(1);
         visitWorkofartModel.setTimestamp(DateTimeBusiness.getDateFromMillis(Long.parseLong(objectMap2.get("timestamp"))));
+
         return visitWorkofartModel;
     }
 }

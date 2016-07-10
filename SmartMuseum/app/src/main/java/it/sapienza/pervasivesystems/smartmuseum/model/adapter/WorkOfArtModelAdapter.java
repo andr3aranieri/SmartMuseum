@@ -14,6 +14,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
+import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
+import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.WorkofartBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitWorkofartModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfObjectActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.Utilities;
@@ -68,8 +72,9 @@ public class WorkOfArtModelAdapter extends BaseAdapter {
         wrapper.obj_title.setText(Utilities.trimString(work.getTitle(), 30));
         Picasso.with(mContext).load(work.getImage()).into(wrapper.obj_image);
 
-
-        if(work.getTimeStamp() != null) {
+        String key = new WorkofartBusiness().getWorkofartHashmapKey(new ExhibitBusiness().getExhibitHashmapKey(work.getExhibitModel()), work);
+        VisitWorkofartModel visitWorkofartModel = SmartMuseumApp.totalVisitedWorksofart.get(key);
+        if(visitWorkofartModel != null) {
             wrapper.obj_timestamp_logo.setVisibility(View.VISIBLE);
         } else {
             wrapper.obj_timestamp_logo.setVisibility(View.GONE);

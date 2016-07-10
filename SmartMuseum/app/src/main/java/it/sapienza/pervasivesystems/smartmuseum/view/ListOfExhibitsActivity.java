@@ -181,7 +181,15 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
             ExhibitModel em = (ExhibitModel) message.getMessageObject();
             VisitExhibitModel visitExhibitModel = new VisitExhibitModel();
             visitExhibitModel.setExhibitModel(em);
-            SmartMuseumApp.todayVisitedExhibits.put(this.exhibitBusiness.getExhibitHashmapKey(em), visitExhibitModel);
+            String key = this.exhibitBusiness.getExhibitHashmapKey(em);
+            SmartMuseumApp.todayVisitedExhibits.put(key, visitExhibitModel);
+
+            VisitExhibitModel visitExhibitModel1 = SmartMuseumApp.totalVisitedExhibits.get(key);
+            ExhibitModel exhibitModel = visitExhibitModel1 != null ? visitExhibitModel1.getExhibitModel() : null;
+            if(exhibitModel != null) {
+                SmartMuseumApp.totalVisitedExhibits.remove(key);
+                SmartMuseumApp.totalVisitedExhibits.put(key, visitExhibitModel);
+            }
         }
 
         this.iAmWriting = false;

@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
 //        startActivity(intent);
 
         //Open Slack Session from here only if the user is already logged;
-        if(SmartMuseumApp.loggedUser != null) {
+        if(SmartMuseumApp.slackSession == null && SmartMuseumApp.loggedUser != null) {
             new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.OPEN_SESSION, "", "").execute();
 
             //show progress popup

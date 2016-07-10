@@ -33,6 +33,38 @@
             android:textColor="#000000"
             android:textSize="22sp"
             android:textStyle="bold" />
+
+        <!-- ANDREA TIME STAMP -->
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:id="@+id/exh_timestamp_layout2"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/exh_timestamp_logo2"
+                android:src="@drawable/user_history_logo"
+                android:layout_height="25dp"
+                android:layout_width="25dp"></ImageView>
+            <TextView
+                android:id="@+id/exh_timestamp_title2"
+                android:text="You visited "
+                android:paddingLeft="4dp"
+                android:paddingTop="2dp"
+                android:layout_toRightOf="@id/exh_timestamp_logo2"
+                android:layout_centerVertical="true"
+                android:layout_height="25dp"
+                android:layout_width="wrap_content"></TextView>
+            <TextView
+                android:id="@+id/exh_timestamp2"
+                android:paddingLeft="4dp"
+                android:paddingTop="2dp"
+                android:layout_toRightOf="@id/exh_timestamp_title2"
+                android:layout_centerVertical="true"
+                android:layout_height="25dp"
+                android:layout_width="wrap_content"></TextView>
+        </RelativeLayout>
+        <!-- ANDREA TIME STAMP -->
+
     </LinearLayout>
 
     <LinearLayout
