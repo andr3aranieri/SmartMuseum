@@ -167,6 +167,7 @@ public class WorkofartDB {
         ExhibitModel exhibit = new ExhibitModel();
         exhibit.setTitle(objectMap2.get("title"));
         exhibit.setShortDescription(objectMap2.get("shortDescription"));
+        exhibit.setLongDescription(objectMap.get("longDescription"));
         exhibit.setLongDescriptionURL("https://".concat(AWSConfiguration.awsHostname.concat(objectMap2.get("longDescription"))));
         exhibit.setImage("https://".concat(AWSConfiguration.awsHostname.concat(objectMap2.get("image"))));
         exhibit.setLocation(objectMap2.get("location"));
