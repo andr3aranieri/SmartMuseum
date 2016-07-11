@@ -58,7 +58,8 @@
         <activity android:name=".view.slack.gui.LeftChatActivity" />
         <activity android:name=".view.slack.gui.RightChatActivity" />
         <activity android:name=".view.slack.oauth.SlackLoginActivity" />
-        <activity android:name=".view.slack.oauth.SlackLoginWebActivity"></activity>
+        <activity android:name=".view.slack.oauth.SlackLoginWebActivity" />
+        <activity android:name=".view.WorkofartVisitItemActivity"></activity>
     </application>
 
 </manifest>

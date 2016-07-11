@@ -46,6 +46,7 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
     private Handler seekHandler = new Handler();
     private Utilities utils;
     private WorkofartModel objectDtl;
+    private String visitTimeStamp;
 //    String mp3 = "http://www.stephaniequinn.com/Music/Allegro%20from%20Duet%20in%20C%20Major.mp3";
 
     private ProgressDialog progressDialog;
@@ -60,7 +61,6 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
         Intent mIntent = getIntent();
 
         objectDtl = (WorkofartModel) mIntent.getSerializableExtra("workOfArtModel");
-
         image = (ImageView) findViewById(R.id.obj_dtl_image);
         title = (TextView) findViewById(R.id.obj_dtl_title);
         desc = (TextView) findViewById(R.id.obj_dtl_desc);
@@ -73,10 +73,10 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
         timeStampLayout = (View) findViewById(R.id.exh_timestamp_layout2);
         timeStampText = (TextView) findViewById(R.id.exh_timestamp2);
 
-        VisitWorkofartModel visitWorkofartModel = SmartMuseumApp.totalVisitedWorksofart.get(new WorkofartBusiness().getWorkofartHashmapKey(new ExhibitBusiness().getExhibitHashmapKey(objectDtl.getExhibitModel()), objectDtl));
-        if(visitWorkofartModel != null) {
+        visitTimeStamp = (String) mIntent.getSerializableExtra("visitTimestamp");
+        if(visitTimeStamp != null && !visitTimeStamp.trim().equals("")) {
             timeStampLayout.setVisibility(View.VISIBLE);
-            timeStampText.setText(new Utilities().formatDateToString(visitWorkofartModel.getTimestamp(), "dd/MM/yyyy HH:mm"));
+            timeStampText.setText(visitTimeStamp);
         }
         else {
             timeStampLayout.setVisibility(View.GONE);

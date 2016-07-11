@@ -3,6 +3,7 @@ package it.sapienza.pervasivesystems.smartmuseum.business.exhibits;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.business.aws.AWSConfiguration;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.VisitDB;
@@ -28,8 +29,8 @@ public class WorkofartBusiness {
         return this.visitDB.getTotalUserWorkofartHistoryHashMap(userModel);
     }
 
-    public ArrayList<WorkofartModel> getUserWorkofartHistory(UserModel um) {
-        return this.workofartDB.getUserWorkofartHistory(um);
+    public List<VisitWorkofartModel> getUserWorkofartHistoryList(UserModel um) {
+        return this.workofartDB.getUserWorkofartHistoryList(um);
     }
 
     public HashMap<String, WorkofartModel> getWorkofarts(ExhibitModel exhibitModel) {
