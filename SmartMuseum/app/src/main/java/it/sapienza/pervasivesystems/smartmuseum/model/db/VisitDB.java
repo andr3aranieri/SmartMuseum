@@ -116,6 +116,27 @@ public class VisitDB {
         return userExhibitHistory;
     }
 
+    public List<VisitExhibitModel> getUserExhibitHistoryList(UserModel um) {
+        ArrayList<VisitExhibitModel> userExhibitHistory = new ArrayList<VisitExhibitModel>();
+        List<CypherRow<List<Object>>> rows = null;
+        String key;
+        try {
+            String cypher = "MATCH (u: User {email:'" + um.getEmail() + "'}) - [r: VISITED] -> (v:Visit {type:'exhibit'}) - [ve: WHAT_EXHIBIT] -> (e) RETURN e, v";
+            rows = this.wsOperations.getCypherMultipleResults(cypher);
+            VisitExhibitModel visitExhibitModel = null;
+            for (CypherRow<List<Object>> row: rows) {
+                visitExhibitModel = this.readVisitExhibit(row);
+                userExhibitHistory.add(visitExhibitModel);
+            }
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            userExhibitHistory = null;
+        }
+
+        return userExhibitHistory;
+    }
+
     public HashMap<String, VisitWorkofartModel> getTodayUserWorkofartHistoryHashMap(UserModel um) {
         HashMap<String, VisitWorkofartModel> userExhibitHistory = new HashMap<String, VisitWorkofartModel>();
         List<CypherRow<List<Object>>> rows = null;

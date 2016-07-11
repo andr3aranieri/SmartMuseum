@@ -36,6 +36,8 @@ public class ExhibitDB {
         e1.setLocation("Floor 1, Room 3");
         e1.setColor("#E3F6CE");
         e1.setTimestamp(new Date(System.currentTimeMillis()));
+        e1.setBeaconMajor("33510");
+        e1.setBeaconMinor("55725");
         exhibits.add(e1);
 
         ExhibitModel e2 = new ExhibitModel();
@@ -48,6 +50,8 @@ public class ExhibitDB {
         e2.setOpeningHour("11:00-19:00");
         e2.setPeriod("01/05/2016 - 02/06/2016");
         e2.setLocation("Floor 2, Room 1");
+        e2.setBeaconMajor("2048");
+        e2.setBeaconMinor("8066");
         exhibits.add(e2);
 
         ExhibitModel e3 = new ExhibitModel();
@@ -61,6 +65,8 @@ public class ExhibitDB {
         e3.setPeriod("01/05/2016 - 24/05/2016");
         e3.setLocation("Floor 1, Room 5");
         e3.setColor("#E3F6CE");
+        e3.setBeaconMajor("20512");
+        e3.setBeaconMinor("25367");
         exhibits.add(e3);
 
         return exhibits;

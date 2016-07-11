@@ -3,7 +3,6 @@ package it.sapienza.pervasivesystems.smartmuseum.model.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +15,11 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
-import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfExhibitActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfObjectsActivity;
@@ -28,35 +27,32 @@ import it.sapienza.pervasivesystems.smartmuseum.view.ListOfUHObjectsActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.Utilities;
 
 /**
- * Created by Guamaral on 5/1/2016.
+ * Created by andrearanieri on 11/07/16.
  */
-public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
+public class VisitExhibitModelArrayAdapter extends ArrayAdapter<VisitExhibitModel> {
 
     Context context;
     int layoutResourceId;
-    ArrayList<ExhibitModel> exhibitModels = new ArrayList<ExhibitModel>();
+    List<VisitExhibitModel> visitsArray = new ArrayList<VisitExhibitModel>();
 
-    public ExhibitModelArrayAdapter(Context context, int layoutResourceId, ArrayList<ExhibitModel> exhibitModelsNew) {
-
-        super(context, layoutResourceId, exhibitModelsNew);
+    public VisitExhibitModelArrayAdapter(Context context, int layoutResourceId, List<VisitExhibitModel> visits) {
+        super(context, layoutResourceId, visits);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.exhibitModels = exhibitModelsNew;
-
+        this.visitsArray = visits;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View item = convertView;
-        ExhibitWrapper exhibitWrapper = null;
+        VisitExhibitWrapper exhibitWrapper = null;
 
         if (item == null) {
-
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             item = inflater.inflate(layoutResourceId, parent, false);
 
-            exhibitWrapper = new ExhibitWrapper();
+            exhibitWrapper = new VisitExhibitWrapper();
             exhibitWrapper.image = (ImageView) item.findViewById(R.id.exh_image);
             exhibitWrapper.title = (TextView) item.findViewById(R.id.exh_title);
             exhibitWrapper.shortDesc = (TextView) item.findViewById(R.id.exh_short_desc);
@@ -69,56 +65,39 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
             item.setTag(exhibitWrapper);
 
         } else {
-            exhibitWrapper = (ExhibitWrapper) item.getTag();
+            exhibitWrapper = (VisitExhibitWrapper) item.getTag();
         }
 
-        final ExhibitModel exhibitModel = exhibitModels.get(position);
+        final VisitExhibitModel visitExhibitModel = visitsArray.get(position);
 
-        Picasso.with(context).load(exhibitModel.getImage()).into(exhibitWrapper.image);
-        exhibitWrapper.title.setText(exhibitModel.getTitle());
-        exhibitWrapper.shortDesc.setText(exhibitModel.getShortDescription());
-        exhibitWrapper.exhDate.setText(exhibitModel.getPeriod());
-
-//        if(exhibitModel.getTimestamp() != null) {
-
-        Log.i("ADAPTER", "position: " + position + ", exhibit" + exhibitModel);
-
-        String key = new ExhibitBusiness().getExhibitHashmapKey(exhibitModel);
-        VisitExhibitModel visitExhibitModel = SmartMuseumApp.totalVisitedExhibits.get(key);
-        if(visitExhibitModel != null) {
-            exhibitWrapper.exhTimestampLayout.setVisibility(View.VISIBLE);
-            exhibitWrapper.exhTimestamp.setText(new Utilities().formatDateToString(visitExhibitModel.getTimeStamp(), "dd/MM/yyyy HH:mm"));
-        } else {
-            exhibitWrapper.exhTimestampLayout.setVisibility(View.GONE);
-        }
-
+        Picasso.with(context).load(visitExhibitModel.getExhibitModel().getImage()).into(exhibitWrapper.image);
+        exhibitWrapper.title.setText(visitExhibitModel.getExhibitModel().getTitle());
+        exhibitWrapper.shortDesc.setText(visitExhibitModel.getExhibitModel().getShortDescription());
+        exhibitWrapper.exhDate.setText(visitExhibitModel.getExhibitModel().getPeriod());
+        exhibitWrapper.exhTimestampLayout.setVisibility(View.VISIBLE);
+        exhibitWrapper.exhTimestamp.setText(new Utilities().formatDateToString(visitExhibitModel.getTimeStamp(), "dd/MM/yyyy HH:mm"));
 
         exhibitWrapper.objectBtn.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Intent intent = null;
 
                 //if the user is inside the museum, the list of object activity will be called.
-                if(SmartMuseumApp.isUserInsideMuseum) {
+                if (SmartMuseumApp.isUserInsideMuseum) {
                     intent = new Intent(context, ListOfObjectsActivity.class);
-                    intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
+                    intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(visitExhibitModel.getExhibitModel()));
                 } else {
                     intent = new Intent(context, ListOfUHObjectsActivity.class);
-                    intent.putExtra("exhibitId", exhibitModel.getId());
+                    intent.putExtra("exhibitId", visitExhibitModel.getExhibitModel().getId());
                 }
-
-
                 context.startActivity(intent);
             }
-
         });
         exhibitWrapper.detailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailOfExhibitActivity.class);
-//                intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
-                intent.putExtra("exhibitModel", exhibitModel);
+                intent.putExtra("exhibitModel", visitExhibitModel.getExhibitModel());
                 context.startActivity(intent);
             }
 
@@ -131,8 +110,7 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
     /**
      * Wrapper class that has to fill the exhibition items
      */
-    static class ExhibitWrapper {
-
+    static class VisitExhibitWrapper {
         ImageView image;
         TextView title;
         TextView shortDesc;
@@ -145,5 +123,3 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
     }
 
 }
-
-

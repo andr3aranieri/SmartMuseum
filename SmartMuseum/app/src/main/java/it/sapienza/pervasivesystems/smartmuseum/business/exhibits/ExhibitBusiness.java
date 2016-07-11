@@ -148,8 +148,8 @@ public class ExhibitBusiness {
         return this.visitDB.getUserExhibitHistoryHashMap(userModel);
     }
 
-    public ArrayList<VisitExhibitModel> getUserExhibitHistoryList(HashMap<String, VisitExhibitModel> userHistoryMap) {
-        return new ArrayList<VisitExhibitModel>(userHistoryMap.values());
+    public List<VisitExhibitModel> getUserExhibitHistoryList(UserModel userModel) {
+        return this.visitDB.getUserExhibitHistoryList(userModel);
     }
 
     public boolean hasAlreadyVisited(String key, HashMap<String, VisitExhibitModel> exhibitsHistoryMap) {
