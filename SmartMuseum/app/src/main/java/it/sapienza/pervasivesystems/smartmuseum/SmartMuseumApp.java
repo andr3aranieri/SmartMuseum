@@ -57,6 +57,7 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
     static public String newQuestionText;
     static public Beacon nearestExhibitBeacon;
     static public String localLoginFile = "LOCAL_LOGIN";
+    static public boolean saveVisit = true;
 
     static public SimpleDateFormat myDateFormat = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
 

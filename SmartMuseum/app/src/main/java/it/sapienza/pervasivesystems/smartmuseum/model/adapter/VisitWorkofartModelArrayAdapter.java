@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
+import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitWorkofartModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfExhibitActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfObjectActivity;
@@ -77,6 +78,7 @@ public class VisitWorkofartModelArrayAdapter extends ArrayAdapter<VisitWorkofart
         workofartWrapper.detailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SmartMuseumApp.saveVisit = false;
                 Intent intent = new Intent(context, DetailOfObjectActivity.class);
                 intent.putExtra("workOfArtModel", visitsArray.get(position).getWorkofartModel());
                 intent.putExtra("visitTimestamp", new Utilities().formatDateToString(visitsArray.get(position).getTimestamp(), "dd/MM/yyyy HH:mm"));

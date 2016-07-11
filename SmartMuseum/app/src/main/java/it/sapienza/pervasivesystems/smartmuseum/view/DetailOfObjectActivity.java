@@ -88,11 +88,13 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
             e.printStackTrace();
         }
 
-        this.progressDialog = new ProgressDialog(DetailOfObjectActivity.this, R.style.AppTheme_Dark_Dialog);
-        this.progressDialog.setIndeterminate(true);
-        this.progressDialog.setMessage("Loading Data... Please wait.");
-        this.progressDialog.show();
-        new WorkofartVisitAsync(this, objectDtl, SmartMuseumApp.loggedUser).execute();
+        if(SmartMuseumApp.saveVisit) {
+            this.progressDialog = new ProgressDialog(DetailOfObjectActivity.this, R.style.AppTheme_Dark_Dialog);
+            this.progressDialog.setIndeterminate(true);
+            this.progressDialog.setMessage("Loading Data... Please wait.");
+            this.progressDialog.show();
+            new WorkofartVisitAsync(this, objectDtl, SmartMuseumApp.loggedUser).execute();
+        }
     }
 
     public void getInit() throws IOException {
