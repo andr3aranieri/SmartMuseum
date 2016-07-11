@@ -1,6 +1,7 @@
 package it.sapienza.pervasivesystems.smartmuseum.view;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusines
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.model.adapter.VisitExhibitModelArrayAdapter;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.gui.MainChatActivity;
 
 public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListOfUHExhibitsActivityLoadUserHistoryAsyncResponse {
 
@@ -62,8 +64,9 @@ public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListO
             return true;
         }
         if(id == R.id.action_ask) {
-            System.out.println("******ACTION ask*********");
-            return true;
+            Intent intent = null;
+            intent = new Intent(this, MainChatActivity.class);
+            this.startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
