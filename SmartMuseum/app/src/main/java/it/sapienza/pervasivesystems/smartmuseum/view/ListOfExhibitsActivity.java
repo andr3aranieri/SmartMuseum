@@ -100,6 +100,7 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
         return true;
     }
 
@@ -119,6 +120,10 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
             Intent intent = null;
             intent = new Intent(this, MainChatActivity.class);
             this.startActivity(intent);
+        }
+
+        if(id == R.id.action_back) {
+            super.onBackPressed();
         }
 
         return super.onOptionsItemSelected(item);
