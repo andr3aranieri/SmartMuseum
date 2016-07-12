@@ -43,12 +43,15 @@ public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListO
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        toolbar.getMenu().findItem(R.id.work_of_art_list).setVisible(true);
         return true;
     }
 
@@ -57,8 +60,9 @@ public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListO
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
+
         if (id == R.id.action_logout) {
             System.out.println("******ACTION logout*********");
             return true;
@@ -67,6 +71,16 @@ public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListO
             Intent intent = null;
             intent = new Intent(this, MainChatActivity.class);
             this.startActivity(intent);
+        }
+
+        if (id == R.id.work_of_art_list) {
+            Intent intent = null;
+            intent = new Intent(this, ListOfUHObjectsActivity.class);
+            this.startActivity(intent);
+        }
+
+        if(id == R.id.action_back) {
+            super.onBackPressed();
         }
 
         return super.onOptionsItemSelected(item);
