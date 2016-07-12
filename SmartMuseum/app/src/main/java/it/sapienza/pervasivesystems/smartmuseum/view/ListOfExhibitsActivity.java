@@ -117,8 +117,7 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         }
         if(id == R.id.action_ask) {
             System.out.println("******ACTION ask*********");
-            Intent intent = null;
-            intent = new Intent(this, MainChatActivity.class);
+            Intent intent = new Intent(this, MainChatActivity.class);
             this.startActivity(intent);
         }
 
