@@ -3,7 +3,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    android:background="@drawable/bg_red_pattern_2"
         android:orientation="vertical"
         tools:context="it.sapienza.pervasivesystems.smartmuseum.view.slack.gui.MainChatActivity">
 

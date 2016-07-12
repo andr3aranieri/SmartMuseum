@@ -14,6 +14,7 @@ import com.estimote.sdk.Beacon;
 import com.ullink.slack.simpleslackapi.SlackSession;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,12 +24,14 @@ import it.sapienza.pervasivesystems.smartmuseum.business.beacons.BeaconBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Monitoring;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
+import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.db.ExhibitDB;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitWorkofartModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.gui.ChatMessage;
 
 /**
  * Created by andrearanieri on 21/04/16.
@@ -58,6 +61,7 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
     static public Beacon nearestExhibitBeacon;
     static public String localLoginFile = "LOCAL_LOGIN";
     static public boolean saveVisit = true;
+    static public boolean newMessage = false;
 
     static public SimpleDateFormat myDateFormat = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
 
@@ -65,6 +69,9 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
     static public SlackSession slackSession = null;
 
     private ExhibitDB exhibitDB = new ExhibitDB();
+
+    private ArrayList<ChatMessage> oldMessages;
+    private SlackBusiness slackBusiness = new SlackBusiness();
 
     @Override
     public void onCreate() {
@@ -81,7 +88,6 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
 
         //initial loading the unordered exhibits from DB (we'll order this list in the list of exhibits view during beacons ranging);
         new LoadExhibitsAsync(this).execute();
-
     }
 
     public void showNotification(String title, String message) {
@@ -108,9 +114,9 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
             String key = new BeaconBusiness().getBeaconHashmapKey(nearestExhibitBeacon);
 
             ExhibitModel em = SmartMuseumApp.unsortedExhibits.get(key);
-            return "[ " + em.getTitle() + " ] - located at: " + em.getLocation() + "";
+            return "_EXHIBIT_: *" + em.getTitle() + "* - _LOCATION_: *" + em.getLocation() + "*\n";
         } else
-            return "_EXHIBIT_: *Gioconda* - _LOCATION_: *Secondo piano sotto la piramide di Cheope*\n";
+            return "";
     }
 
     @Override

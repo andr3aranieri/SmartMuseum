@@ -140,8 +140,8 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:minHeight="0dp"
-                android:text="DETAIL"
-                android:textColor="#27AE60"
+                android:text="WORK OF ART DETAIL"
+                android:textColor="#C64142"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -156,8 +156,8 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:minHeight="0dp"
-                android:text="View Exhibit"
-                android:textColor="#3498DB"
+                android:text="EXHIBIT DETAIL"
+                android:textColor="#C64142"
                 android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>

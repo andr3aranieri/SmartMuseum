@@ -120,7 +120,6 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            //TODO
             try {
                 new FileSystemBusiness(this).deleteFile(SmartMuseumApp.localLoginFile);
             } catch (IOException e) {
@@ -226,6 +225,9 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
         else {
             Log.i("CHATACTIVITY2", "Dont LOAD MESSAGES");
         }
+
+        SmartMuseumApp.newMessage = reloadMessages;
+        Log.i("SMARTAPP", "NEW MESSAGE!!!!!: " + SmartMuseumApp.newMessage);
 
         //hide progress popup;
         this.progressDialog.dismiss();

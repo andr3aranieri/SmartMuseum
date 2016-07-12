@@ -88,7 +88,7 @@
             android:fontFamily="sans-serif-condensed"
             android:textColor="#000000"
             android:textSize="18sp"
-            android:textStyle="italic" />
+            android:textStyle="normal" />
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -101,7 +101,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_marginTop="2dp"
-                android:text="Period :  "
+                android:text="Period:  "
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -113,7 +113,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginTop="2dp"
                 android:textSize="16sp"
-                android:textStyle="italic" />
+                android:textStyle="normal" />
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -140,8 +140,8 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:minHeight="0dp"
-                android:text="EXHIBITS DETAIL"
-                android:textColor="#27AE60"
+                android:text="EXHIBIT'S DETAIL"
+                android:textColor="#C64142"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -156,8 +156,8 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:minHeight="0dp"
-                android:text="OBJECTS"
-                android:textColor="#3498DB"
+                android:text="WORKS OF ART"
+                android:textColor="#C64142"
                 android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
