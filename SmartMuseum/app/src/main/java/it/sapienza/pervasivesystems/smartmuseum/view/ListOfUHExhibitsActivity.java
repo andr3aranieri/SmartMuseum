@@ -54,7 +54,7 @@ public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListO
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        toolbar.getMenu().findItem(R.id.work_of_art_list).setVisible(true);
+        toolbar.getMenu().findItem(R.id.exhibition_list).setVisible(false);
         return true;
     }
 
