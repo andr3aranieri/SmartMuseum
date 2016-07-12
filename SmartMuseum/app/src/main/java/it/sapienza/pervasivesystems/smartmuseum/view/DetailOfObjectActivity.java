@@ -7,6 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,6 +31,7 @@ import it.sapienza.pervasivesystems.smartmuseum.business.visits.VisitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.UserModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitWorkofartModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.gui.MainChatActivity;
 
 public class DetailOfObjectActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener, WorkofartVisitAsyncResponse {
 
@@ -47,6 +51,7 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
     private Utilities utils;
     private WorkofartModel objectDtl;
     private String visitTimeStamp;
+    private Toolbar toolbar;
 //    String mp3 = "http://www.stephaniequinn.com/Music/Allegro%20from%20Duet%20in%20C%20Major.mp3";
 
     private ProgressDialog progressDialog;
@@ -82,6 +87,9 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
             timeStampLayout.setVisibility(View.GONE);
         }
 
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        setSupportActionBar(toolbar);
+
         try {
             getInit();
         } catch (IOException e) {
@@ -95,6 +103,38 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
             this.progressDialog.show();
             new WorkofartVisitAsync(this, objectDtl, SmartMuseumApp.loggedUser).execute();
         }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_logout) {
+            //TODO
+            System.out.println("******ACTION logout*********");
+            return true;
+        }
+        if(id == R.id.action_ask) {
+            Intent intent = new Intent(this, MainChatActivity.class);
+            this.startActivity(intent);
+        }
+
+        if(id == R.id.action_back) {
+            super.onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void getInit() throws IOException {
