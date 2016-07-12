@@ -19,13 +19,16 @@ import android.widget.ListView;
 
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
+import it.sapienza.pervasivesystems.smartmuseum.business.InternalStorage.FileSystemBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.view.LoginActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsync;
 import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsyncResponse;
 
@@ -116,8 +119,13 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             //TODO
-            System.out.println("******ACTION logout*********");
-            return true;
+            try {
+                new FileSystemBusiness(this).deleteFile(SmartMuseumApp.localLoginFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Intent intent = new Intent(this, LoginActivity.class);
+            this.startActivity(intent);
         }
         if(id == R.id.action_back) {
             super.onBackPressed();

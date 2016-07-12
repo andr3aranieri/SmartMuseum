@@ -152,10 +152,6 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
     }
 
     private void goToFirstActivity() {
-
-        System.out.println("*****************gotofirstactivity************" + SmartMuseumApp.isUserInsideMuseum);
-
-
         Intent intent = null;
         //if the user is inside of the museum, the list of exhibits will be called
         if(SmartMuseumApp.isUserInsideMuseum) {
@@ -163,6 +159,8 @@ public class LoginActivity extends AppCompatActivity implements LoginAsyncRespon
         } else { // otherwise the history of users exhibits list will be called
             intent = new Intent(this, ListOfUHObjectsActivity.class);
         }
+
+        this.startActivity(intent);
     }
 
     @Override

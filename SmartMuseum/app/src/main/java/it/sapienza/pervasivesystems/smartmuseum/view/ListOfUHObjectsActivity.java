@@ -10,10 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
+import it.sapienza.pervasivesystems.smartmuseum.business.InternalStorage.FileSystemBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.WorkofartBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.model.adapter.VisitWorkofartModelArrayAdapter;
@@ -66,7 +68,11 @@ public class ListOfUHObjectsActivity extends AppCompatActivity implements ListOf
         //noinspection SimplifiableIfStatement
 
         if (id == R.id.action_logout) {
-            //TODO
+            try {
+                new FileSystemBusiness(this).deleteFile(SmartMuseumApp.localLoginFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Intent intent = new Intent(this, LoginActivity.class);
             this.startActivity(intent);
         }

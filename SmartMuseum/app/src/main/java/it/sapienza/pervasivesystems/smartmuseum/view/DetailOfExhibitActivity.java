@@ -20,7 +20,8 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
-import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
+import it.sapienza.pervasivesystems.smartmuseum.business.InternalStorage.FileSystemBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.slack.gui.MainChatActivity;
 
@@ -98,7 +99,11 @@ public class DetailOfExhibitActivity extends AppCompatActivity implements View.O
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            //TODO
+            try {
+                new FileSystemBusiness(this).deleteFile(SmartMuseumApp.localLoginFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Intent intent = new Intent(this, LoginActivity.class);
             this.startActivity(intent);
         }
