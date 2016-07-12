@@ -18,9 +18,10 @@
         android:orientation="vertical">
 
         <ImageView
+            android:layout_marginTop="40dp"
             android:id="@+id/exh_dtl_image"
             android:layout_width="fill_parent"
-            android:layout_height="200dp"
+            android:layout_height="250dp"
             android:scaleType="fitXY" />
 
         <TextView
