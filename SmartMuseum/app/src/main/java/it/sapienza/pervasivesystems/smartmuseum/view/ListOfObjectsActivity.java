@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -18,11 +21,13 @@ import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication
 import it.sapienza.pervasivesystems.smartmuseum.model.adapter.WorkOfArtModelAdapter;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.WorkofartModel;
+import it.sapienza.pervasivesystems.smartmuseum.view.slack.gui.MainChatActivity;
 
 public class ListOfObjectsActivity extends AppCompatActivity implements ListOfObjectsActivityAsyncResponse
 {
 
     private WorkofartBusiness workofartBusiness = new WorkofartBusiness();
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +42,42 @@ public class ListOfObjectsActivity extends AppCompatActivity implements ListOfOb
 //        GridView gridview = (GridView) findViewById(R.id.gridView);
 //        gridview.setAdapter(new WorkOfArtModelAdapter(this, workofartModels));
 
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        setSupportActionBar(toolbar);
+
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_logout) {
+            //TODO
+            System.out.println("******ACTION logout*********");
+            return true;
+        }
+        if(id == R.id.action_ask) {
+            Intent intent = new Intent(this, MainChatActivity.class);
+            this.startActivity(intent);
+        }
+
+        if(id == R.id.action_back) {
+            super.onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     public void processFinish(ILCMessage message) {
