@@ -10,11 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
+import it.sapienza.pervasivesystems.smartmuseum.business.InternalStorage.FileSystemBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.WorkofartBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
@@ -62,7 +64,11 @@ public class ListOfObjectsActivity extends AppCompatActivity implements ListOfOb
         int id = item.getItemId();
 
         if (id == R.id.action_logout) {
-            //TODO
+            try {
+                new FileSystemBusiness(this).deleteFile(SmartMuseumApp.localLoginFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Intent intent = new Intent(this, LoginActivity.class);
             this.startActivity(intent);
         }

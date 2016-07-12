@@ -15,6 +15,7 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.SystemRequirementsChecker;
 import com.estimote.sdk.Utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
+import it.sapienza.pervasivesystems.smartmuseum.business.InternalStorage.FileSystemBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.BeaconBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Ranging;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.RangingDetection;
@@ -113,6 +115,11 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             //TODO
+            try {
+                new FileSystemBusiness(this).deleteFile(SmartMuseumApp.localLoginFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Intent intent = new Intent(this, LoginActivity.class);
             this.startActivity(intent);
         }
