@@ -113,8 +113,8 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             //TODO
-            System.out.println("******ACTION logout*********");
-            return true;
+            Intent intent = new Intent(this, LoginActivity.class);
+            this.startActivity(intent);
         }
         if(id == R.id.action_ask) {
             System.out.println("******ACTION ask*********");
