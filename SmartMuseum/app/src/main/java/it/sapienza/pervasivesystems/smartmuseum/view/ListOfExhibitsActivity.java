@@ -112,6 +112,7 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
+            //TODO
             System.out.println("******ACTION logout*********");
             return true;
         }
