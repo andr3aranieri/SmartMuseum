@@ -8,8 +8,8 @@
     <string name="header_questions" value="Opened Quesitons" />
     <string name="ask"></string>
     <string name="logout_action">Logout</string>
-    <string name="exhibition_list">Exhibition lists</string>
-    <string name="work_of_arts">Work of arts</string>
+    <string name="exhibition_list">Exhibition history</string>
+    <string name="work_of_arts">Work of art history</string>
 
 
 </resources>
