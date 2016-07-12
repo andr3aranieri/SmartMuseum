@@ -133,6 +133,17 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
             super.onBackPressed();
         }
 
+        if (id == R.id.exhibition_list) {
+            Intent intent = new Intent(this, ListOfUHExhibitsActivity.class);
+            this.startActivity(intent);
+        }
+
+        if (id == R.id.work_of_art_list) {
+            Intent intent = new Intent(this, ListOfUHObjectsActivity.class);
+            this.startActivity(intent);
+        }
+
+
         return super.onOptionsItemSelected(item);
     }
 
