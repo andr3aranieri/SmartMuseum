@@ -71,8 +71,7 @@ public class ListOfUHObjectsActivity extends AppCompatActivity implements ListOf
             return true;
         }
         if(id == R.id.action_ask) {
-            Intent intent = null;
-            intent = new Intent(this, MainChatActivity.class);
+            Intent intent = new Intent(this, MainChatActivity.class);
             this.startActivity(intent);
         }
 
