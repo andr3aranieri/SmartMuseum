@@ -7,10 +7,30 @@
         android:title="@string/logout_action"
         app:showAsAction="never" />
     <item
+        android:id="@+id/exhibition_list"
+        android:orderInCategory="100"
+        android:title="@string/exhibition_list"
+        android:visible="false"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/work_of_art_list"
+        android:orderInCategory="100"
+        android:title="@string/work_of_arts"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_ask"
         android:orderInCategory="200"
         android:title="Ask"
         android:icon="@drawable/chat_icon"
+        app:showAsAction="ifRoom"
+        ></item>
+    <item
+        android:id="@+id/action_back"
+        android:orderInCategory="200"
+        android:title="Ask"
+        android:icon="@drawable/back_icon"
         app:showAsAction="ifRoom"
         ></item>
 
