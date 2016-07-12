@@ -21,67 +21,74 @@
             android:layout_marginTop="40dp"
             android:id="@+id/obj_dtl_image"
             android:layout_width="fill_parent"
-            android:layout_height="250dp"
+            android:layout_height="200dp"
             android:scaleType="fitXY" />
 
         <TextView
             android:id="@+id/obj_dtl_title"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:fontFamily="sans-serif-condensed"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="22sp"
             android:textStyle="bold" />
 
-        <!-- ANDREA TIME STAMP -->
-        <RelativeLayout
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:id="@+id/exh_timestamp_layout2"
-            android:orientation="horizontal">
-            <ImageView
-                android:id="@+id/exh_timestamp_logo2"
-                android:src="@drawable/user_history_logo"
-                android:layout_height="25dp"
-                android:layout_width="25dp"></ImageView>
-            <TextView
-                android:id="@+id/exh_timestamp_title2"
-                android:text="You visited "
-                android:paddingLeft="4dp"
-                android:paddingTop="2dp"
-                android:layout_toRightOf="@id/exh_timestamp_logo2"
-                android:layout_centerVertical="true"
-                android:layout_height="25dp"
-                android:layout_width="wrap_content"></TextView>
-            <TextView
-                android:id="@+id/exh_timestamp2"
-                android:paddingLeft="4dp"
-                android:paddingTop="2dp"
-                android:layout_toRightOf="@id/exh_timestamp_title2"
-                android:layout_centerVertical="true"
-                android:layout_height="25dp"
-                android:layout_width="wrap_content"></TextView>
-        </RelativeLayout>
-        <!-- ANDREA TIME STAMP -->
-
     </LinearLayout>
+
+    <!-- ANDREA TIME STAMP -->
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:id="@+id/exh_timestamp_layout2"
+        android:layout_below="@+id/obj_dtl_img_layout"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/exh_timestamp_logo2"
+            android:src="@drawable/user_history_logo"
+            android:layout_height="25dp"
+            android:layout_width="25dp"></ImageView>
+        <TextView
+            android:id="@+id/exh_timestamp_title2"
+            android:text="You visited "
+            android:paddingLeft="4dp"
+            android:paddingTop="2dp"
+            android:layout_toRightOf="@id/exh_timestamp_logo2"
+            android:layout_centerVertical="true"
+            android:layout_height="25dp"
+            android:layout_width="wrap_content"></TextView>
+        <TextView
+            android:id="@+id/exh_timestamp2"
+            android:paddingLeft="4dp"
+            android:paddingTop="2dp"
+            android:layout_toRightOf="@id/exh_timestamp_title2"
+            android:layout_centerVertical="true"
+            android:layout_height="25dp"
+            android:layout_width="wrap_content"></TextView>
+    </LinearLayout>
+    <!-- ANDREA TIME STAMP -->
 
     <LinearLayout
         android:id="@+id/media_player_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/obj_dtl_img_layout"
-        android:layout_marginTop="10dp"
+        android:layout_below="@+id/exh_timestamp_layout2"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/playPauseButton"
-            android:layout_width="150px"
-            android:layout_height="150px"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:layout_marginLeft="5px"
             android:layout_marginTop="5px"
             android:background="@drawable/play_icon_pink"
@@ -118,6 +125,8 @@
         android:id="@+id/scrollViewExhDtl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_below="@+id/media_player_layout"
         android:layout_marginTop="12dp">
 
