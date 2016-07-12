@@ -68,14 +68,12 @@ public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListO
             return true;
         }
         if(id == R.id.action_ask) {
-            Intent intent = null;
-            intent = new Intent(this, MainChatActivity.class);
+            Intent intent = new Intent(this, MainChatActivity.class);
             this.startActivity(intent);
         }
 
         if (id == R.id.work_of_art_list) {
-            Intent intent = null;
-            intent = new Intent(this, ListOfUHObjectsActivity.class);
+            Intent intent = new Intent(this, ListOfUHObjectsActivity.class);
             this.startActivity(intent);
         }
 
