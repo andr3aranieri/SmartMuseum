@@ -28,6 +28,8 @@ import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.InternalStorage.FileSystemBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.view.ListOfUHExhibitsActivity;
+import it.sapienza.pervasivesystems.smartmuseum.view.ListOfUHObjectsActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.LoginActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsync;
 import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsyncResponse;
@@ -129,6 +131,16 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
         }
         if(id == R.id.action_back) {
             super.onBackPressed();
+        }
+
+        if (id == R.id.exhibition_list) {
+            Intent intent = new Intent(this, ListOfUHExhibitsActivity.class);
+            this.startActivity(intent);
+        }
+
+        if (id == R.id.work_of_art_list) {
+            Intent intent = new Intent(this, ListOfUHObjectsActivity.class);
+            this.startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
