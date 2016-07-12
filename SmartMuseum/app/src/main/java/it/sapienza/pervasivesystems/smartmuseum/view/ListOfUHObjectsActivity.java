@@ -77,8 +77,7 @@ public class ListOfUHObjectsActivity extends AppCompatActivity implements ListOf
         }
 
         if (id == R.id.exhibition_list) {
-            Intent intent = null;
-            intent = new Intent(this, ListOfUHExhibitsActivity.class);
+            Intent intent = new Intent(this, ListOfUHExhibitsActivity.class);
             this.startActivity(intent);
         }
 
