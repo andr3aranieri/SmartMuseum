@@ -64,8 +64,9 @@ public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListO
         int id = item.getItemId();
 
         if (id == R.id.action_logout) {
-            System.out.println("******ACTION logout*********");
-            return true;
+            //TODO
+            Intent intent = new Intent(this, LoginActivity.class);
+            this.startActivity(intent);
         }
         if(id == R.id.action_ask) {
             Intent intent = new Intent(this, MainChatActivity.class);
