@@ -86,9 +86,6 @@ public class WorkOfArtModelAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailOfObjectActivity.class);
-//                intent.putExtra("idWork", workofartModels.get(position).getIdWork());
-//                WorkofartModel workofartModel = workofartModels.get(position);
-//                intent.putExtra("key", workofartModel.getExhibitModel().getBeaconMajor() + ":" + workofartModel.getExhibitModel().getBeaconMinor() + ":" + workofartModel.getIdWork());
 
                 intent.putExtra("workOfArtModel", workofartModels.get(position));
                 mContext.startActivity(intent);

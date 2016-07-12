@@ -15,7 +15,7 @@ import it.sapienza.pervasivesystems.smartmuseum.business.beacons.Ranging;
 import it.sapienza.pervasivesystems.smartmuseum.business.beacons.RangingDetection;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.business.slack.SlackBusiness;
-import it.sapienza.pervasivesystems.smartmuseum.view.ListOfUHObjectsActivity;
+import it.sapienza.pervasivesystems.smartmuseum.view.ListOfExhibitsActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.LoginActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsync;
 import it.sapienza.pervasivesystems.smartmuseum.view.slack.ChatAsyncResponse;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
     }
 
     private void goToListOfExhibitsActivity() {
-        Intent intent = new Intent(this, ListOfUHObjectsActivity.class);
+        Intent intent = new Intent(this, ListOfExhibitsActivity.class);
         startActivity(intent);
     }
 

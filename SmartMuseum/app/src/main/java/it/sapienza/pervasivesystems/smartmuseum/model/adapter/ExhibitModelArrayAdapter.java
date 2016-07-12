@@ -24,7 +24,6 @@ import it.sapienza.pervasivesystems.smartmuseum.model.entity.ExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfExhibitActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfObjectsActivity;
-import it.sapienza.pervasivesystems.smartmuseum.view.ListOfUHObjectsActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.Utilities;
 
 /**
@@ -98,16 +97,18 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
             @Override
             public void onClick(View v) {
                 Intent intent = null;
-
+                SmartMuseumApp.saveVisit = true;
                 //if the user is inside the museum, the list of object activity will be called.
-                if(SmartMuseumApp.isUserInsideMuseum) {
-                    intent = new Intent(context, ListOfObjectsActivity.class);
-                    intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
-                } else {
-                    intent = new Intent(context, ListOfUHObjectsActivity.class);
-                    intent.putExtra("exhibitId", exhibitModel.getId());
-                }
+//                if(SmartMuseumApp.isUserInsideMuseum) {
+//                    intent = new Intent(context, ListOfObjectsActivity.class);
+//                    intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
+//                } else {
+//                    intent = new Intent(context, ListOfUHObjectsActivity.class);
+//                    intent.putExtra("exhibitId", exhibitModel.getId());
+//                }
 
+                intent = new Intent(context, ListOfObjectsActivity.class);
+                intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(exhibitModel));
 
                 context.startActivity(intent);
             }

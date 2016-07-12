@@ -23,7 +23,6 @@ import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusines
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.DetailOfExhibitActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.ListOfObjectsActivity;
-import it.sapienza.pervasivesystems.smartmuseum.view.ListOfUHObjectsActivity;
 import it.sapienza.pervasivesystems.smartmuseum.view.Utilities;
 
 /**
@@ -83,13 +82,19 @@ public class VisitExhibitModelArrayAdapter extends ArrayAdapter<VisitExhibitMode
                 Intent intent = null;
 
                 //if the user is inside the museum, the list of object activity will be called.
-                if (SmartMuseumApp.isUserInsideMuseum) {
-                    intent = new Intent(context, ListOfObjectsActivity.class);
-                    intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(visitExhibitModel.getExhibitModel()));
-                } else {
-                    intent = new Intent(context, ListOfUHObjectsActivity.class);
-                    intent.putExtra("exhibitId", visitExhibitModel.getExhibitModel().getId());
-                }
+                SmartMuseumApp.saveVisit = false;
+
+//                if (SmartMuseumApp.isUserInsideMuseum) {
+//                    intent = new Intent(context, ListOfObjectsActivity.class);
+//                    intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(visitExhibitModel.getExhibitModel()));
+//                } else {
+//                    intent = new Intent(context, ListOfUHObjectsActivity.class);
+//                    intent.putExtra("exhibitId", visitExhibitModel.getExhibitModel().getId());
+//                }
+
+                intent = new Intent(context, ListOfObjectsActivity.class);
+                intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(visitExhibitModel.getExhibitModel()));
+
                 context.startActivity(intent);
             }
         });

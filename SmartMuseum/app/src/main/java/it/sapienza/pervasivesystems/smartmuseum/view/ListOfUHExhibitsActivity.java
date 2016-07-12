@@ -10,14 +10,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.util.HashMap;
 import java.util.List;
 
 import it.sapienza.pervasivesystems.smartmuseum.R;
 import it.sapienza.pervasivesystems.smartmuseum.SmartMuseumApp;
 import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.ExhibitBusiness;
+import it.sapienza.pervasivesystems.smartmuseum.business.exhibits.WorkofartBusiness;
 import it.sapienza.pervasivesystems.smartmuseum.business.interlayercommunication.ILCMessage;
 import it.sapienza.pervasivesystems.smartmuseum.model.adapter.VisitExhibitModelArrayAdapter;
 import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitExhibitModel;
+import it.sapienza.pervasivesystems.smartmuseum.model.entity.VisitWorkofartModel;
 import it.sapienza.pervasivesystems.smartmuseum.view.slack.gui.MainChatActivity;
 
 public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListOfUHExhibitsActivityLoadUserHistoryAsyncResponse {
@@ -87,9 +90,13 @@ public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListO
 
     @Override
     public void loadUserHistoryFinish(ILCMessage message) {
-        //TODO getUserExhibitHistory iig duudna
-        this.dataItems = (List<VisitExhibitModel>) message.getMessageObject();
+        Object[] objects = (Object[]) message.getMessageObject();
+        List<VisitExhibitModel> ev = null;
+
+        this.dataItems = (List<VisitExhibitModel>) objects[0];
         exhibitVisitsAdapter = new VisitExhibitModelArrayAdapter(ListOfUHExhibitsActivity.this, R.layout.activity_item_of_exhibits, dataItems);
+
+        SmartMuseumApp.totalVisitedWorksofart = (HashMap<String, VisitWorkofartModel>) objects[1];
 
         // Getting a reference to listview of activity_item_of_exhibits layout file
         listView = (ListView) findViewById(R.id.listview);
@@ -120,7 +127,13 @@ class ListOfUHExhibitsActivityLoadUserHistoryAsync extends AsyncTask<Void, Integ
         this.message.setMessageText("List of total exhibit user history");
         ExhibitBusiness exhibitBusiness = new ExhibitBusiness();
         List<VisitExhibitModel> totalVisits = exhibitBusiness.getUserExhibitHistoryList(SmartMuseumApp.loggedUser);
-        this.message.setMessageObject(totalVisits);
+
+        WorkofartBusiness workofartBusiness = new WorkofartBusiness();
+        HashMap<String, VisitWorkofartModel> totalWorkofartsVisits = workofartBusiness.getTotalUserWorksofartHistoryHashMap(SmartMuseumApp.loggedUser);
+
+        Object[] objects = new Object[] {totalVisits, totalWorkofartsVisits};
+
+        this.message.setMessageObject(objects);
         return this.message.getMessageText();
     }
 
