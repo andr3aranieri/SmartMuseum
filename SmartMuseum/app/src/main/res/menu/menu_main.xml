@@ -10,13 +10,11 @@
         android:id="@+id/exhibition_list"
         android:orderInCategory="100"
         android:title="@string/exhibition_list"
-        android:visible="false"
         app:showAsAction="never" />
     <item
         android:id="@+id/work_of_art_list"
         android:orderInCategory="100"
         android:title="@string/work_of_arts"
-        android:visible="false"
         app:showAsAction="never" />
 
     <item
