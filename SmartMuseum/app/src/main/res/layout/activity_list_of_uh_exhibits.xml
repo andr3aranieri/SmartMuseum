@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="0dp"
         android:paddingTop="8dp"
-        android:text="Exhibitions"
+        android:text="Your Exhibition history"
         android:gravity="center"
         android:textSize="25dp"
         android:textStyle="bold" />
