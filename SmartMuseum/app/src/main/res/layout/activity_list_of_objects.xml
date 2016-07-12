@@ -3,9 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_exhibits"
+    android:background="@drawable/bg_red_pattern_2"
     android:orientation="vertical"
     >
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar">
+    </include>
 
     <GridView
         android:id="@+id/gridView"
