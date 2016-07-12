@@ -63,8 +63,8 @@ public class ListOfObjectsActivity extends AppCompatActivity implements ListOfOb
 
         if (id == R.id.action_logout) {
             //TODO
-            System.out.println("******ACTION logout*********");
-            return true;
+            Intent intent = new Intent(this, LoginActivity.class);
+            this.startActivity(intent);
         }
         if(id == R.id.action_ask) {
             Intent intent = new Intent(this, MainChatActivity.class);
