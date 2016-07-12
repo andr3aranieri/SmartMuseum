@@ -103,6 +103,7 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        toolbar.getMenu().findItem(R.id.action_ask).setVisible(false);
         return true;
     }
 
@@ -114,8 +115,12 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
+            //TODO
             System.out.println("******ACTION logout*********");
             return true;
+        }
+        if(id == R.id.action_back) {
+            super.onBackPressed();
         }
 
         return super.onOptionsItemSelected(item);
