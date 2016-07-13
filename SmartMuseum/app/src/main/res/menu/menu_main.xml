@@ -24,6 +24,15 @@
         android:icon="@drawable/chat_icon"
         app:showAsAction="ifRoom"
         ></item>
+
+    <!--<item-->
+    <!--android:id="@+id/action_ask"-->
+    <!--android:actionLayout="@layout/badge_count"-->
+    <!--android:orderInCategory="200"-->
+    <!--android:title="Ask"-->
+    <!--app:showAsAction="always">-->
+    <!--</item>-->
+
     <item
         android:id="@+id/action_back"
         android:orderInCategory="300"
