@@ -3,7 +3,6 @@ package it.sapienza.pervasivesystems.smartmuseum.model.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,10 +76,6 @@ public class ExhibitModelArrayAdapter extends ArrayAdapter<ExhibitModel> {
         exhibitWrapper.title.setText(exhibitModel.getTitle());
         exhibitWrapper.shortDesc.setText(exhibitModel.getShortDescription());
         exhibitWrapper.exhDate.setText(exhibitModel.getPeriod());
-
-//        if(exhibitModel.getTimestamp() != null) {
-
-        Log.i("ADAPTER", "position: " + position + ", exhibit" + exhibitModel);
 
         String key = new ExhibitBusiness().getExhibitHashmapKey(exhibitModel);
         VisitExhibitModel visitExhibitModel = SmartMuseumApp.totalVisitedExhibits.get(key);

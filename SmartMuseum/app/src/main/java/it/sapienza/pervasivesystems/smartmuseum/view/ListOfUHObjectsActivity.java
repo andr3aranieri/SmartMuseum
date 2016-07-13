@@ -42,7 +42,7 @@ public class ListOfUHObjectsActivity extends AppCompatActivity implements ListOf
 
         this.progressDialog = new ProgressDialog(ListOfUHObjectsActivity.this, R.style.AppTheme_Dark_Dialog);
         this.progressDialog.setIndeterminate(true);
-        this.progressDialog.setMessage("Loading User History (Objects)... Please wait.");
+        this.progressDialog.setMessage("Loading User History... Please wait.");
         this.progressDialog.show();
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object

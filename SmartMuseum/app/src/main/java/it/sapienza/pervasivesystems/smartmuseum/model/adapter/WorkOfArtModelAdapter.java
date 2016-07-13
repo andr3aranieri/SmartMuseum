@@ -73,7 +73,7 @@ public class WorkOfArtModelAdapter extends BaseAdapter {
         Picasso.with(mContext).load(work.getImage()).into(wrapper.obj_image);
 
         String key = new WorkofartBusiness().getWorkofartHashmapKey(new ExhibitBusiness().getExhibitHashmapKey(work.getExhibitModel()), work);
-        VisitWorkofartModel visitWorkofartModel = SmartMuseumApp.totalVisitedWorksofart.get(key);
+        final VisitWorkofartModel visitWorkofartModel = SmartMuseumApp.totalVisitedWorksofart.get(key);
         if(visitWorkofartModel != null) {
             wrapper.obj_timestamp_logo.setVisibility(View.VISIBLE);
         } else {
@@ -88,6 +88,8 @@ public class WorkOfArtModelAdapter extends BaseAdapter {
                 Intent intent = new Intent(mContext, DetailOfObjectActivity.class);
 
                 intent.putExtra("workOfArtModel", workofartModels.get(position));
+                if(visitWorkofartModel != null)
+                    intent.putExtra("visitTimestamp", new Utilities().formatDateToString(visitWorkofartModel.getTimestamp(), "dd/MM/yyyy HH:mm"));
                 mContext.startActivity(intent);
             }
         });

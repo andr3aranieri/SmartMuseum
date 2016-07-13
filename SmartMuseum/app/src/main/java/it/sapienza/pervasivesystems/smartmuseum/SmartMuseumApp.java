@@ -114,7 +114,7 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
             String key = new BeaconBusiness().getBeaconHashmapKey(nearestExhibitBeacon);
 
             ExhibitModel em = SmartMuseumApp.unsortedExhibits.get(key);
-            return "_EXHIBIT_: *" + em.getTitle() + "* - _LOCATION_: *" + em.getLocation() + "*\n";
+            return em != null ? "_EXHIBIT_: *" + em.getTitle() + "* - _LOCATION_: *" + em.getLocation() + "*\n": "";
         } else
             return "";
     }
