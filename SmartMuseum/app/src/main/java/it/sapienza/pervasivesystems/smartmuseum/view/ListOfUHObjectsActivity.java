@@ -8,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.List;
@@ -77,6 +79,7 @@ public class ListOfUHObjectsActivity extends AppCompatActivity implements ListOf
             this.startActivity(intent);
         }
         if(id == R.id.action_ask) {
+
             Intent intent = new Intent(this, MainChatActivity.class);
             this.startActivity(intent);
         }
