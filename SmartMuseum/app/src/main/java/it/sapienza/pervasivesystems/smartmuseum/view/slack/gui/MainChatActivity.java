@@ -100,8 +100,13 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
 
-        //TODO ANDREA: slack message posted listener not working
+        //slack message posted listener
 //        this.slackBusiness.startListener(channelToLoad, "andrea_visitor");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -130,6 +135,7 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
         }
         if(id == R.id.action_back) {
             super.onBackPressed();
+            SmartMuseumApp.newMessageRead = true;
         }
 
         if (id == R.id.exhibition_list) {
@@ -169,7 +175,8 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
     @Override
     public void onBackPressed() {
         //stop the async channel messages downloading;
-        this.chatAsyncPushMessages.setPushMessages(false);
+//        this.chatAsyncPushMessages.setPushMessages(false);
+        SmartMuseumApp.newMessageRead = true;
         return;
     }
 

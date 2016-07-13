@@ -111,6 +111,7 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.createThreadChatNotification();
         return true;
     }
 
@@ -131,6 +132,7 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
             this.startActivity(intent);
         }
         if(id == R.id.action_ask) {
+            SmartMuseumApp.newMessageRead = true;
             Intent intent = new Intent(this, MainChatActivity.class);
             this.startActivity(intent);
         }
@@ -261,6 +263,31 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
                 SmartMuseumApp.totalVisitedWorksofart.put(key, visitWorkofartModel);
             }
         }
+    }
+
+    private void createThreadChatNotification() {
+        final DetailOfObjectActivity parentActivity = this;
+        final Handler handler=new Handler();
+        handler.post(new Runnable(){
+            @Override
+            public void run() {
+                // upadte textView here
+                handler.postDelayed(this,5000); // set time here to refresh textView
+
+                MenuItem item = toolbar.getMenu().findItem(R.id.action_ask);
+
+                if(SmartMuseumApp.newMessage) {
+                    SmartMuseumApp.newMessageRead = false;
+                    item.setIcon(R.drawable.ic_chat_notification2);
+                }
+                else {
+                    if(!SmartMuseumApp.newMessageRead)
+                        item.setIcon(R.drawable.ic_chat_notification2);
+                    else
+                        item.setIcon(R.drawable.chat_icon);
+                }
+            }
+        });
     }
 }
 

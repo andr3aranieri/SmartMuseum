@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -103,6 +104,8 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        this.createThreadChatNotification();
+
         return true;
     }
 
@@ -125,6 +128,7 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         }
         if(id == R.id.action_ask) {
             System.out.println("******ACTION ask*********");
+            SmartMuseumApp.newMessageRead = true;
             Intent intent = new Intent(this, MainChatActivity.class);
             this.startActivity(intent);
         }
@@ -273,6 +277,33 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         listView = (ListView) findViewById(R.id.listview);
         listView.setItemsCanFocus(false);
         listView.setAdapter(exhibitAdapter);
+    }
+
+    private void createThreadChatNotification() {
+        final ListOfExhibitsActivity parentActivity = this;
+        final Handler handler=new Handler();
+        handler.post(new Runnable(){
+            @Override
+            public void run() {
+                // upadte textView here
+                handler.postDelayed(this,5000); // set time here to refresh textView
+
+                MenuItem item = toolbar.getMenu().findItem(R.id.action_ask);
+
+                if(SmartMuseumApp.newMessage) {
+                    SmartMuseumApp.newMessageRead = false;
+                    item.setIcon(R.drawable.ic_chat_notification2);
+                }
+                else {
+                    if(!SmartMuseumApp.newMessageRead)
+                        item.setIcon(R.drawable.ic_chat_notification2);
+                    else
+                    item.setIcon(R.drawable.chat_icon);
+                }
+
+                Log.i("NOTIFICATION", "new message: " + SmartMuseumApp.newMessage + ", messageRead: " + SmartMuseumApp.newMessageRead);
+            }
+        });
     }
 }
 

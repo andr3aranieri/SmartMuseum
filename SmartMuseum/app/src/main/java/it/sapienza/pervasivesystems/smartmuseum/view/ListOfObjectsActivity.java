@@ -3,6 +3,7 @@ package it.sapienza.pervasivesystems.smartmuseum.view;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -53,6 +54,7 @@ public class ListOfObjectsActivity extends AppCompatActivity implements ListOfOb
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.createThreadChatNotification();
         return true;
     }
 
@@ -73,6 +75,7 @@ public class ListOfObjectsActivity extends AppCompatActivity implements ListOfOb
             this.startActivity(intent);
         }
         if(id == R.id.action_ask) {
+            SmartMuseumApp.newMessageRead = true;
             Intent intent = new Intent(this, MainChatActivity.class);
             this.startActivity(intent);
         }
@@ -106,6 +109,31 @@ public class ListOfObjectsActivity extends AppCompatActivity implements ListOfOb
             case ERROR:
                 break;
         }
+    }
+
+    private void createThreadChatNotification() {
+        final ListOfObjectsActivity parentActivity = this;
+        final Handler handler=new Handler();
+        handler.post(new Runnable(){
+            @Override
+            public void run() {
+                // upadte textView here
+                handler.postDelayed(this,5000); // set time here to refresh textView
+
+                MenuItem item = toolbar.getMenu().findItem(R.id.action_ask);
+
+                if(SmartMuseumApp.newMessage) {
+                    SmartMuseumApp.newMessageRead = false;
+                    item.setIcon(R.drawable.ic_chat_notification2);
+                }
+                else {
+                    if(!SmartMuseumApp.newMessageRead)
+                        item.setIcon(R.drawable.ic_chat_notification2);
+                    else
+                        item.setIcon(R.drawable.chat_icon);
+                }
+            }
+        });
     }
 }
 

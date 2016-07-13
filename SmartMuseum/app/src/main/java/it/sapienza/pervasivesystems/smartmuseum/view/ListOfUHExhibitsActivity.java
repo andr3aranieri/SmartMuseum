@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -57,6 +58,7 @@ public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListO
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         toolbar.getMenu().findItem(R.id.exhibition_list).setVisible(false);
+        this.createThreadChatNotification();
         return true;
     }
 
@@ -78,6 +80,7 @@ public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListO
             this.startActivity(intent);
         }
         if(id == R.id.action_ask) {
+            SmartMuseumApp.newMessageRead = true;
             Intent intent = new Intent(this, MainChatActivity.class);
             this.startActivity(intent);
         }
@@ -110,6 +113,31 @@ public class ListOfUHExhibitsActivity extends AppCompatActivity implements ListO
         listView.setAdapter(exhibitVisitsAdapter);
 
         this.progressDialog.dismiss();
+    }
+
+    private void createThreadChatNotification() {
+        final ListOfUHExhibitsActivity parentActivity = this;
+        final Handler handler=new Handler();
+        handler.post(new Runnable(){
+            @Override
+            public void run() {
+                // upadte textView here
+                handler.postDelayed(this,5000); // set time here to refresh textView
+
+                MenuItem item = toolbar.getMenu().findItem(R.id.action_ask);
+
+                if(SmartMuseumApp.newMessage) {
+                    SmartMuseumApp.newMessageRead = false;
+                    item.setIcon(R.drawable.ic_chat_notification2);
+                }
+                else {
+                    if(!SmartMuseumApp.newMessageRead)
+                        item.setIcon(R.drawable.ic_chat_notification2);
+                    else
+                        item.setIcon(R.drawable.chat_icon);
+                }
+            }
+        });
     }
 }
 
