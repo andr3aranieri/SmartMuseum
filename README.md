@@ -1,6 +1,6 @@
 # SmartMuseum
 
-![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/app_icon.png)
+![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/app_icon.png)
 
 
 
