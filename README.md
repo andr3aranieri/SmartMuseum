@@ -36,11 +36,11 @@ The Slack integration is done using a BOT token; it is transparent to the user (
 
 ##Architecture
 
-![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/architecture.png)
+![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/architecture.png)
 
 The Estimote Android SDK lets the app interact with beacons (detecting the user entering a beacon region, the list of beacons around him and estimating the distances):
 
-![alt tag](https://github.com/GuamaralVasili/SmartMuseumImages/blob/master/arch_beacons.png)
+![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/arch_beacons.png)
 
 
 The graph nosql dbms Neo4J, installed on a ubuntu virtual machine hosted by amazon EC2, stores the database.
