@@ -76,16 +76,20 @@ When the user registers to the application, the system chooses the first free ch
 
 
 
-##Demo
-https://www.youtube.com/watch?v=X9FN14E_KmA
-
-
-
 ##Installation instructions
 
 1. Download and install android studio
 2. Clone the https://github.com/smartmuseumandroidapp/SmartMuseum git repository
 3. Join https://smartmuseumask.slack.com team.
 
+##Team
+You can find us : 
+	Guamaral Vasili : https://www.linkedin.com/in/guamaral-vasil-707393a5
+	Andrea Ranieri : https://it.linkedin.com/in/andrea-ranieri-bb6165b7
 
+The project was developed for the course of "Pervasive Systems 2016", held by Prof. Ioannis Chatzigiannakis within the Master of Science in Computer Science of University of Rome "La Sapienza". 
+
+Homepage of Pervasive Systems 2016 course : http://ichatz.me/index.php/Site/PervasiveSystems2016
+SlideShare presentation : http://www.slideshare.net/guamaralvasil/smart-museum-61019999
+Short demo : https://www.youtube.com/watch?v=X9FN14E_KmA
 
