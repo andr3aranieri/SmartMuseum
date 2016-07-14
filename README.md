@@ -47,11 +47,11 @@ The graph nosql dbms Neo4J, installed on a ubuntu virtual machine hosted by amaz
 
 
 ######Museum Structure
-![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/arch_neo4j1.png)
+![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/arch_neo4j1.png)
 
 
 ######User Visits store, using a time tree to access to them chronologically
-![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/arch_neo4j2.png)
+![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/arch_neo4j2.png)
 
 
 The amazon S3 bucket is used to store and retrieve the multimedia files (audio, images, long text files).
@@ -61,11 +61,11 @@ When the user registers to the application, the system chooses the first free ch
 
 
 ######User Registration
-![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/arch_userregistration.png)
+![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/arch_userregistration.png)
 
 
 ######User - Expert interaction
-![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/arch_userexpertinteraction.png)
+![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/arch_userexpertinteraction.png)
 
 
 
