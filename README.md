@@ -73,7 +73,7 @@ When the user registers to the application, the system chooses the first free ch
 
 
 ##Demo
-<iframe width="420" height="315" src="https://www.youtube.com/embed/X9FN14E_KmA" frameborder="0" allowfullscreen></iframe>
+https://www.youtube.com/embed/X9FN14E_KmA
 
 
 
