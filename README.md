@@ -83,7 +83,7 @@ When the user registers to the application, the system chooses the first free ch
 3. Join https://smartmuseumask.slack.com team.
 
 ##Team
-You can find us : 
+You can find us :
 
 	Guamaral Vasili : https://www.linkedin.com/in/guamaral-vasil-707393a5
 	Andrea Ranieri : https://it.linkedin.com/in/andrea-ranieri-bb6165b7
