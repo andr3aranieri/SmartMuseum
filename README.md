@@ -69,11 +69,11 @@ When the user registers to the application, the system chooses the first free ch
 
 
 ##Application Screenshots
-|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s1.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s2.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s3.png)|
+|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s1.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s8.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s5.png)|
 |------------|------------|------------|
-|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s4.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s5.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s6.png)|
+|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s9.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s6.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s4.png)|
 |------------|------------|------------|
-|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s7.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s8.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s9.png)|
+|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s3.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s2.png)||
 
 
 
