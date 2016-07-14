@@ -6,20 +6,20 @@
 
 ##Introduction
 
-Smart Museum is a pervasive Android application that enhances user’s museum Experience. 
-Using bluetooth low energy, the application is able to sense the physical environment and adapt its behavior detecting the exhibits around the user and estimating their distance from him.
+Smart Museum is a pervasive Android application that enhances user’s museum experience. 
+Using bluetooth low energy, the application is able to sense the physical environment and adapt its behavior detecting the exhibits around the user and estimating their distance from her/him.
 Using a graph nosql database, the app stores every action of the user inside the museum, to be able to create a complete user history of visits.
 The user will be able to 
-- receive detailed informations about the exhibits around him directly on his smartphone;
-- access his history of visits whenever, wherever you want; 
+- receive detailed informations about the exhibits around her/him directly on her/his smartphone;
+- access her/his history of visits whenever, wherever you want; 
 - interact with museum experts to clarify every doubt or to obtain more detailed informations about the exhibits;
 
 The interaction with the physical environment is implemented using eddystone beacons:
-- Monitoring: when the user approaches one of the museum entrances, he will receive a notification that invites him to start the app and to enter the museum;
-- Ranging: when the user is inside the museum, the app detectes the exhibits around him showing them ordered by distance in real time;
+- Monitoring: when the user approaches one of the museum entrances, she/he will receive a notification that invites her/him to start the app and to enter the museum;
+- Ranging: when the user is inside the museum, the app detectes the exhibits around her/him showing them ordered by distance in real time;
 
 The ask to an expert function is implemented using the http://smartmuseumask.slack.com/ Slack team. 
-The Slack integration is done using a BOT token; it is transparent to the user (the user doesn’t use his Slack account), and in the future could be replaced by a proprietary message server.
+The Slack integration is done using a BOT token; it is transparent to the user (the user doesn’t use her/his Slack account), and in the future could be replaced by a proprietary message server.
 
 
 
@@ -38,7 +38,7 @@ The Slack integration is done using a BOT token; it is transparent to the user (
 
 ![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/architecture.png)
 
-The Estimote Android SDK lets the app interact with beacons (detecting the user entering a beacon region, the list of beacons around him and estimating the distances):
+The Estimote Android SDK lets the app interact with beacons (detecting the user entering a beacon region, the list of beacons around her/him and estimating the distances):
 
 ![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/arch_beacons.png)
 
@@ -57,7 +57,7 @@ The graph nosql dbms Neo4J, installed on a ubuntu virtual machine hosted by amaz
 The amazon S3 bucket is used to store and retrieve the multimedia files (audio, images, long text files).
 
 https://smartmuseumask.slack.com Slack team lets the user interact with museum experts. We use a set of pre-created channels. The number of channels depends on the estimated number of users. 
-When the user registers to the application, the system chooses the first free channel and permanently assigns it to him. The user will use this channel to interact with museum experts.
+When the user registers to the application, the system chooses the first free channel and permanently assigns it to her/him. The user will use this channel to interact with museum experts.
 
 
 ######User Registration
