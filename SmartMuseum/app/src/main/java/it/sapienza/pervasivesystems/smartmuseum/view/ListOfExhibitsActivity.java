@@ -61,15 +61,6 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_exhibits);
 
-//        //reading data from sorted exhibitList and set it to the adapter class
-//        this.dataItems = (ArrayList<ExhibitModel>) new ExhibitDB().getSortedExhibitList();
-//        exhibitAdapter = new ExhibitModelArrayAdapter(ListOfExhibitsActivity.this, R.layout.activity_item_of_exhibits, dataItems);
-//
-//        // Getting a reference to listview of activity_item_of_exhibits layout file
-//        listView = (ListView) findViewById(R.id.listview);
-//        listView.setItemsCanFocus(false);
-//        listView.setAdapter(exhibitAdapter);
-
         //initial loading of the today user exhibit history not to store a visit more than once;
         new LoadUserHistoryAsync(this).execute();
 
@@ -306,58 +297,6 @@ public class ListOfExhibitsActivity extends AppCompatActivity implements Ranging
         });
     }
 }
-
-//class RangingTest2 {
-//    static int i = 1;
-//
-//    private ListOfExhibitsActivity act;
-//
-//    public RangingTest2(ListOfExhibitsActivity a) {
-//        this.act = a;
-//    }
-//
-//    public void getSortedBeacons() {
-//        ILCMessage message = new ILCMessage();
-//        List<Beacon> beacons = new ArrayList<Beacon>();
-//        switch (i)
-//
-//        {
-//            case 1:
-//                i = 2;
-//                Beacon b1 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString("58:b0:35:f0:95:a1"), 33510, 55725, 0, 0);
-//                Beacon b2 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString("AB-46-C5-4A-F8-B4"), 20512, 25367, 0, 0);
-//                Beacon b3 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString("C5-62-DE-4B-39-85"), 2048, 8066, 0, 0);
-//                beacons.add(b1);
-//                beacons.add(b2);
-//                beacons.add(b3);
-//                break;
-//            case 2:
-//                i = 3;
-//                Beacon b4 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 20512, 25367, 0, 0);
-//                Beacon b5 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 33510, 55725, 0, 0);
-//                Beacon b6 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 2048, 8066, 0, 0);
-//                beacons.add(b4);
-//                beacons.add(b5);
-//                beacons.add(b6);
-//                break;
-//            case 3:
-//                i = 1;
-//                Beacon b8 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 20512, 25367, 0, 0);
-//                Beacon b9 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 33510, 55725, 0, 0);
-//                Beacon b7 = new Beacon(new java.util.UUID(new Long(1), new Long(1)), MacAddress.fromString(""), 2048, 8066, 0, 0);
-//                beacons.add(b7);
-//                beacons.add(b8);
-//                beacons.add(b9);
-//                break;
-//        }
-//
-//        message.setMessageType(ILCMessage.MessageType.DEBUG);
-//        message.setMessageText("TEST");
-//        message.setMessageObject(beacons);
-//
-//        this.act.beaconsDetected(message);
-//    }
-//}
 
 interface ListOfExhibitsAsyncResponse {
     void processFinish(ILCMessage message);

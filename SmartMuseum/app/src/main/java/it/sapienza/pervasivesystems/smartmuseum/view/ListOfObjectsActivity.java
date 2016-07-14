@@ -41,10 +41,6 @@ public class ListOfObjectsActivity extends AppCompatActivity implements ListOfOb
         String exhibitKey = mIntent.getStringExtra("exhibitId");
         new ListOfObjectsActivityAsync(this, new ExhibitBusiness().getExhibitDetail(exhibitKey)).execute();
 
-//        ArrayList<WorkofartModel> workofartModels = new WorkofartBusiness().getWorkOfArtListFAKE();
-//        GridView gridview = (GridView) findViewById(R.id.gridView);
-//        gridview.setAdapter(new WorkOfArtModelAdapter(this, workofartModels));
-
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
 

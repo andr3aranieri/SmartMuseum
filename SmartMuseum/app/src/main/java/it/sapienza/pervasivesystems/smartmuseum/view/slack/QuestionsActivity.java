@@ -64,7 +64,6 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionsAsy
             ex.printStackTrace();
             this.newChannelName = "";
         }
-//        new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.CREATE_CHANNEL, this.newChannelName.substring(0, 21), "").execute();
         new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.CHANNEL_LIST, this.newChannelName.substring(0, 21), "").execute();
 
         this.showProgressPopup("Sending Question. Please wait...");

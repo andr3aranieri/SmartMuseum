@@ -97,7 +97,6 @@ public class SmartMuseumApp extends Application implements LoadExhibitsAsyncResp
         PendingIntent pendingIntent = PendingIntent.getActivities(this, 0,
                 new Intent[]{notifyIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification = new Notification.Builder(this)
-//                .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setSmallIcon(R.drawable.ic_smartmuseumnotifica6)
                 .setContentTitle(title)
                 .setContentText(message)

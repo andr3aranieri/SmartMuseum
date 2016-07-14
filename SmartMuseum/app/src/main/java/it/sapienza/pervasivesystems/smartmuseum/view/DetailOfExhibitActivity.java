@@ -51,14 +51,11 @@ public class DetailOfExhibitActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_detail_of_exhibit);
 
         Intent mIntent = getIntent();
-//        String exhibitKey = mIntent.getStringExtra("exhibitId");
-//        ExhibitModel exhDtl = (ExhibitModel) new ExhibitBusiness().getExhibitDetail(exhibitKey);
 
         exhDtl= (ExhibitModel) mIntent.getSerializableExtra("exhibitModel");
 
         if(exhDtl == null)
             return;
-
 
         image = (ImageView) findViewById(R.id.exh_dtl_image);
         title = (TextView) findViewById(R.id.exh_dtl_title);
