@@ -70,10 +70,10 @@ When the user registers to the application, the system chooses the first free ch
 
 
 ##Application Screenshots
-|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s1.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s8.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s5.png)|
+|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s1.png)|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s8.png)|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s5.png)|
 |------------|------------|------------|
-|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s9.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s6.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s4.png)|
-|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s3.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s10.png)|![alt tag](https://github.com/andr3aranieri/smartmuseumimages/blob/master/s2.png)|
+|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s9.png)|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s6.png)|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s4.png)|
+|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s3.png)|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s10.png)|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s2.png)|
 
 
 
@@ -88,7 +88,7 @@ When the user registers to the application, the system chooses the first free ch
 You can find us :
 
 - *Guamaral Vasili*: https://www.linkedin.com/in/guamaral-vasil-707393a5
-- *Andrea Ranieri*: https://it.linkedin.com/in/andrea-ranieri-bb6165b7
+- *Andrea Ranieri*: http://www.slideshare.net/AndreaRanieri5
 	
 
 The project was developed for the course of "Pervasive Systems 2016", held by Prof. Ioannis Chatzigiannakis within the Master of Science in Computer Science of University of Rome "La Sapienza". 
