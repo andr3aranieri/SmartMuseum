@@ -38,31 +38,6 @@ public class MainActivity extends AppCompatActivity implements RangingDetection,
         Ranging.rangingDetection = this;
         this.beaconsRanging.initRanging();
 
-//        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,
-//                R.style.AppTheme_Dark_Dialog);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setMessage("Detecting your position. Please wait...");
-//        progressDialog.show();
-
-//        new android.os.Handler().postDelayed(
-//                new Runnable() {
-//                    public void run() {
-//                        goToFirstActivity();
-//                        progressDialog.dismiss();
-//                    }
-//                }, 3000);
-
-//        Intent intent = null;
-//
-//        //if the user is inside of the museum, the list of exhibits will be called
-//        if(SmartMuseumApp.isUserInsideMuseum) {
-//            intent = new Intent(this, ListOfExhibitsActivity.class);
-//        } else { // otherwise the history of users exhibits list will be called
-//            intent = new Intent(this, ListOfUHExhibitsActivity.class);
-//        }
-//
-//        startActivity(intent);
-
         //Open Slack Session from here only if the user is already logged;
         if(SmartMuseumApp.slackSession == null && SmartMuseumApp.loggedUser != null) {
             new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.OPEN_SESSION, "", "").execute();

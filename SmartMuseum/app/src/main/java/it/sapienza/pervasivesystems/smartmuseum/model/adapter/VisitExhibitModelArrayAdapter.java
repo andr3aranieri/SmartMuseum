@@ -83,15 +83,6 @@ public class VisitExhibitModelArrayAdapter extends ArrayAdapter<VisitExhibitMode
 
                 //if the user is inside the museum, the list of object activity will be called.
                 SmartMuseumApp.saveVisit = false;
-
-//                if (SmartMuseumApp.isUserInsideMuseum) {
-//                    intent = new Intent(context, ListOfObjectsActivity.class);
-//                    intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(visitExhibitModel.getExhibitModel()));
-//                } else {
-//                    intent = new Intent(context, ListOfUHObjectsActivity.class);
-//                    intent.putExtra("exhibitId", visitExhibitModel.getExhibitModel().getId());
-//                }
-
                 intent = new Intent(context, ListOfObjectsActivity.class);
                 intent.putExtra("exhibitId", new ExhibitBusiness().getExhibitHashmapKey(visitExhibitModel.getExhibitModel()));
 

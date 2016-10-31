@@ -43,7 +43,6 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
     static public String channelToLoad;
     private ProgressDialog progressDialog;
     private SlackBusiness slackBusiness = new SlackBusiness();
-    private ChatAsync chatAsyncPushMessages;
     private ArrayList<ChatMessage> oldMessages;
     private Toolbar toolbar;
 
@@ -63,10 +62,6 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
         new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.DOWNLOAD_MESSAGES, channelToLoad, "").execute();
 
         /*****SLACK CHANNEL MESSAGES PUSH********/
-//        this.chatAsyncPushMessages = new ChatAsync(this, SmartMuseumApp.loggedUser, SlackBusiness.SlackCommand.PUSH_MESSAGES, channelToLoad, "");
-//        this.chatAsyncPushMessages.setPushMessages(true);
-//        this.chatAsyncPushMessages.execute();
-
         final MainChatActivity parentActivity = this;
         final Handler handler=new Handler();
         handler.post(new Runnable(){
@@ -99,9 +94,6 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
-
-        //slack message posted listener
-//        this.slackBusiness.startListener(channelToLoad, "andrea_visitor");
     }
 
     @Override
@@ -175,7 +167,6 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
     @Override
     public void onBackPressed() {
         //stop the async channel messages downloading;
-//        this.chatAsyncPushMessages.setPushMessages(false);
         SmartMuseumApp.newMessageRead = true;
         return;
     }
@@ -234,7 +225,6 @@ public class MainChatActivity extends AppCompatActivity implements ChatAsyncResp
         }
 
         SmartMuseumApp.newMessage = reloadMessages;
-        Log.i("SMARTAPP", "NEW MESSAGE!!!!!: " + SmartMuseumApp.newMessage);
 
         //hide progress popup;
         this.progressDialog.dismiss();

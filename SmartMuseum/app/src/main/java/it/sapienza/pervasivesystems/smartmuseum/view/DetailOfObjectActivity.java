@@ -151,7 +151,6 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
             this.startActivity(intent);
         }
 
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -161,7 +160,6 @@ public class DetailOfObjectActivity extends AppCompatActivity implements View.On
 
         musicDuration = (TextView) findViewById(R.id.musicDuration);
         musicCurrentLoc = (TextView) findViewById(R.id.musicCurrentLoc);
-
 
         play_button.setOnClickListener(this);
         player = new MediaPlayer();
