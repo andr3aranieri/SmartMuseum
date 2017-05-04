@@ -91,7 +91,7 @@ You can find us :
 - *Andrea Ranieri*: https://www.linkedin.com/in/andr3aranieri/
 	
 
-The project was developed for the course of "Pervasive Systems 2016", held by Prof. Ioannis Chatzigiannakis within the Master of Science in Computer Science of University of Rome "La Sapienza". 
+The project was developed for the course of "Pervasive Systems 2016", held by Prof. Ioannis Chatzigiannakis within the Master of Science in Engineering in Computer Science of University of Rome "La Sapienza". 
 
 Homepage of Pervasive Systems 2016 course : http://ichatz.me/index.php/Site/PervasiveSystems2016
 
