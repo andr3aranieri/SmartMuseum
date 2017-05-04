@@ -4,7 +4,7 @@
 
 
 
-##Introduction
+## Introduction
 
 Smart Museum is a pervasive Android application that enhances user’s museum experience. 
 Using bluetooth low energy, the application is able to sense the physical environment and adapt its behavior detecting the exhibits around the user and estimating their distance from her/him.
@@ -23,7 +23,7 @@ The Slack integration is done using a BOT token; it is transparent to the user (
 
 
 
-##Technologies
+## Technologies
 
 - Estimote Android SDK used for beacons monitoring and ranging: http://estimote.com/
 - Neo4j hosted on Amazon EC2 ubuntu machine for data storing: https://neo4j.com/
@@ -34,7 +34,7 @@ The Slack integration is done using a BOT token; it is transparent to the user (
 
 
 
-##Architecture
+## Architecture
 
 ![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/architecture.png)
 
@@ -46,11 +46,11 @@ The Estimote Android SDK lets the app interact with beacons (detecting the user 
 The graph nosql dbms Neo4J, installed on a ubuntu virtual machine hosted by amazon EC2, stores the database.
 
 
-######Museum Structure
+###### Museum Structure
 ![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/arch_neo4j1.png)
 
 
-######User Visits store, using a time tree to access to them chronologically
+###### User Visits store, using a time tree to access to them chronologically
 ![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/arch_neo4j2.png)
 
 
@@ -60,16 +60,16 @@ https://smartmuseumask.slack.com Slack team lets the user interact with museum e
 When the user registers to the application, the system chooses the first free channel and permanently assigns it to her/him. The user will use this channel to interact with museum experts.
 
 
-######User Registration
+###### User Registration
 ![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/arch_userregistration.png)
 
 
-######User - Expert interaction
+###### User - Expert interaction
 ![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/arch_userexpertinteraction.png)
 
 
 
-##Application Screenshots
+## Application Screenshots
 |![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s1.png)|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s8.png)|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s5.png)|
 |------------|------------|------------|
 |![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s9.png)|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s6.png)|![alt tag](https://github.com/smartmuseumandroidapp/SmartMuseumImages/blob/master/s4.png)|
@@ -77,18 +77,18 @@ When the user registers to the application, the system chooses the first free ch
 
 
 
-##Installation instructions
+## Installation instructions
 
 1. Download and install android studio
 2. Clone the https://github.com/smartmuseumandroidapp/SmartMuseum git repository
 3. Join https://smartmuseumask.slack.com team.
 
-##Team
+## Team
 
 You can find us :
 
 - *Guamaral Vasili*: https://www.linkedin.com/in/guamaral-vasil-707393a5
-- *Andrea Ranieri*: http://www.slideshare.net/AndreaRanieri5
+- *Andrea Ranieri*: https://www.linkedin.com/in/andr3aranieri/
 	
 
 The project was developed for the course of "Pervasive Systems 2016", held by Prof. Ioannis Chatzigiannakis within the Master of Science in Computer Science of University of Rome "La Sapienza". 
